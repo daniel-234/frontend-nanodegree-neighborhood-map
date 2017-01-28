@@ -26,8 +26,44 @@
 				// Use a constructor to create a new Map JavaScript object
 				function initMap() {
 					map = new google.maps.Map(document.getElementById('map'), {
-						center: {lat: 39.21475, lng: 9.1138},
-		    			zoom: 16
+						center: {lat: 39.214, lng: 9.114},
+		    			zoom: 18
+					});
+
+					var localRestaurants = [{lat: 39.2146448, lng: 9.1125939},
+											{lat: 39.2141012, lng: 9.1140706},
+											{lat: 39.2139655, lng: 9.1138612},
+											{lat: 39.2145392, lng: 9.1132458},
+											{lat: 39.2128275, lng: 9.1150288}];
+
+					var firstMarker = new google.maps.Marker({
+						position: localRestaurants[0],
+						map: map,
+						title: 'Antica Cagliari'
+					});
+
+					var secondMarker = new google.maps.Marker({
+						position: localRestaurants[1],
+						map: map,
+						title: 'L\'Ostrica Ubriaca'
+					});
+
+					var secondMarker = new google.maps.Marker({
+						position: localRestaurants[2],
+						map: map,
+						title: 'Trattoria Lillicu'
+					});
+
+					var secondMarker = new google.maps.Marker({
+						position: localRestaurants[3],
+						map: map,
+						title: 'La Taverna di Castello'
+					});
+
+					var secondMarker = new google.maps.Marker({
+						position: localRestaurants[4],
+						map: map,
+						title: 'Il Porcile'
 					});
 				}
 			</script>
