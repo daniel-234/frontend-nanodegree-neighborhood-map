@@ -1,0 +1,40 @@
+html, body {
+	height: 100%;
+}
+
+.container {
+	height: 100%;
+}
+
+.row {
+	height: 100%;
+}
+
+/* In a mobile first design, the two divs are stacked along a single column.
+   This implementation is also maintained in portrait orientaion for all devices. */
+.col-list-view {
+	width: 100%;
+	height: 35%;
+}
+
+.col-map-view {
+	width: 100%;
+	height: 65%;
+}
+
+/* For landscape orientation, regardless of the screen size, we want the list
+   view to take only 25% of the available width.
+   We also want the map view to take 75% of the available width. */
+@media screen and (orientation: landscape) {
+	.col-list-view {
+		float: left;
+		width: 25%;
+		height: 100%;
+	}
+
+	.col-map-view {
+		float: right;
+		width: 75%;
+		height: 100%;
+	}
+}

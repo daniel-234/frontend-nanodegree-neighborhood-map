@@ -10,8 +10,30 @@
 			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<!-- Bootstrap CSS local fallback -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-
+		<div class="container">
+			<div class="row">
+				<div class="col-list-view">
+					List of places go here
+				</div>
+				<div class="col-map-view" id="map"></div>
+			</div>
+			<script>
+				// Create a map variable
+				var map;
+				// Use a constructor to create a new Map JavaScript object
+				function initMap() {
+					map = new google.maps.Map(document.getElementById('map'), {
+						center: {lat: 39.21475, lng: 9.1138},
+		    			zoom: 16
+					});
+				}
+			</script>
+			<script async defer
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&callback=initMap">
+		    </script>
+		</div>
 	</body>
 </html>
