@@ -21,52 +21,48 @@
 				<div class="col-map-view" id="map"></div>
 			</div>
 			<script>
-				// Create a map variable
+				// Declare a map variable
 				var map;
-				// Use a constructor to create a new Map JavaScript object
+				// Declare a bounds variable
+				var bounds;
+				// Create an array of locations coordinates
+				var localRestaurants = [{lat: 39.2146448, lng: 9.1125939},
+										{lat: 39.2141012, lng: 9.1140706},
+										{lat: 39.2139655, lng: 9.1138612},
+										{lat: 39.2145392, lng: 9.1132458},
+										{lat: 39.2128275, lng: 9.1150288}];
+
 				function initMap() {
-					map = new google.maps.Map(document.getElementById('map'), {
-						center: {lat: 39.214, lng: 9.114},
-		    			zoom: 18
-					});
+					// Create a new Map JavaScript object
+					map = new google.maps.Map(document.getElementById('map'));
+					// Create a bounds object
+					bounds = new google.maps.LatLngBounds();
 
-					var localRestaurants = [{lat: 39.2146448, lng: 9.1125939},
-											{lat: 39.2141012, lng: 9.1140706},
-											{lat: 39.2139655, lng: 9.1138612},
-											{lat: 39.2145392, lng: 9.1132458},
-											{lat: 39.2128275, lng: 9.1150288}];
+					// Create a marker for each restaurant location
+					for(var i = 0; i < localRestaurants.length; i++) {
+						var marker = new google.maps.Marker({
+							position: localRestaurants[i],
+							map: map,
+							title: 'Marker ' + (i + 1)
+						});
 
-					var firstMarker = new google.maps.Marker({
-						position: localRestaurants[0],
-						map: map,
-						title: 'Antica Cagliari'
-					});
+						// For each marker, extend the bounds object
+						bounds.extend(localRestaurants[i]);
+					}
 
-					var secondMarker = new google.maps.Marker({
-						position: localRestaurants[1],
-						map: map,
-						title: 'L\'Ostrica Ubriaca'
-					});
+					// Update the map to fit the bounds and set the center accordingly
+					function adjustMap() {
+						map.setCenter(bounds.getCenter());
+						map.fitBounds(bounds);
+					}
 
-					var secondMarker = new google.maps.Marker({
-						position: localRestaurants[2],
-						map: map,
-						title: 'Trattoria Lillicu'
-					});
-
-					var secondMarker = new google.maps.Marker({
-						position: localRestaurants[3],
-						map: map,
-						title: 'La Taverna di Castello'
-					});
-
-					var secondMarker = new google.maps.Marker({
-						position: localRestaurants[4],
-						map: map,
-						title: 'Il Porcile'
+					// Capture the viewport change
+					google.maps.event.addListener(map, 'idle', function() {
+						adjustMap();
 					});
 				}
 			</script>
+			<!-- Load Google Maps asynchronously -->
 			<script async defer
 				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&callback=initMap">
 		    </script>
