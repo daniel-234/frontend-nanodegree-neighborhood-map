@@ -11,6 +11,7 @@ To view the website, download a copy of the project to your local machine and op
 
 * [Bootstrap](http://getbootstrap.com/) - The web framework used
 * [Google Maps API](https://developers.google.com/maps/web/) - The map API used
+* [jQuery](http://jquery.com/) - A JavaScript library for simpler HTML manipulation and event handling
 
 ## Author
 
@@ -18,7 +19,7 @@ To view the website, download a copy of the project to your local machine and op
 
 ## Notes
 
-The app will display 5 locations in my city when the page loads.
+The app will display 1 location in Cagliari (IT) when the page loads.
 
 ## License
 
@@ -31,3 +32,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - Google Map API v3 - set bounds and center](http://stackoverflow.com/questions/1556921/google-map-api-v3-set-bounds-and-center?rq=1)
 * [Learn Tech - Google Maps API v3: Capturing viewport change - use "idle" not "bounds_changed"](https://learntech.imsu.ox.ac.uk/blog/?p=861)
 * [Stackoverflow - Google Map event bounds_changed triggered multiple times when draggered](http://stackoverflow.com/questions/4338490/google-map-event-bounds-changed-triggered-multiple-times-when-dragging)
+* To refactor the code to make use of the JavaScript library KnockoutJS, I used the following resources:
+* [KnockoutJS documentation](http://knockoutjs.com/documentation/introduction.html)
+* [Mastering KnockoutJS - by Timothy Moran](https://www.packtpub.com/web-development/mastering-knockoutjs)
+* [Stackoverflow - How to display a Google map with Knockout js and HTML](http://stackoverflow.com/questions/39417762/how-to-display-a-google-map-with-knockout-js-and-html)
+* [Stackoverflow - Why am I getting a "Cannot read property 'nodeType' of null" error with Knockout JS?](http://stackoverflow.com/questions/15090015/why-am-i-getting-a-cannot-read-property-nodetype-of-null-error-with-knockout)

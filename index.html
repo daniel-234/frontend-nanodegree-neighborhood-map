@@ -11,6 +11,19 @@
 		<!-- Bootstrap CSS local fallback -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/style.css">
+
+
+		<!-- <script async defer
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A">
+		    </script> -->
+
+
+		<!-- jQuery Google CDN -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<!-- jQuery local fallback -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="js/lib/knockout-3.4.1.js"></script>
+		<script src="js/app.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -18,54 +31,16 @@
 				<div class="col-list-view">
 					List of places go here
 				</div>
-				<div class="col-map-view" id="map"></div>
+				<!-- Create the map View from the ViewModel defined in app.js.
+					 The binding name 'map' matches the custom binding handler
+					 defined in app.js, while the binding value 'position' is
+					 the JavaScript property defined in the ViewModel.  -->
+				<div data-bind="map: position" class="col-map-view" id="map" ></div>
 			</div>
-			<script>
-				// Declare a map variable
-				var map;
-				// Declare a bounds variable
-				var bounds;
-				// Create an array of locations coordinates
-				var localRestaurants = [{lat: 39.2146448, lng: 9.1125939},
-										{lat: 39.2141012, lng: 9.1140706},
-										{lat: 39.2139655, lng: 9.1138612},
-										{lat: 39.2145392, lng: 9.1132458},
-										{lat: 39.2128275, lng: 9.1150288}];
-
-				function initMap() {
-					// Create a new Map JavaScript object
-					map = new google.maps.Map(document.getElementById('map'));
-					// Create a bounds object
-					bounds = new google.maps.LatLngBounds();
-
-					// Create a marker for each restaurant location
-					for(var i = 0; i < localRestaurants.length; i++) {
-						var marker = new google.maps.Marker({
-							position: localRestaurants[i],
-							map: map,
-							title: 'Marker ' + (i + 1)
-						});
-
-						// For each marker, extend the bounds object
-						bounds.extend(localRestaurants[i]);
-					}
-
-					// Update the map to fit the bounds and set the center accordingly
-					function adjustMap() {
-						map.setCenter(bounds.getCenter());
-						map.fitBounds(bounds);
-					}
-
-					// Capture the viewport change
-					google.maps.event.addListener(map, 'idle', function() {
-						adjustMap();
-					});
-				}
-			</script>
 			<!-- Load Google Maps asynchronously -->
 			<script async defer
-				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&callback=initMap">
-		    </script>
+			    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A">
+			</script>
 		</div>
 	</body>
 </html>
