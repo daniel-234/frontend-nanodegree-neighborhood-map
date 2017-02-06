@@ -33,13 +33,16 @@ ko.bindingHandlers.map = {
 		var data = valueAccessor();
 
 		// Create a new map JavaScript object using the coordinates
-		// given by the position property of the ViewModel.
+		// given by the center position property of the ViewModel.
 		map = new google.maps.Map(element, {
 			zoom: 15,
 			center: data.center
 		});
 
-		// Add a marker to the map for each selected location
+		// Create an infoWindow instance
+		locationsInfoWindow = new google.maps.InfoWindow();
+
+		// Add a marker to the map for each given location
 		for(var i = 0; i < data.markers.length; i++) {
 			var marker = new google.maps.Marker({
 				// The position field of the Marker options object literal
@@ -52,7 +55,29 @@ ko.bindingHandlers.map = {
 				map: map,
 				title: 'Marker ' + (i + 1)
 			});
+			// Add an event listener so that the infoWindow only opens
+			// when we click on the marker.
+			// Code taken from the Google Maps API section of the course.
+			marker.addListener('click', function() {
+				populateInfoWindow(this, locationsInfoWindow);
+			});
 		}
+
+		// Tell the infoWindow to open at this marker and populate it with
+		// information specific to this marker.
+		// Code taken from the Google Maps API section of the course.
+		function populateInfoWindow(marker, infowindow) {
+			// Check to make sure the infoWindow is not already open on this marker.
+			if (infowindow.marker != marker) {
+				infowindow.marker = marker;
+				infowindow.setContent('<div>' + marker.title + '</div>');
+				infowindow.open(map, marker);
+				// Make sure the marker property is cleared if the infoWindow is closed.
+				infowindow.addListener('closeclick', function() {
+					infowindow.setMarker = null;
+				});
+			}
+		};
 	}
 };
 
@@ -66,12 +91,7 @@ var ViewModel = function() {
 			lat: 39.2151,
 			lng: 9.1128
 		},
-		markers: [
-			// {
-			// 	lat: 39.214645,
-			// 	lng: 9.112594
-			// }
-		]
+		markers: []
 	};
 
 	// Populate the 'markers' array property in the position field with
