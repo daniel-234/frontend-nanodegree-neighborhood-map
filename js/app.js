@@ -19,11 +19,11 @@ var markersPosition = [
 ];
 
 // Create a custom binding handler to interact with the
-// Google Maps API
+// Google Maps API.
 ko.bindingHandlers.map = {
 	// Define an 'init' callback to be called once for the DOM
 	// element the callback is used on (in this case, the div with
-	// id='map')
+	// id='map').
 	init: function(element, valueAccessor) {
 		// Assign to a variable data the current model property that
 		// is involved in this binding, in this case 'position'.
@@ -39,10 +39,36 @@ ko.bindingHandlers.map = {
 			center: data.center
 		});
 
-		// Create an infoWindow instance
+		// Create an infoWindow instance.
 		locationsInfoWindow = new google.maps.InfoWindow();
 
-		// Add a marker to the map for each given location
+		// Make an AJAX request to the Wikipedia API for articles about selected locations.
+		var locationString = 'Cagliari';
+		// Define the wikipedia article link that will be appended to the infoWindow.
+		var wikiAPIStr;
+		// Store the Wikipedia URL with a search string.
+		// Code taken from the Wikipedia API lesson of the course.
+		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+			locationString + '&format=json&callback=wikiCallback';
+		// AJAX request object.
+		$.ajax({
+			url: wikiUrl,
+			dataType: 'jsonp',
+			success: function(response) {
+				// The articleList variable is set equal to the array of articles
+				// from the response.
+				var articleList = response[1];
+				// Take only the first article, that should be the most relevant.
+				var selectedArticle = articleList[0];
+				// Create the url to load the page when the link is clicked.
+				var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+				// Set the Wikipedia article link.
+				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+					selectedArticle + '</a></p>';
+			}
+		});
+
+		// Add a marker to the map for each given location.
 		for(var i = 0; i < data.markers.length; i++) {
 			var marker = new google.maps.Marker({
 				// The position field of the Marker options object literal
@@ -70,7 +96,11 @@ ko.bindingHandlers.map = {
 			// Check to make sure the infoWindow is not already open on this marker.
 			if (infowindow.marker != marker) {
 				infowindow.marker = marker;
-				infowindow.setContent('<div>' + marker.title + '</div>');
+				// Set the infoWindow content to contain a title and a Wikipedia link.
+				var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+					'<div>' + wikiAPIStr + '</div></div>'
+				// infowindow.setContent('<div>' + marker.title + '</div>');
+				infowindow.setContent(content);
 				infowindow.open(map, marker);
 				// Make sure the marker property is cleared if the infoWindow is closed.
 				infowindow.addListener('closeclick', function() {
