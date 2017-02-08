@@ -18,6 +18,21 @@ var markersPosition = [
 	}
 ];
 
+// ko.bindingHandlers.input = {
+// 	init: function(element, valueAccessor) {
+// 		var data = valueAccessor();
+
+// 		input = document.getElementById('input-list');
+// 		searchBox = new google.maps.places.SearchBox(input);
+// 	}
+// };
+
+var map, locationsInfoWindow;
+
+function initMap() {
+
+}
+
 // Create a custom binding handler to interact with the
 // Google Maps API.
 ko.bindingHandlers.map = {
@@ -111,28 +126,34 @@ ko.bindingHandlers.map = {
 	}
 };
 
-// The ViewModel contains a property for the positions of the map
-// center and the markers on the map.
-var ViewModel = function() {
-	var self = this;
-	// Store the map center and markers positions.
-	self.position = {
-		center: {
-			lat: 39.2151,
-			lng: 9.1128
-		},
-		markers: []
+// Instantiate the ViewModel and activate KnockoutJS. This makes sure that the
+// Google Maps API has finished loading before we use this script that depends
+// on the Google Maps API.
+//
+// Suggestion taken from a response in the discussion forum:
+// https://discussions.udacity.com/t/map-async-moved-after-app-js/216797/2
+function activateKO() {
+	// The ViewModel contains a property for the positions of the map
+	// center and the markers on the map.
+	var ViewModel = function() {
+		var self = this;
+		// Store the map center and markers positions.
+		self.position = {
+			center: {
+				lat: 39.2151,
+				lng: 9.1128
+			},
+			markers: []
+		};
+
+		// Populate the 'markers' array property in the position field with
+		// the locations selected by the user.
+		markersPosition.forEach(function(positionItem) {
+			self.position['markers'].push(positionItem);
+		});
 	};
 
-	// Populate the 'markers' array property in the position field with
-	// the locations selected by the user.
-	markersPosition.forEach(function(positionItem) {
-		self.position['markers'].push(positionItem);
-	});
-};
+	// Apply the binding to activate Knockout JS.
+	ko.applyBindings(new ViewModel(), document.getElementById('map'));
+}
 
-// Apply the binding to activate Knockout JS when the HTML document
-// is ready.
-$(document).ready(function() {
-	ko.applyBindings(new ViewModel());
-});
