@@ -37,3 +37,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Mastering KnockoutJS - by Timothy Moran](https://www.packtpub.com/web-development/mastering-knockoutjs)
 * [Stackoverflow - How to display a Google map with Knockout js and HTML](http://stackoverflow.com/questions/39417762/how-to-display-a-google-map-with-knockout-js-and-html)
 * [Stackoverflow - Why am I getting a "Cannot read property 'nodeType' of null" error with Knockout JS?](http://stackoverflow.com/questions/15090015/why-am-i-getting-a-cannot-read-property-nodetype-of-null-error-with-knockout)
+* To handle the two Views on the same page and the different ViewModels, I relied on this answer on Stackoverflow.
+* [Stackoverflow - Example of knockout js pattern for multi-view applications](http://stackoverflow.com/questions/8676988/example-of-knockoutjs-pattern-for-multi-view-applications/8680668#8680668)
