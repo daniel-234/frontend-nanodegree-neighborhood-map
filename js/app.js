@@ -50,7 +50,7 @@ ko.bindingHandlers.map = {
 		// plain value.
 		var value = ko.unwrap(valueAccessor());
 
-		var wikiAPIStr;
+		// var wikiAPIStr;
 
 		// Create a new map JavaScript object using the coordinates
 		// given by the center position property of the ViewModel.
@@ -135,6 +135,8 @@ ko.bindingHandlers.map = {
 			console.log(place.name);
 			var title = place.name;
 
+			var wikiAPIStr;
+
 			var marker = new google.maps.Marker({
 				// The position field of the Marker options object literal
 				// taken by the google.maps.Marker constructor specifies a
@@ -159,23 +161,33 @@ ko.bindingHandlers.map = {
 			// var wikiAPIStr;
 			// Store the Wikipedia URL with a search string.
 			// Code taken from the Wikipedia API lesson of the course.
-			var wikiUrl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
-				place.name + "&limit=1&namespace=0&format=json&callback=wikiCallback";
+			var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+				place.name + '&format=json&callback=wikiCallback';
+			console.log(wikiUrl);
 			// AJAX request object.
 			$.ajax({
 				url: wikiUrl,
 				dataType: 'jsonp',
 				success: function(response) {
+					console.log(response);
 					// The articleList variable is set equal to the array of articles
 					// from the response.
 					var articleList = response[1];
 					// Take only the first article, that should be the most relevant.
 					var selectedArticle = articleList[0];
 					// Create the url to load the page when the link is clicked.
-					var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+					// var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
 					// Set the Wikipedia article link.
-					wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
-						selectedArticle + '</a></p>';
+					// wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+						// selectedArticle + '</a></p>';
+
+					var articleUrl = response[3][0];
+
+					if (response[3].length > 0) {
+						wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + response[0] + '</a></p>';
+					} else {
+						wikiAPIStr = '<p>Sorry, no results were found on Wikipedia.</p>'
+					}
 				}
 			});
 
@@ -189,27 +201,48 @@ ko.bindingHandlers.map = {
 			markers.push(marker);
 
 
+			// Tell the infoWindow to open at this marker and populate it with
+			// information specific to this marker.
+			// Code taken from the Google Maps API section of the course.
+			function populateInfoWindow(marker, infowindow) {
+				// Check to make sure the infoWindow is not already open on this marker.
+				if (infowindow.marker != marker) {
+					infowindow.marker = marker;
+					// Set the infoWindow content to contain a title and a Wikipedia link.
+					var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+						'<div>' + wikiAPIStr + '</div></div>'
+					// infowindow.setContent('<div>' + marker.title + '</div>');
+					infowindow.setContent(content);
+					infowindow.open(map, marker);
+					// Make sure the marker property is cleared if the infoWindow is closed.
+					infowindow.addListener('closeclick', function() {
+						infowindow.setMarker = null;
+					});
+				}
+			};
+
+
 		}
 
-		// Tell the infoWindow to open at this marker and populate it with
-		// information specific to this marker.
-		// Code taken from the Google Maps API section of the course.
-		function populateInfoWindow(marker, infowindow) {
-			// Check to make sure the infoWindow is not already open on this marker.
-			if (infowindow.marker != marker) {
-				infowindow.marker = marker;
-				// Set the infoWindow content to contain a title and a Wikipedia link.
-				var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-					'<div>' + wikiAPIStr + '</div></div>'
-				// infowindow.setContent('<div>' + marker.title + '</div>');
-				infowindow.setContent(content);
-				infowindow.open(map, marker);
-				// Make sure the marker property is cleared if the infoWindow is closed.
-				infowindow.addListener('closeclick', function() {
-					infowindow.setMarker = null;
-				});
-			}
-		};
+		// // Tell the infoWindow to open at this marker and populate it with
+		// // information specific to this marker.
+		// // Code taken from the Google Maps API section of the course.
+		// function populateInfoWindow(marker, infowindow) {
+		// 	// Check to make sure the infoWindow is not already open on this marker.
+		// 	if (infowindow.marker != marker) {
+		// 		infowindow.marker = marker;
+		// 		// Set the infoWindow content to contain a title and a Wikipedia link.
+		// 		var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+		// 			'<div>' + wikiAPIStr + '</div></div>'
+		// 		// infowindow.setContent('<div>' + marker.title + '</div>');
+		// 		infowindow.setContent(content);
+		// 		infowindow.open(map, marker);
+		// 		// Make sure the marker property is cleared if the infoWindow is closed.
+		// 		infowindow.addListener('closeclick', function() {
+		// 			infowindow.setMarker = null;
+		// 		});
+		// 	}
+		// };
 	},
 
 	update: function(element, valueAccessor) {
@@ -320,6 +353,8 @@ ko.bindingHandlers.map = {
 			console.log(place.name);
 			var title = place.name;
 
+			var wikiAPIStr;
+
 			var marker = new google.maps.Marker({
 				// The position field of the Marker options object literal
 				// taken by the google.maps.Marker constructor specifies a
@@ -346,27 +381,46 @@ ko.bindingHandlers.map = {
 			// Code taken from the Wikipedia API lesson of the course.
 			// var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
 			// 	locationString + '&format=json&callback=wikiCallback';
-			var wikiUrl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
-				place.name + "&limit=1&namespace=0&format=json&callback=wikiCallback";
-				// console.log(locationString);
+			var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+				place.name + '&format=json&callback=wikiCallback';
+
 				// console.log(wikiUrl);
 			// AJAX request object.
 			$.ajax({
 				url: wikiUrl,
 				dataType: 'jsonp',
 				success: function(response) {
+					console.log(response);
 					// The articleList variable is set equal to the array of articles
 					// from the response.
 					var articleList = response[1];
 					// Take only the first article, that should be the most relevant.
 					var selectedArticle = articleList[0];
 					// Create the url to load the page when the link is clicked.
-					var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+					var articleUrl = response[3][0];
+					console.log(wikiAPIStr);
+
+					// var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
 					// Set the Wikipedia article link.
-					wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
-						selectedArticle + '</a></p>';
+					if (response[3].length > 0) {
+						wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + response[0] + '</a></p>';
+					} else {
+						wikiAPIStr = '<p>Sorry, no results were found on Wikipedia.</p>'
+					}
+
+					console.log(wikiAPIStr);
+
+						// selectedArticle + '</a></p>';
 				}
 			});
+
+			// , error: function() {
+			// 		var selectedArticle = 'Cagliari';  //place.address_components[2].long_name;
+			// 		var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+			// 		console.log(articleUrl);
+			// 		wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+			// 			selectedArticle + '</a></p>';
+			// 	}
 
 			// Add an event listener so that the infoWindow only opens
 			// when we click on the marker.
@@ -377,28 +431,50 @@ ko.bindingHandlers.map = {
 
 			markers.push(marker);
 
+			// Tell the infoWindow to open at this marker and populate it with
+			// information specific to this marker.
+			// Code taken from the Google Maps API section of the course.
+			function populateInfoWindow(marker, infowindow) {
+				// Check to make sure the infoWindow is not already open on this marker.
+				if (infowindow.marker != marker) {
+					infowindow.marker = marker;
+					// Set the infoWindow content to contain a title and a Wikipedia link.
+					var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+						'<div>' + wikiAPIStr + '</div></div>';
+					console.log(wikiAPIStr);
+					// infowindow.setContent('<div>' + marker.title + '</div>');
+					infowindow.setContent(content);
+					infowindow.open(map, marker);
+					// Make sure the marker property is cleared if the infoWindow is closed.
+					infowindow.addListener('closeclick', function() {
+						infowindow.setMarker = null;
+					});
+				}
+			};
+
 
 		}
 
-		// Tell the infoWindow to open at this marker and populate it with
-		// information specific to this marker.
-		// Code taken from the Google Maps API section of the course.
-		function populateInfoWindow(marker, infowindow) {
-			// Check to make sure the infoWindow is not already open on this marker.
-			if (infowindow.marker != marker) {
-				infowindow.marker = marker;
-				// Set the infoWindow content to contain a title and a Wikipedia link.
-				var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-					'<div>' + wikiAPIStr + '</div></div>'
-				// infowindow.setContent('<div>' + marker.title + '</div>');
-				infowindow.setContent(content);
-				infowindow.open(map, marker);
-				// Make sure the marker property is cleared if the infoWindow is closed.
-				infowindow.addListener('closeclick', function() {
-					infowindow.setMarker = null;
-				});
-			}
-		};
+		// // Tell the infoWindow to open at this marker and populate it with
+		// // information specific to this marker.
+		// // Code taken from the Google Maps API section of the course.
+		// function populateInfoWindow(marker, infowindow) {
+		// 	// Check to make sure the infoWindow is not already open on this marker.
+		// 	if (infowindow.marker != marker) {
+		// 		infowindow.marker = marker;
+		// 		// Set the infoWindow content to contain a title and a Wikipedia link.
+		// 		var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+		// 			'<div>' + wikiAPIStr + '</div></div>';
+		// 		console.log(wikiAPIStr);
+		// 		// infowindow.setContent('<div>' + marker.title + '</div>');
+		// 		infowindow.setContent(content);
+		// 		infowindow.open(map, marker);
+		// 		// Make sure the marker property is cleared if the infoWindow is closed.
+		// 		infowindow.addListener('closeclick', function() {
+		// 			infowindow.setMarker = null;
+		// 		});
+		// 	}
+		// };
 
 	}
 

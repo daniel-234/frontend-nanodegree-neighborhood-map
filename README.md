@@ -45,3 +45,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [JSFiddle - Knockout custom binding with multiple parameters](https://jsfiddle.net/NathanFriend/sectn9va/)
 * To update the list View I used some code from the following answer on Stackoverflow:
 * [Stackoverflow - Remove all child elements of a DOM node in JavaScript](http://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript)
+* This discussion forum helped me debug some major problems with the Wikipedia API:
+[Udacity Discussion Forums - Wikipedia API problem](https://discussions.udacity.com/t/wikipedia-api-problem/208644/12)
