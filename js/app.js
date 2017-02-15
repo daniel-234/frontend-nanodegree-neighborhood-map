@@ -50,6 +50,8 @@ ko.bindingHandlers.map = {
 		// plain value.
 		var value = ko.unwrap(valueAccessor());
 
+		var wikiAPIStr;
+
 		// Create a new map JavaScript object using the coordinates
 		// given by the center position property of the ViewModel.
 		map = new google.maps.Map(element, {
@@ -88,6 +90,8 @@ ko.bindingHandlers.map = {
 					console.log(place.name);
 					addMarker(place);
 
+
+
 					var listItem = document.createElement('li');
 					var newContent = document.createTextNode(place.name);
 					listItem.appendChild(newContent);
@@ -98,34 +102,34 @@ ko.bindingHandlers.map = {
 			}
 		}
 
-		// Create an infoWindow instance.
-		locationsInfoWindow = new google.maps.InfoWindow();
+		// // Create an infoWindow instance.
+		// locationsInfoWindow = new google.maps.InfoWindow();
 
-		// Make an AJAX request to the Wikipedia API for articles about selected locations.
-		var locationString = 'Cagliari';
-		// Define the wikipedia article link that will be appended to the infoWindow.
-		var wikiAPIStr;
-		// Store the Wikipedia URL with a search string.
-		// Code taken from the Wikipedia API lesson of the course.
-		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-			locationString + '&format=json&callback=wikiCallback';
-		// AJAX request object.
-		$.ajax({
-			url: wikiUrl,
-			dataType: 'jsonp',
-			success: function(response) {
-				// The articleList variable is set equal to the array of articles
-				// from the response.
-				var articleList = response[1];
-				// Take only the first article, that should be the most relevant.
-				var selectedArticle = articleList[0];
-				// Create the url to load the page when the link is clicked.
-				var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
-				// Set the Wikipedia article link.
-				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
-					selectedArticle + '</a></p>';
-			}
-		});
+		// // Make an AJAX request to the Wikipedia API for articles about selected locations.
+		// var locationString = 'Cagliari';
+		// // Define the wikipedia article link variable that will be appended to the infoWindow.
+		// var wikiAPIStr;
+		// // Store the Wikipedia URL with a search string.
+		// // Code taken from the Wikipedia API lesson of the course.
+		// var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+		// 	locationString + '&format=json&callback=wikiCallback';
+		// // AJAX request object.
+		// $.ajax({
+		// 	url: wikiUrl,
+		// 	dataType: 'jsonp',
+		// 	success: function(response) {
+		// 		// The articleList variable is set equal to the array of articles
+		// 		// from the response.
+		// 		var articleList = response[1];
+		// 		// Take only the first article, that should be the most relevant.
+		// 		var selectedArticle = articleList[0];
+		// 		// Create the url to load the page when the link is clicked.
+		// 		var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+		// 		// Set the Wikipedia article link.
+		// 		wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+		// 			selectedArticle + '</a></p>';
+		// 	}
+		// });
 
 		function addMarker(place) {
 			console.log(place.name);
@@ -142,6 +146,37 @@ ko.bindingHandlers.map = {
 				map: map,
 				title: title
 				// title: 'Marker'  //place.name
+			});
+
+			// Create an infoWindow instance.
+			locationsInfoWindow = new google.maps.InfoWindow();
+
+			// Make an AJAX request to the Wikipedia API for articles about selected locations.
+			var locationString = place.name;
+
+			// var locationString = 'Cagliari';
+			// Define the wikipedia article link variable that will be appended to the infoWindow.
+			// var wikiAPIStr;
+			// Store the Wikipedia URL with a search string.
+			// Code taken from the Wikipedia API lesson of the course.
+			var wikiUrl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+				place.name + "&limit=1&namespace=0&format=json&callback=wikiCallback";
+			// AJAX request object.
+			$.ajax({
+				url: wikiUrl,
+				dataType: 'jsonp',
+				success: function(response) {
+					// The articleList variable is set equal to the array of articles
+					// from the response.
+					var articleList = response[1];
+					// Take only the first article, that should be the most relevant.
+					var selectedArticle = articleList[0];
+					// Create the url to load the page when the link is clicked.
+					var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+					// Set the Wikipedia article link.
+					wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+						selectedArticle + '</a></p>';
+				}
 			});
 
 			// Add an event listener so that the infoWindow only opens
@@ -235,6 +270,10 @@ ko.bindingHandlers.map = {
 					// 	// title: 'Marker'
 					// });
 
+
+
+
+
 					var listItem = document.createElement('li');
 					var newContent = document.createTextNode(place.name);
 					listItem.appendChild(newContent);
@@ -248,34 +287,34 @@ ko.bindingHandlers.map = {
 			}
 		}
 
-		// Create an infoWindow instance.
-		locationsInfoWindow = new google.maps.InfoWindow();
+		// // Create an infoWindow instance.
+		// locationsInfoWindow = new google.maps.InfoWindow();
 
-		// Make an AJAX request to the Wikipedia API for articles about selected locations.
-		var locationString = 'Cagliari';
-		// Define the wikipedia article link that will be appended to the infoWindow.
-		var wikiAPIStr;
-		// Store the Wikipedia URL with a search string.
-		// Code taken from the Wikipedia API lesson of the course.
-		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-			locationString + '&format=json&callback=wikiCallback';
-		// AJAX request object.
-		$.ajax({
-			url: wikiUrl,
-			dataType: 'jsonp',
-			success: function(response) {
-				// The articleList variable is set equal to the array of articles
-				// from the response.
-				var articleList = response[1];
-				// Take only the first article, that should be the most relevant.
-				var selectedArticle = articleList[0];
-				// Create the url to load the page when the link is clicked.
-				var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
-				// Set the Wikipedia article link.
-				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
-					selectedArticle + '</a></p>';
-			}
-		});
+		// // Make an AJAX request to the Wikipedia API for articles about selected locations.
+		// var locationString = 'Cagliari';
+		// // Define the wikipedia article link variable that will be appended to the infoWindow.
+		// var wikiAPIStr;
+		// // Store the Wikipedia URL with a search string.
+		// // Code taken from the Wikipedia API lesson of the course.
+		// var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+		// 	locationString + '&format=json&callback=wikiCallback';
+		// // AJAX request object.
+		// $.ajax({
+		// 	url: wikiUrl,
+		// 	dataType: 'jsonp',
+		// 	success: function(response) {
+		// 		// The articleList variable is set equal to the array of articles
+		// 		// from the response.
+		// 		var articleList = response[1];
+		// 		// Take only the first article, that should be the most relevant.
+		// 		var selectedArticle = articleList[0];
+		// 		// Create the url to load the page when the link is clicked.
+		// 		var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+		// 		// Set the Wikipedia article link.
+		// 		wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+		// 			selectedArticle + '</a></p>';
+		// 	}
+		// });
 
 		function addMarker(place) {
 			console.log(place.name);
@@ -292,6 +331,41 @@ ko.bindingHandlers.map = {
 				map: map,
 				title: title
 				// title: 'Marker'  //place.name
+			});
+
+			// Create an infoWindow instance.
+			locationsInfoWindow = new google.maps.InfoWindow();
+
+			// Make an AJAX request to the Wikipedia API for articles about selected locations.
+			// var locationString = String(place.name);
+
+			// var locationString = 'Cagliari';
+			// Define the wikipedia article link variable that will be appended to the infoWindow.
+			// var wikiAPIStr;
+			// Store the Wikipedia URL with a search string.
+			// Code taken from the Wikipedia API lesson of the course.
+			// var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+			// 	locationString + '&format=json&callback=wikiCallback';
+			var wikiUrl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+				place.name + "&limit=1&namespace=0&format=json&callback=wikiCallback";
+				// console.log(locationString);
+				// console.log(wikiUrl);
+			// AJAX request object.
+			$.ajax({
+				url: wikiUrl,
+				dataType: 'jsonp',
+				success: function(response) {
+					// The articleList variable is set equal to the array of articles
+					// from the response.
+					var articleList = response[1];
+					// Take only the first article, that should be the most relevant.
+					var selectedArticle = articleList[0];
+					// Create the url to load the page when the link is clicked.
+					var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+					// Set the Wikipedia article link.
+					wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+						selectedArticle + '</a></p>';
+				}
 			});
 
 			// Add an event listener so that the infoWindow only opens
