@@ -1,24 +1,27 @@
 // Store the location of 5 places of our choice.
-var markersPosition = [
-	{
-		lat: 39.2146448,
-		lng: 9.1125939
-	}, {
-		lat: 39.2141012,
-		lng: 9.1140706
-	}, {
-		lat: 39.2139655,
-		lng: 9.1138612
-	}, {
-		lat: 39.2145392,
-		lng: 9.1132458
-	}, {
-		lat: 39.2128275,
-		lng: 9.1150288
-	}
-];
+// var markersPosition = [
+// 	{
+// 		lat: 39.2146448,
+// 		lng: 9.1125939
+// 	}, {
+// 		lat: 39.2141012,
+// 		lng: 9.1140706
+// 	}, {
+// 		lat: 39.2139655,
+// 		lng: 9.1138612
+// 	}, {
+// 		lat: 39.2145392,
+// 		lng: 9.1132458
+// 	}, {
+// 		lat: 39.2128275,
+// 		lng: 9.1150288
+// 	}
+// ];
 
 // var markersPosition = [10, 20, 30, 40, 50];
+
+
+
 
 // Define global variables for the map and infoWindows.
 var map, locationsInfoWindow, service;
@@ -95,12 +98,40 @@ ko.bindingHandlers.map = {
 			}
 		}
 
+		// Create an infoWindow instance.
+		locationsInfoWindow = new google.maps.InfoWindow();
+
+		// Make an AJAX request to the Wikipedia API for articles about selected locations.
+		var locationString = 'Cagliari';
+		// Define the wikipedia article link that will be appended to the infoWindow.
+		var wikiAPIStr;
+		// Store the Wikipedia URL with a search string.
+		// Code taken from the Wikipedia API lesson of the course.
+		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+			locationString + '&format=json&callback=wikiCallback';
+		// AJAX request object.
+		$.ajax({
+			url: wikiUrl,
+			dataType: 'jsonp',
+			success: function(response) {
+				// The articleList variable is set equal to the array of articles
+				// from the response.
+				var articleList = response[1];
+				// Take only the first article, that should be the most relevant.
+				var selectedArticle = articleList[0];
+				// Create the url to load the page when the link is clicked.
+				var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+				// Set the Wikipedia article link.
+				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+					selectedArticle + '</a></p>';
+			}
+		});
+
 		function addMarker(place) {
 			console.log(place.name);
-			var title = place.name
+			var title = place.name;
 
-			// Create a marker for each place and insert it into the markers array
-			markers.push(new google.maps.Marker({
+			var marker = new google.maps.Marker({
 				// The position field of the Marker options object literal
 				// taken by the google.maps.Marker constructor specifies a
 				// LatLng identifying the location of the marker.
@@ -109,27 +140,41 @@ ko.bindingHandlers.map = {
 				// marker; here the marker is attached to the map created
 				// just above.
 				map: map,
-				// title: title
+				title: title
 				// title: 'Marker'  //place.name
-			}));
+			});
 
+			// Add an event listener so that the infoWindow only opens
+			// when we click on the marker.
+			// Code taken from the Google Maps API section of the course.
+			marker.addListener('click', function() {
+				populateInfoWindow(this, locationsInfoWindow);
+			});
 
-
-			// var marker = new google.maps.Marker({
-			// 	// The position field of the Marker options object literal
-			// 	// taken by the google.maps.Marker constructor specifies a
-			// 	// LatLng identifying the location of the marker.
-			// 	position: place.geometry.location,
-			// 	// The map field specifies the Map on which to place the
-			// 	// marker; here the marker is attached to the map created
-			// 	// just above.
-			// 	map: map,
-			// 	// title: title
-			// 	// title: 'Marker'  //place.name
-			// });
+			markers.push(marker);
 
 
 		}
+
+		// Tell the infoWindow to open at this marker and populate it with
+		// information specific to this marker.
+		// Code taken from the Google Maps API section of the course.
+		function populateInfoWindow(marker, infowindow) {
+			// Check to make sure the infoWindow is not already open on this marker.
+			if (infowindow.marker != marker) {
+				infowindow.marker = marker;
+				// Set the infoWindow content to contain a title and a Wikipedia link.
+				var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+					'<div>' + wikiAPIStr + '</div></div>'
+				// infowindow.setContent('<div>' + marker.title + '</div>');
+				infowindow.setContent(content);
+				infowindow.open(map, marker);
+				// Make sure the marker property is cleared if the infoWindow is closed.
+				infowindow.addListener('closeclick', function() {
+					infowindow.setMarker = null;
+				});
+			}
+		};
 	},
 
 	update: function(element, valueAccessor) {
@@ -203,14 +248,40 @@ ko.bindingHandlers.map = {
 			}
 		}
 
+		// Create an infoWindow instance.
+		locationsInfoWindow = new google.maps.InfoWindow();
+
+		// Make an AJAX request to the Wikipedia API for articles about selected locations.
+		var locationString = 'Cagliari';
+		// Define the wikipedia article link that will be appended to the infoWindow.
+		var wikiAPIStr;
+		// Store the Wikipedia URL with a search string.
+		// Code taken from the Wikipedia API lesson of the course.
+		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+			locationString + '&format=json&callback=wikiCallback';
+		// AJAX request object.
+		$.ajax({
+			url: wikiUrl,
+			dataType: 'jsonp',
+			success: function(response) {
+				// The articleList variable is set equal to the array of articles
+				// from the response.
+				var articleList = response[1];
+				// Take only the first article, that should be the most relevant.
+				var selectedArticle = articleList[0];
+				// Create the url to load the page when the link is clicked.
+				var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
+				// Set the Wikipedia article link.
+				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
+					selectedArticle + '</a></p>';
+			}
+		});
+
 		function addMarker(place) {
 			console.log(place.name);
 			var title = place.name;
 
-
-
-			// Create a marker for each place and insert it into the markers array
-			markers.push(new google.maps.Marker({
+			var marker = new google.maps.Marker({
 				// The position field of the Marker options object literal
 				// taken by the google.maps.Marker constructor specifies a
 				// LatLng identifying the location of the marker.
@@ -219,190 +290,20 @@ ko.bindingHandlers.map = {
 				// marker; here the marker is attached to the map created
 				// just above.
 				map: map,
-				// title: title
+				title: title
 				// title: 'Marker'  //place.name
-			}));
+			});
+
+			// Add an event listener so that the infoWindow only opens
+			// when we click on the marker.
+			// Code taken from the Google Maps API section of the course.
+			marker.addListener('click', function() {
+				populateInfoWindow(this, locationsInfoWindow);
+			});
+
+			markers.push(marker);
 
 
-			// var marker = new google.maps.Marker({
-			// 	// The position field of the Marker options object literal
-			// 	// taken by the google.maps.Marker constructor specifies a
-			// 	// LatLng identifying the location of the marker.
-			// 	position: place.geometry.location,
-			// 	// The map field specifies the Map on which to place the
-			// 	// marker; here the marker is attached to the map created
-			// 	// just above.
-			// 	map: map,
-			// 	// title: title
-			// 	title: 'Marker'
-			// });
-		}
-
-
-		// 		results.forEach(function(queryResult) {
-		// 			markersPosition.push(queryResult);
-		// 		});
-
-		// 		for(var i = 0; i < markersPosition.length; i++) {
-		// 			console.log(markersPosition[i].geometry.location.lat);
-		// 			var marker = new google.maps.Marker({
-		// 				// The position field of the Marker options object literal
-		// 				// taken by the google.maps.Marker constructor specifies a
-		// 				// LatLng identifying the location of the marker.
-		// 				position: markersPosition[i].geometry.location,
-		// 				// The map field specifies the Map on which to place the
-		// 				// marker; here the marker is attached to the map created
-		// 				// just above.
-		// 				map: map,
-		// 				title: 'Marker ' + (i + 1)
-		// 			});
-		// }
-	}
-
-
-
-
-
-
-
-	// 	// console.log(data);
-	// 	// Add a marker to the map for each given location.
-	// 	for(var i = 0; i < data.length; i++) {
-	// 		var marker = new google.maps.Marker({
-	// 			// The position field of the Marker options object literal
-	// 			// taken by the google.maps.Marker constructor specifies a
-	// 			// LatLng identifying the location of the marker.
-	// 			position: data[i],
-	// 			// The map field specifies the Map on which to place the
-	// 			// marker; here the marker is attached to the map created
-	// 			// just above.
-	// 			map: map,
-	// 			title: 'Marker ' + (i + 1)
-	// 		});
-	// 		console.log(data[i]);
-	// 	}
-	// }
-
-
-	// 	var request = {
-	// 		location: data.center,
-	// 		radius: 500,
-	// 		query: data.markers[i]
-	// 		// query: 'restaurant'
-	// 	};
-
-
-
-
-
-
-
-
-
-
-
-		// service = new google.maps.places.PlacesService(map);
-		// service.textSearch(request, callback);
-
-		// function callback(results, status) {
-		// 	if (status == google.maps.places.PlacesServiceStatus.OK) {
-		// 		results.forEach(function(queryResult) {
-		// 			markersPosition.push(queryResult);
-		// 		});
-
-		// 		for(var i = 0; i < markersPosition.length; i++) {
-		// 			console.log(markersPosition[i].geometry.location.lat);
-		// 			var marker = new google.maps.Marker({
-		// 				// The position field of the Marker options object literal
-		// 				// taken by the google.maps.Marker constructor specifies a
-		// 				// LatLng identifying the location of the marker.
-		// 				position: markersPosition[i].geometry.location,
-		// 				// The map field specifies the Map on which to place the
-		// 				// marker; here the marker is attached to the map created
-		// 				// just above.
-		// 				map: map,
-		// 				title: 'Marker ' + (i + 1)
-		// 			});
-		// 	// Add an event listener so that the infoWindow only opens
-		// 	// when we click on the marker.
-		// 	// Code taken from the Google Maps API section of the course.
-		// 	marker.addListener('click', function() {
-		// 		populateInfoWindow(this, locationsInfoWindow);
-		// 	});
-		// }
-
-
-
-				// for(var i = 0; i < results.length; i++) {
-				// 	var place = results[i];
-				// 	var marker = new google.maps.Marker({
-				// 		// The position field of the Marker options object literal
-				// 		// taken by the google.maps.Marker constructor specifies a
-				// 		// LatLng identifying the location of the marker.
-				// 		position: place.geometry.location,
-
-				// 		//data.markers[i],
-				// 		// The map field specifies the Map on which to place the
-				// 		// marker; here the marker is attached to the map created
-				// 		// just above.
-				// 		map: map,
-				// 		// title: 'Marker ' + (i + 1)
-				// 	});
-				// }
-			// }
-			// console.log(markersPosition[0]);
-			// console.log(data);
-
-
-
-		// // Create an infoWindow instance.
-		// locationsInfoWindow = new google.maps.InfoWindow();
-
-		// // Make an AJAX request to the Wikipedia API for articles about selected locations.
-		// var locationString = 'Cagliari';
-		// // Define the wikipedia article link that will be appended to the infoWindow.
-		// var wikiAPIStr;
-		// // Store the Wikipedia URL with a search string.
-		// // Code taken from the Wikipedia API lesson of the course.
-		// var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-		// 	locationString + '&format=json&callback=wikiCallback';
-		// // AJAX request object.
-		// $.ajax({
-		// 	url: wikiUrl,
-		// 	dataType: 'jsonp',
-		// 	success: function(response) {
-		// 		// The articleList variable is set equal to the array of articles
-		// 		// from the response.
-		// 		var articleList = response[1];
-		// 		// Take only the first article, that should be the most relevant.
-		// 		var selectedArticle = articleList[0];
-		// 		// Create the url to load the page when the link is clicked.
-		// 		var articleUrl = 'https://en.wikipedia.org/wiki/' + selectedArticle;
-		// 		// Set the Wikipedia article link.
-		// 		wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' +
-		// 			selectedArticle + '</a></p>';
-		// 	}
-		// });
-
-		// // Add a marker to the map for each given location.
-		// for(var i = 0; i < data.length; i++) {
-		// 	var marker = new google.maps.Marker({
-		// 		// The position field of the Marker options object literal
-		// 		// taken by the google.maps.Marker constructor specifies a
-		// 		// LatLng identifying the location of the marker.
-		// 		position: data[i],
-		// 		// The map field specifies the Map on which to place the
-		// 		// marker; here the marker is attached to the map created
-		// 		// just above.
-		// 		map: map,
-		// 		title: 'Marker ' + (i + 1)
-		// 	});
-		// 	// Add an event listener so that the infoWindow only opens
-		// 	// when we click on the marker.
-		// 	// Code taken from the Google Maps API section of the course.
-		// 	marker.addListener('click', function() {
-		// 		populateInfoWindow(this, locationsInfoWindow);
-		// 	});
 		}
 
 		// Tell the infoWindow to open at this marker and populate it with
@@ -424,6 +325,13 @@ ko.bindingHandlers.map = {
 				});
 			}
 		};
+
+	}
+
+
+}
+
+
 	// }
 // };
 
