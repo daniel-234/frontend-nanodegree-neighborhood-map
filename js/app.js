@@ -76,12 +76,22 @@ ko.bindingHandlers.map = {
 		service.textSearch(request, callback);
 
 		function callback(results, status) {
+			var elem = document.getElementById('input-list');
+			var uList = document.createElement('ul');
+
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				for (var i = 0; i < results.length; i++) {
 					var place = results[i];
 					console.log(place.name);
 					addMarker(place);
+
+					var listItem = document.createElement('li');
+					var newContent = document.createTextNode(place.name);
+					listItem.appendChild(newContent);
+					uList.appendChild(listItem);
 				}
+
+				elem.appendChild(uList);
 			}
 		}
 
