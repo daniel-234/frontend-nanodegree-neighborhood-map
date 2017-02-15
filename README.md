@@ -19,7 +19,7 @@ To view the website, download a copy of the project to your local machine and op
 
 ## Notes
 
-The app will display 1 location in Cagliari (IT) when the page loads.
+The app will display several locations in the city center of Cagliari (Italy) when the page is loaded.
 
 ## License
 
@@ -43,5 +43,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Mastering KnockoutJS - by Timothy Moran](https://www.packtpub.com/web-development/mastering-knockoutjs)
 * [Another look at Custom Bindings for KnockoutJS - KnockMeOut](http://www.knockmeout.net/2011/07/another-look-at-custom-bindings-for.html)
 * [JSFiddle - Knockout custom binding with multiple parameters](https://jsfiddle.net/NathanFriend/sectn9va/)
-* To update the list View I used some code from the following answer on Stackoverflow.
+* To update the list View I used some code from the following answer on Stackoverflow:
 * [Stackoverflow - Remove all child elements of a DOM node in JavaScript](http://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript)
