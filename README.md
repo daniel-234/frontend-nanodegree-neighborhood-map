@@ -39,3 +39,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - Why am I getting a "Cannot read property 'nodeType' of null" error with Knockout JS?](http://stackoverflow.com/questions/15090015/why-am-i-getting-a-cannot-read-property-nodetype-of-null-error-with-knockout)
 * To handle the two Views on the same page and the different ViewModels, I relied on this answer on Stackoverflow.
 * [Stackoverflow - Example of knockout js pattern for multi-view applications](http://stackoverflow.com/questions/8676988/example-of-knockoutjs-pattern-for-multi-view-applications/8680668#8680668)
+* To understand the Custom Bindings feature of KnockoutJS I read several articles and some book paragraphs. The most important for adapting it to my needs were:
+* [Mastering KnockoutJS - by Timothy Moran](https://www.packtpub.com/web-development/mastering-knockoutjs)
+* [Another look at Custom Bindings for KnockoutJS - KnockMeOut](http://www.knockmeout.net/2011/07/another-look-at-custom-bindings-for.html)
+* [JSFiddle - Knockout custom binding with multiple parameters](https://jsfiddle.net/NathanFriend/sectn9va/)
