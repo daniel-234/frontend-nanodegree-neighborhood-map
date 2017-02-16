@@ -21,35 +21,15 @@
 	<body>
 		<div class="container">
 			<div class="row">
-
 				<div class='col-list-view'>
+					<!-- Form element with a filter button -->
 					<form data-bind="submit: filterSearch">
 					    <input data-bind='value: query' />
 					    <button type="submit">Filter</button>
 					</form>
+					<!-- Element to attach the dynamically created list -->
 					<div id="input-list"></div>
-
 				</div>
-
-				<!-- <div data-bind="input: position" id="input-list" class="col-list-view"> -->
-				<!-- <div class="col-list-view">
-					<form data-bind="submit: doSomething">
-						<input type="text" name="Location" placeholder="Search Location">
-						<button type="submit">Filter</button>
-					</form>
-					<div data-bind="inputList: myLocations" id="input-list"></div> -->
-					<!-- List of places go here -->
-				<!-- </div> -->
-
-
-				<!-- <div data-bind="input: position" id="input-list" class="col-list-view"> -->
-				<!-- <div data-bind="inputList: myLocations" id="input-list" class="col-list-view">
-					<form data-bind="submit: doSomething">
-						<input type="text" name="Location" placeholder="Search Location">
-						<button type="submit">Filter</button>
-					</f -->
-					<!-- List of places go here -->
-				<!-- </div> -->
 				<!-- Create the map View from the ViewModel defined in app.js.
 					 The binding name 'map' matches the custom binding handler
 					 defined in app.js, while the binding value 'position' is
