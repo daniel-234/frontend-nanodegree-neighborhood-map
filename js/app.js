@@ -8,6 +8,9 @@ var cityOfCagliari = {
 // Create an array to hold the markers.
 var markers = [];
 
+// Store the map icon markers.
+var green_icon = 'img/green_marker.png';
+var red_icon = 'img/red_marker.png';
 
 // Create a custom binding handler to interact with the Google Maps API.
 ko.bindingHandlers.map = {
@@ -145,7 +148,13 @@ function addMarker(place) {
 	// Code taken from the Google Maps API section of the course.
 	marker.addListener('click', function() {
 		populateInfoWindow(this, locationsInfoWindow, wikiAPIStr);
+		marker.setIcon(green_icon);
 	});
+
+	// marker.addListener('mouseover', function() {
+	// 	marker.setIcon(green_icon);
+	// });
+
 	// Insert the marker into the markers array.
 	markers.push(marker);
 }
@@ -166,6 +175,7 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr) {
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
 			infowindow.setMarker = null;
+			marker.setIcon(red_icon);
 		});
 	}
 }
