@@ -52,6 +52,12 @@ ko.bindingHandlers.map = {
 	}
 };
 
+// Store the position of the selected marker; undefined as page loads.
+// As a marker is clicked, it stores its position inside the markers
+// array; it is called to set the icon back to the original color when
+// another marker is clicked.
+var selected_marker;
+
 // Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
 function callback(results, status) {
 	// Store the element with id='input-list'.
@@ -64,6 +70,10 @@ function callback(results, status) {
 			});
 			markers = [];
 		}
+
+		// Create an infoWindow instance.
+		locationsInfoWindow = new google.maps.InfoWindow();
+		console.log(locationsInfoWindow);
 
 		// Remove the child elements of elem, if any exists.
 		while (elem.firstChild) {
@@ -78,11 +88,13 @@ function callback(results, status) {
 			// Store the result.
 			var place = results[i];
 			// Add a new marker to the map.
-			addMarker(place);
+			addMarker(place, i);
 			// Create a list item with the place name as text content and append it.
 			var listItem = document.createElement('li');
 			var newContent = document.createTextNode(place.name);
 			listItem.appendChild(newContent);
+			listItem.id = "item_" + i;
+			console.log(listItem.id);
 			uList.appendChild(listItem);
 		}
 
@@ -92,8 +104,7 @@ function callback(results, status) {
 }
 
 // Create a marker with an infoWindow and insert it into the 'markers' array.
-function addMarker(place) {
-	// console.log(place.name);
+function addMarker(place, listPos) {
 	// Store the marker title.
 	var title = place.name;
 	// Define a variable to store the Wikipedia repsonse link.
@@ -110,9 +121,9 @@ function addMarker(place) {
 		map: map,
 		title: title
 	});
-
-	// Create an infoWindow instance.
-	locationsInfoWindow = new google.maps.InfoWindow();
+	// Set this marker id; univocal for each marker.
+	marker.set('id', 'item_' + listPos);
+	console.log(marker.get('id'));
 
 	// Store the place name.
 	var locationString = place.name;
@@ -147,14 +158,22 @@ function addMarker(place) {
 	// when we click on the marker.
 	// Code taken from the Google Maps API section of the course.
 	marker.addListener('click', function() {
+		// Check if there is a marker already selected; it there is
+		// one, select it from the array and set back its icon to the
+		// normal red value.
+		if (selected_marker !== undefined) {
+			markers[selected_marker].setIcon(red_icon);
+		}
+		// Assign the current marker position inside the markers array
+		// to variable 'selected_marker'.
+		console.log(selected_marker);
+		selected_marker = listPos;
+		console.log(selected_marker);
+		// Call a function to populate the infoWindow on the selected marker.
 		populateInfoWindow(this, locationsInfoWindow, wikiAPIStr);
+		// Set the icon of the selected marker to the green color.
 		marker.setIcon(green_icon);
 	});
-
-	// marker.addListener('mouseover', function() {
-	// 	marker.setIcon(green_icon);
-	// });
-
 	// Insert the marker into the markers array.
 	markers.push(marker);
 }
@@ -174,7 +193,9 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr) {
 		infowindow.open(map, marker);
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
-			infowindow.setMarker = null;
+			// Close the infoWindow on this marker.
+			infowindow.marker = null;
+			// Set the icon of the marker back to red as we close the infoWindow.
 			marker.setIcon(red_icon);
 		});
 	}
@@ -190,13 +211,14 @@ function activateKO() {
 	// Store the position of the map center and the query input value as an Observable.
 	var ViewModel = function() {
 		var self = this;
-		self.position = {
-			center: {
-				lat: 39.2151,
-				lng: 9.1128
-			}
-		};
+		// self.position = {
+		// 	center: {
+		// 		lat: 39.2151,
+		// 		lng: 9.1128
+		// 	}
+		// };
 
+		// Define an Observable variable.
 		self.query = ko.observable();
 		// Update the query value.
 		self.filterSearch = function() {
