@@ -50,3 +50,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Suggestions to modify the Maps markers icon on mouse click:
 * [Stackoverflow - Change marker icons on mouseover (Google Maps V3)](http://stackoverflow.com/questions/8198635/change-marker-icon-on-mouseover-google-maps-v3)
 * [Stackoverflow - Google Maps default icons](http://stackoverflow.com/questions/25368851/google-maps-default-icons)
+* A hint from the discussion forums that helped me fix the problems with infoWindows:
+* [Udacity Discussion Forums - Open and Close InfoWindow onclick?](https://discussions.udacity.com/t/open-and-close-infowindow-onclick/170572/9)
+* Some suggestions on how to give each marker a different id and to change an element background color.
+* [Stackoverflow - Adding IDs to Google Map markers](http://stackoverflow.com/questions/2564320/adding-ids-to-google-map-markers)
+* [Stackoverflow - JavaScript adding an ID attribute to another created element](http://stackoverflow.com/questions/19625646/javascript-adding-an-id-attribute-to-another-created-element)
+* [Stackoverflow - Change background color on anchor in listitem when clicked](http://stackoverflow.com/questions/12940782/change-background-color-on-anchor-in-listitem-when-clicked)

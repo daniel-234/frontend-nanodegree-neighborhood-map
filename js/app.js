@@ -93,7 +93,7 @@ function callback(results, status) {
 			var listItem = document.createElement('li');
 			var newContent = document.createTextNode(place.name);
 			listItem.appendChild(newContent);
-			listItem.id = "item_" + i;
+			listItem.id = "item_list" + i;
 			console.log(listItem.id);
 			uList.appendChild(listItem);
 		}
@@ -160,9 +160,11 @@ function addMarker(place, listPos) {
 	marker.addListener('click', function() {
 		// Check if there is a marker already selected; it there is
 		// one, select it from the array and set back its icon to the
-		// normal red value.
+		// normal red value and set the background color of the
+		// equivalent list element to normal.
 		if (selected_marker !== undefined) {
 			markers[selected_marker].setIcon(red_icon);
+			setListItemBackground(selected_marker, 'white');
 		}
 		// Assign the current marker position inside the markers array
 		// to variable 'selected_marker'.
@@ -170,9 +172,11 @@ function addMarker(place, listPos) {
 		selected_marker = listPos;
 		console.log(selected_marker);
 		// Call a function to populate the infoWindow on the selected marker.
-		populateInfoWindow(this, locationsInfoWindow, wikiAPIStr);
+		populateInfoWindow(this, locationsInfoWindow, wikiAPIStr, selected_marker);
 		// Set the icon of the selected marker to the green color.
 		marker.setIcon(green_icon);
+		// Change the background of the equivalent list item.
+		setListItemBackground(selected_marker, 'red');
 	});
 	// Insert the marker into the markers array.
 	markers.push(marker);
@@ -181,7 +185,7 @@ function addMarker(place, listPos) {
 // Tell the infoWindow to open at this marker and populate it with
 // information specific to this marker.
 // Code taken from the Google Maps API section of the course.
-function populateInfoWindow(marker, infowindow, wikiAPIStr) {
+function populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition) {
 	// Check to make sure the infoWindow is not already open on this marker.
 	if (infowindow.marker != marker) {
 		infowindow.marker = marker;
@@ -197,8 +201,15 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr) {
 			infowindow.marker = null;
 			// Set the icon of the marker back to red as we close the infoWindow.
 			marker.setIcon(red_icon);
+			// Set the background color of the correspondent list item to normal.
+			setListItemBackground(itemPosition, 'white');
 		});
 	}
+}
+
+// Set the background color of the list item at position itemPos to color.
+function setListItemBackground(itemPos, color) {
+	document.getElementById("item_list" + itemPos).style.backgroundColor = color;
 }
 
 // Instantiate the ViewModel and activate KnockoutJS inside a callback function.
@@ -211,13 +222,6 @@ function activateKO() {
 	// Store the position of the map center and the query input value as an Observable.
 	var ViewModel = function() {
 		var self = this;
-		// self.position = {
-		// 	center: {
-		// 		lat: 39.2151,
-		// 		lng: 9.1128
-		// 	}
-		// };
-
 		// Define an Observable variable.
 		self.query = ko.observable();
 		// Update the query value.
