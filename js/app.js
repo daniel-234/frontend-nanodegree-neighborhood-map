@@ -62,6 +62,7 @@ var selected_marker;
 function callback(results, status) {
 	// Store the element with id='input-list'.
 	var elem = document.getElementById('input-list');
+
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
 		// Check if there are old markers and clear them out.
 		if (markers.length > 0) {
@@ -71,40 +72,32 @@ function callback(results, status) {
 			markers = [];
 		}
 
-		// Create an infoWindow instance.
-		locationsInfoWindow = new google.maps.InfoWindow();
-		console.log(locationsInfoWindow);
-
 		// Remove the child elements of elem, if any exists.
 		while (elem.firstChild) {
 			elem.removeChild(elem.firstChild);
 		}
 
+		// Create an infoWindow instance.
+		locationsInfoWindow = new google.maps.InfoWindow();
+		console.log(locationsInfoWindow);
+
 		// Create an unordered list and store it.
 		var uList = document.createElement('ul');
+		// Append the list to the appropriate div.
+		elem.appendChild(uList);
 
 		// For each result, place a marker in the map and add a list item.
 		for (var i = 0; i < results.length; i++) {
 			// Store the result.
 			var place = results[i];
-			// Add a new marker to the map.
-			addMarker(place, i);
-			// Create a list item with the place name as text content and append it.
-			var listItem = document.createElement('li');
-			var newContent = document.createTextNode(place.name);
-			listItem.appendChild(newContent);
-			listItem.id = "item_list" + i;
-			console.log(listItem.id);
-			uList.appendChild(listItem);
+			// Add a new marker and a list item to the map.
+			addMarker(place, i, uList, elem);
 		}
-
-		// Append the unordered list to the div element..
-		elem.appendChild(uList);
 	}
 }
 
 // Create a marker with an infoWindow and insert it into the 'markers' array.
-function addMarker(place, listPos) {
+function addMarker(place, listPos, uList, elem) {
 	// Store the marker title.
 	var title = place.name;
 	// Define a variable to store the Wikipedia repsonse link.
@@ -121,9 +114,13 @@ function addMarker(place, listPos) {
 		map: map,
 		title: title
 	});
-	// Set this marker id; univocal for each marker.
-	marker.set('id', 'item_' + listPos);
-	console.log(marker.get('id'));
+
+	// Create a list item with the place name as text content and append it.
+	var listItem = document.createElement('li');
+	var newContent = document.createTextNode(place.name);
+	listItem.appendChild(newContent);
+	listItem.id = "item_list" + listPos;
+	uList.appendChild(listItem);
 
 	// Store the place name.
 	var locationString = place.name;
@@ -154,32 +151,24 @@ function addMarker(place, listPos) {
 		}
 	});
 
-	// Add an event listener so that the infoWindow only opens
-	// when we click on the marker.
-	// Code taken from the Google Maps API section of the course.
+	// Add an event listener.
+	// Code taken from the Google Maps API section of the course and elaborated for this
+	// app.
 	marker.addListener('click', function() {
-		// Check if there is a marker already selected; it there is
-		// one, select it from the array and set back its icon to the
-		// normal red value and set the background color of the
-		// equivalent list element to normal.
-		if (selected_marker !== undefined) {
-			markers[selected_marker].setIcon(red_icon);
-			setListItemBackground(selected_marker, 'white');
-		}
-		// Assign the current marker position inside the markers array
-		// to variable 'selected_marker'.
-		console.log(selected_marker);
-		selected_marker = listPos;
-		console.log(selected_marker);
-		// Call a function to populate the infoWindow on the selected marker.
-		populateInfoWindow(this, locationsInfoWindow, wikiAPIStr, selected_marker);
-		// Set the icon of the selected marker to the green color.
-		marker.setIcon(green_icon);
-		// Change the background of the equivalent list item.
-		setListItemBackground(selected_marker, 'red');
+		// Set bacground color of the list item, the color of the marker and populates
+		// the infoWindow.
+		selectRightLocation(this, listItem, locationsInfoWindow, wikiAPIStr);
 	});
+
 	// Insert the marker into the markers array.
 	markers.push(marker);
+
+	// Add an event listener to the list element.
+	listItem.addEventListener('click', function() {
+		// Set bacground color of the list item, the color of the marker and populates
+		// the infoWindow.
+		selectRightLocation(marker, this, locationsInfoWindow, wikiAPIStr);
+	});
 }
 
 // Tell the infoWindow to open at this marker and populate it with
@@ -195,6 +184,10 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition) {
 		// Set the infoWindow content.
 		infowindow.setContent(content);
 		infowindow.open(map, marker);
+		// Set the icon of the marker back to red as we close the infoWindow.
+		marker.setIcon(green_icon);
+		// Set the background color of the correspondent list item to normal.
+		setListItemBackground(itemPosition, 'red');
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
 			// Close the infoWindow on this marker.
@@ -210,6 +203,26 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition) {
 // Set the background color of the list item at position itemPos to color.
 function setListItemBackground(itemPos, color) {
 	document.getElementById("item_list" + itemPos).style.backgroundColor = color;
+}
+
+// Set the background color of the selected item and the color of the equivalent marker.
+// Populate the appropriate infoWindow.
+function selectRightLocation(marker, listItem, locationsInfoWindow, wikiAPIStr) {
+	// Store the position of the selected list item.
+	var itemNumber = listItem.id.substr(9);
+	// Check if there is a marker already selected; it there is
+	// one, select it from the array and set back its icon to the
+	// normal red value and set the background color of the
+	// equivalent list element to normal.
+	if (selected_marker !== undefined) {
+		markers[selected_marker].setIcon(red_icon);
+		setListItemBackground(selected_marker, 'white');
+	}
+	// Assign the current item position inside the markers array
+	// to variable 'selected_marker'.
+	selected_marker = itemNumber;
+	// Call a function to populate the infoWindow on the selected marker.
+	populateInfoWindow(marker, locationsInfoWindow, wikiAPIStr, itemNumber);
 }
 
 // Instantiate the ViewModel and activate KnockoutJS inside a callback function.
