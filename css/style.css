@@ -11,7 +11,8 @@ html, body {
 }
 
 /* In a mobile first design, the two divs are stacked along a single column.
-   This implementation is also maintained in portrait orientaion for all devices. */
+   This implementation is also maintained in portrait orientaion for all devices.
+*/
 .col-list-view {
 	width: 100%;
 	height: 35%;
@@ -24,8 +25,12 @@ html, body {
 
 /* For landscape orientation, regardless of the screen size, we want the list
    view to take only 25% of the available width.
-   We also want the map view to take 75% of the available width. */
-@media screen and (orientation: landscape) {
+   We also want the map view to take 75% of the available width.
+   Add a min-device-width to prevent that the keyboard in small devices could
+   change the divs position when showing up to let the user type into the input
+   search field.
+*/
+@media screen and (min-device-width: 500px) and (orientation: landscape) {
 	.col-list-view {
 		float: left;
 		width: 25%;
