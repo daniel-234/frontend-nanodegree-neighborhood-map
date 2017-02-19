@@ -86,6 +86,7 @@ function callback(results, status) {
 		// Append the list to the appropriate div.
 		elem.appendChild(uList);
 
+
 		// For each result, place a marker in the map and add a list item.
 		for (var i = 0; i < results.length; i++) {
 			// Store the result.

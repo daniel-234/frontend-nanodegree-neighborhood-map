@@ -38,3 +38,99 @@ html, body {
 		height: 100%;
 	}
 }
+
+/* Add Media queries to target different devices and add a scrollbar to the list
+   whenever the result list is higher than the div that hosts it.
+   This way even the hidden result locations can be chosen by the user.
+   For every targeted device, a different height was considered depending on
+   the device orientation.
+   In landscape mode the list height is bigger because it can take up
+   all the div height; in portrait orientation, instead, the list
+   can only take up the space left by the input search bar and the map.
+   Note that this devices list takes into account only some models and their
+   official characteristics as of late 2016.
+   It is possible to adapt them to a change in screen size in the future by
+   modifying the height values or to target more devices by adding new media
+   queries.
+*/
+
+/* Target an iPhone 5 screen */
+@media screen and (min-device-height: 320px) and (orientation: landscape) {
+	.listWrapper {
+		height: 285px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target an iPhone 5 screen */
+@media screen and (min-device-height: 568px) and (orientation: portrait) {
+	.listWrapper {
+		height: 164px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target a Galaxy S5 screen */
+@media screen and (min-device-height: 360px) and (orientation: landscape) {
+	.listWrapper {
+		height: 326px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target a Galaxy S5 screen */
+@media screen and (min-device-height: 640px) and (orientation: portrait) {
+	.listWrapper {
+		height: 190px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target a Nexus 6P and an iPhone 6 and iPhone 6 Plus screen */
+@media screen and (min-device-height: 412px) and (orientation: landscape) {
+	.listWrapper {
+		height: 380px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target a Nexus 6P and an iPhone 6 and iPhone 6 Plus screen */
+@media screen and (min-device-height: 732px) and (orientation: portrait) {
+	.listWrapper {
+		height: 224px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target an iPad screen */
+@media screen and (min-device-height: 768px) and (orientation: landscape) {
+	.listWrapper {
+		height: 699.6px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target an iPad screen */
+@media screen and (min-device-height: 1024px) and (orientation: portrait) {
+	.listWrapper {
+		height: 324.4px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target an iPad Pro screen */
+@media screen and (min-device-height: 1024px) and (orientation: landscape) {
+	.listWrapper {
+		height: 990px;
+		overflow-y: scroll;
+	}
+}
+
+/* Target an iPad screen */
+@media screen and (min-device-height: 1366px) and (orientation: portrait) {
+	.listWrapper {
+		height: 444px;
+		overflow-y: scroll;
+	}
+}
+
