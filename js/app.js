@@ -26,7 +26,12 @@ ko.bindingHandlers.map = {
 		// Create a request for the service callback function.
 		var request = {
 			location: cityOfCagliari,
-			radius: 500,
+			// Instruct the Places service to prefer showing results within this circle.
+			// If turned on, the following bounds parameter must be turned off.
+			// radius: 500,
+			// A google.maps.LatLngBounds object defining the rectangle in which to search.
+			// If turned on, the former radius parameter must be turned off.
+			bounds: map.getBounds(),
 			query: 'restaurant'
 		};
 		// Initiate a text search by calling the PlacesService's textSearch() method.
@@ -42,7 +47,12 @@ ko.bindingHandlers.map = {
 		// Create a request for the service callback function.
 		var request = {
 			location: cityOfCagliari,
-			radius: 500,
+			// Instruct the Places service to prefer showing results within this circle.
+			// If turned on, the following bounds parameter must be turned off.
+			// radius: 500,
+			// A google.maps.LatLngBounds object defining the rectangle in which to search.
+			// If turned on, the former radius parameter must be turned off.
+			bounds: map.getBounds(),
 			query: value
 		};
 		// Initiate a text search by calling the PlacesService's textSearch() method.
@@ -79,7 +89,6 @@ function callback(results, status) {
 
 		// Create an infoWindow instance.
 		locationsInfoWindow = new google.maps.InfoWindow();
-		console.log(locationsInfoWindow);
 
 		// Create an unordered list and store it.
 		var uList = document.createElement('ul');
