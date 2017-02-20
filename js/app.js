@@ -8,6 +8,12 @@ var cityOfCagliari = {
 // Create an array to hold the markers.
 var markers = [];
 
+// Store the position of the selected marker; undefined as page loads.
+// As a marker is clicked, it stores its position inside the markers
+// array; it is called to set the icon back to the original color when
+// another marker is clicked.
+var selected_marker;
+
 // Store the map icon markers.
 var green_icon = 'img/green_marker.png';
 var red_icon = 'img/red_marker.png';
@@ -61,12 +67,6 @@ ko.bindingHandlers.map = {
 		service.textSearch(request, callback);
 	}
 };
-
-// Store the position of the selected marker; undefined as page loads.
-// As a marker is clicked, it stores its position inside the markers
-// array; it is called to set the icon back to the original color when
-// another marker is clicked.
-var selected_marker;
 
 // Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
 function callback(results, status) {
@@ -194,10 +194,10 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition) {
 		// Set the infoWindow content.
 		infowindow.setContent(content);
 		infowindow.open(map, marker);
-		// Set the icon of the marker back to red as we close the infoWindow.
+		// Set the icon of the marker to green as the infowindow opens.
 		marker.setIcon(green_icon);
-		// Set the background color of the correspondent list item to normal.
-		setListItemBackground(itemPosition, 'red');
+		// Highlight the background color of the correspondent list item.
+		setListItemBackground(itemPosition, 'limegreen');
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
 			// Close the infoWindow on this marker.
