@@ -224,7 +224,7 @@ function selectRightLocation(marker, listItem, locationsInfoWindow, wikiAPIStr) 
 	// one, select it from the array and set back its icon to the
 	// normal red value and set the background color of the
 	// equivalent list element to normal.
-	if (selected_marker !== undefined) {
+	if ((itemNumber !== selected_marker) && (selected_marker !== undefined)) {
 		markers[selected_marker].setIcon(red_icon);
 		setListItemBackground(selected_marker, 'white');
 	}
