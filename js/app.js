@@ -92,6 +92,8 @@ function callback(results, status) {
 
 		// Create an unordered list and store it.
 		var uList = document.createElement('ul');
+		// Append a class to the unordered list.
+		uList.classList.add('no-bullets');
 		// Append the list to the appropriate div.
 		elem.appendChild(uList);
 

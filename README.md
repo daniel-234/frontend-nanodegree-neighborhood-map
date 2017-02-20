@@ -57,4 +57,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - JavaScript adding an ID attribute to another created element](http://stackoverflow.com/questions/19625646/javascript-adding-an-id-attribute-to-another-created-element)
 * [Stackoverflow - Change background color on anchor in listitem when clicked](http://stackoverflow.com/questions/12940782/change-background-color-on-anchor-in-listitem-when-clicked)
 * [Stackoverflow - Get li element onclick with pure JavaScript without applying onClick to each element](http://stackoverflow.com/questions/26204120/get-li-element-onclick-with-pure-javascript-without-applying-onclick-to-each-ele)
-[Todd Motto - Attaching event handlers to dynamically created JavaScript elements](https://toddmotto.com/attaching-event-handlers-to-dynamically-created-javascript-elements/)
+* [Todd Motto - Attaching event handlers to dynamically created JavaScript elements](https://toddmotto.com/attaching-event-handlers-to-dynamically-created-javascript-elements/)
+* [Stackoverflow - How to append a CSS class to an element by JavaScript](http://stackoverflow.com/questions/927312/how-to-append-a-css-class-to-an-element-by-javascript)
+* [Stackoverflow - Need an unordered list without any bullets](http://stackoverflow.com/questions/1027354/need-an-unordered-list-without-any-bullets)

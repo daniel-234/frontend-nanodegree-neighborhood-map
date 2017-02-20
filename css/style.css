@@ -23,6 +23,11 @@ html, body {
 	height: 65%;
 }
 
+/* Remove bullet points from the unordered list items. */
+.no-bullets {
+	list-style-type: none;
+}
+
 /* For landscape orientation, regardless of the screen size, we want the list
    view to take only 25% of the available width.
    We also want the map view to take 75% of the available width.
