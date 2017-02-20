@@ -60,3 +60,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Todd Motto - Attaching event handlers to dynamically created JavaScript elements](https://toddmotto.com/attaching-event-handlers-to-dynamically-created-javascript-elements/)
 * [Stackoverflow - How to append a CSS class to an element by JavaScript](http://stackoverflow.com/questions/927312/how-to-append-a-css-class-to-an-element-by-javascript)
 * [Stackoverflow - Need an unordered list without any bullets](http://stackoverflow.com/questions/1027354/need-an-unordered-list-without-any-bullets)
+I found this post on how to make a child div scrollable when it exceeds its parent height:
+[Stackoverflow - How to make child div scrollable when it exceeds parent height](http://stackoverflow.com/questions/27784727/how-to-make-child-div-scrollable-when-it-exceeds-parent-height)
