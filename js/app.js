@@ -25,7 +25,7 @@ ko.bindingHandlers.map = {
 	// the callback is used on (in this case, the div with id='map').
 	init: function(element, valueAccessor) {
 		// Create a new map JavaScript object using the coordinates
-		// given by the center position property of the ViewModel.
+		// given by the center property.
 		map = new google.maps.Map(element, {
 			zoom: 15,
 			center: cityOfCagliari
@@ -33,11 +33,11 @@ ko.bindingHandlers.map = {
 		// Create a request for the service callback function.
 		var request = {
 			location: cityOfCagliari,
-			// Instruct the Places service to prefer showing results within this circle.
-			// If turned on, the following bounds parameter must be turned off.
+			// Instruct the Places service to prefer showing results within this area.
+			// If radius is turned on, the bounds parameter must be turned off.
 			// radius: 500,
 			// A google.maps.LatLngBounds object defining the rectangle in which to search.
-			// If turned on, the former radius parameter must be turned off.
+			// If bounds is turned on, the radius parameter must be turned off.
 			bounds: map.getBounds(),
 			query: 'restaurant'
 		};
@@ -54,11 +54,11 @@ ko.bindingHandlers.map = {
 		// Create a request for the service callback function.
 		var request = {
 			location: cityOfCagliari,
-			// Instruct the Places service to prefer showing results within this circle.
-			// If turned on, the following bounds parameter must be turned off.
+			// Instruct the Places service to prefer showing results within this area.
+			// If radius is turned on, the bounds parameter must be turned off.
 			// radius: 500,
 			// A google.maps.LatLngBounds object defining the rectangle in which to search.
-			// If turned on, the former radius parameter must be turned off.
+			// If bounds is turned on, the radius parameter must be turned off.
 			bounds: map.getBounds(),
 			query: value
 		};
@@ -98,7 +98,6 @@ function callback(results, status) {
 		// Append the list to the appropriate div.
 		elem.appendChild(uList);
 
-
 		// For each result, place a marker in the map and add a list item.
 		for (var i = 0; i < results.length; i++) {
 			// Store the result.
@@ -110,12 +109,13 @@ function callback(results, status) {
 }
 
 // Create a marker with an infoWindow and insert it into the 'markers' array.
+// Create a list item connected to an appropriate marker.
 function addMarker(place, listPos, uList, elem) {
 	// Store the marker title.
 	var title = place.name;
 	// Define a variable to store the Wikipedia repsonse link.
 	var wikiAPIStr;
-	// Create a new marker for each place
+	// Create a new marker for each place.
 	var marker = new google.maps.Marker({
 		// The position field of the Marker options object literal
 		// taken by the google.maps.Marker constructor specifies a
@@ -149,7 +149,7 @@ function addMarker(place, listPos, uList, elem) {
 		success: function(response) {
 			// Take the first element of the response Array as the article title.
 			var articleTitle = response[0];
-			// There may be more than one article in the response 4th element. Take only the first link,
+			// There may be more than one article in the response's 4th element. Take only the first link,
 			// that should be the most representative.
 			var articleUrl = response[3][0];
 			// The AJAX response is an Array with 4 elements. The Wikipedia link that's of interest to the
@@ -178,7 +178,7 @@ function addMarker(place, listPos, uList, elem) {
 	// Code taken from the Google Maps API section of the course and elaborated for this
 	// app.
 	marker.addListener('click', function() {
-		// Set bacground color of the list item, the color of the marker and populates
+		// Set background color of the list item, the color of the marker and populates
 		// the infoWindow.
 		selectRightLocation(this, listItem, locationsInfoWindow, wikiAPIStr);
 	});
@@ -188,7 +188,7 @@ function addMarker(place, listPos, uList, elem) {
 
 	// Add an event listener to the list element.
 	listItem.addEventListener('click', function() {
-		// Set bacground color of the list item, the color of the marker and populates
+		// Set background color of the list item, the color of the marker and populates
 		// the infoWindow.
 		selectRightLocation(marker, this, locationsInfoWindow, wikiAPIStr);
 	});
@@ -231,12 +231,12 @@ function setListItemBackground(itemPos, color) {
 // Set the background color of the selected item and the color of the equivalent marker.
 // Populate the appropriate infoWindow.
 function selectRightLocation(marker, listItem, locationsInfoWindow, wikiAPIStr) {
-	// Store the position of the selected list item.
+	// Store the position of the selected list item, taking it from its id.
 	var itemNumber = listItem.id.substr(9);
-	// Check if there is a marker already selected; it there is
-	// one, select it from the array and set back its icon to the
-	// normal red value and set the background color of the
-	// equivalent list element to normal.
+	// Check if there is a marker already selected; if there is
+	// one, deselect it.
+	// Retrieve it from the array, set back its icon to the normal red icon and
+	// set the background color of the equivalent list element to normal.
 	if ((itemNumber !== selected_marker) && (selected_marker !== undefined)) {
 		markers[selected_marker].setIcon(red_icon);
 		setListItemBackground(selected_marker, 'white');
@@ -244,7 +244,8 @@ function selectRightLocation(marker, listItem, locationsInfoWindow, wikiAPIStr) 
 	// Assign the current item position inside the markers array
 	// to variable 'selected_marker'.
 	selected_marker = itemNumber;
-	// Call a function to populate the infoWindow on the selected marker.
+	// Call a function to higlight the selected list item and the equivalent marker and
+	// populate the chosen marker's infoWindow..
 	populateInfoWindow(marker, locationsInfoWindow, wikiAPIStr, itemNumber);
 }
 
