@@ -44,9 +44,10 @@
 				<div data-bind="map: query" class="col-map-view" id="map"></div>
 			</div>
 		</div>
-		<!-- Load Google Maps asynchronously -->
+		<!-- Load Google Maps asynchronously.
+		Make use of the event handler 'onerror' to call a function named googleError if the script fails to load -->
 		<script async defer
-		    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&libraries=places&callback=activateKO">
+		    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&libraries=places&callback=activateKO" onerror="googleError()">
 		</script>
 	</body>
 </html>

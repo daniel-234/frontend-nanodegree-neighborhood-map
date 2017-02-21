@@ -29,9 +29,18 @@ html, body {
 	list-style-type: none;
 }
 
-/* For landscape orientation, regardless of the screen size, we want the list
-   view to take only 25% of the available width.
-   We also want the map view to take 75% of the available width.
+/* Position the element with class='error-message' at the center of the map div. */
+.error-message {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%);
+	font-size: medium;
+}
+
+/* In landscape orientation, regardless of the screen size, the list view should take
+   only 25% of the available width. The map view should instead take 75% of it.
    Add a min-device-width to prevent that the keyboard in small devices could
    change the divs position when showing up to let the user type into the input
    search field.
@@ -47,5 +56,19 @@ html, body {
 		float: right;
 		width: 75%;
 		height: 100%;
+	}
+}
+
+/* Adjust error message font size for small screens. */
+@media screen and (max-device-width: 400px) and (orientation: portrait) {
+	.error-message {
+		font-size: small;
+	}
+}
+
+/* Adjust error message font size for big screens. */
+@media screen and (min-device-width: 700px){
+	.error-message {
+		font-size: x-large;
 	}
 }

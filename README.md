@@ -62,3 +62,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - Need an unordered list without any bullets](http://stackoverflow.com/questions/1027354/need-an-unordered-list-without-any-bullets)
 I found this post on how to make a child div scrollable when it exceeds its parent height:
 [Stackoverflow - How to make child div scrollable when it exceeds parent height](http://stackoverflow.com/questions/27784727/how-to-make-child-div-scrollable-when-it-exceeds-parent-height)
+* Suggestions on Error Handling:
+* [Udacity Discussions Forums - Handling Google Maps in Async and Fallback](https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282)
+* [W£C - Centering Things](https://www.w3.org/Style/Examples/007/center.en.html)
+* [Stackoverflow - Add a "new-line" in innerHTML](http://stackoverflow.com/questions/19438895/add-a-new-line-in-innerhtml)
+* [Stackoverflow - JSONP request error handling](http://stackoverflow.com/questions/19035557/jsonp-request-error-handling)

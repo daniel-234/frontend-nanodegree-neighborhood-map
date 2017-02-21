@@ -1,6 +1,7 @@
 // Define global variables for the map and infoWindows instances.
 var map, locationsInfoWindow, service;
-// Store the map center coordinates.
+// Store the map center coordinates and set them to the city center
+// of Cagliari, the capital town of Sardinia (IT).
 var cityOfCagliari = {
 				lat: 39.2151,
 				lng: 9.1128
@@ -160,6 +161,16 @@ function addMarker(place, listPos, uList, elem) {
 			} else {
 				wikiAPIStr = '<p>No results were found on Wikipedia.</p>'
 			}
+		},
+		// Handle error if the AJAX method fails to load the API.
+		error: function(parsedjson, textStatus, errorThrown) {
+			// Display the error message on the console to let the user have more details about it.
+			console.log('parsedJSON: ' + parsedjson.statusText + ' ' + parsedjson.status);
+			console.log('Error status: ' + textStatus);
+			console.log('Error thrown: ' + textStatus);
+			console.log('parsedJSON: ' + JSON.stringify(parsedjson));
+			// Display a string prompting the user to check the console for details.
+			wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>'
 		}
 	});
 
@@ -235,6 +246,16 @@ function selectRightLocation(marker, listItem, locationsInfoWindow, wikiAPIStr) 
 	selected_marker = itemNumber;
 	// Call a function to populate the infoWindow on the selected marker.
 	populateInfoWindow(marker, locationsInfoWindow, wikiAPIStr, itemNumber);
+}
+
+// Display an error message to the user if the map fails to load.
+function googleError() {
+	var message = document.createElement('p');
+	message.classList.add('error-message');
+	message.innerHTML = 'Something went wrong when loading Google Maps.' + '<br />' +
+		'Check the JavaScript console for details.';
+	var mapDiv = document.getElementById('map');
+	mapDiv.append(message);
 }
 
 // Instantiate the ViewModel and activate KnockoutJS inside a callback function.
