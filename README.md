@@ -9,9 +9,11 @@ To view the website, download a copy of the project to your local machine and op
 
 ## Built With
 
-* [Bootstrap](http://getbootstrap.com/) - The web framework used
-* [Google Maps API](https://developers.google.com/maps/web/) - The map API used
+* [Bootstrap](http://getbootstrap.com/) - Framework for developing responsive, mobile first websites
+* [Knockout](http://knockoutjs.com/) - A JavaScript library that simplifies dynamic JavaScript UIs
 * [jQuery](http://jquery.com/) - A JavaScript library for simpler HTML manipulation and event handling
+* [Google Maps API](https://developers.google.com/maps/web/) - The map API used
+* [MediaWikiAPI for Wikipedia](https://www.mediawiki.org/wiki/API:Main_page) - the third party API used to provide information when a location is selected
 
 ## Author
 
@@ -64,6 +66,6 @@ I found this post on how to make a child div scrollable when it exceeds its pare
 [Stackoverflow - How to make child div scrollable when it exceeds parent height](http://stackoverflow.com/questions/27784727/how-to-make-child-div-scrollable-when-it-exceeds-parent-height)
 * Suggestions on Error Handling:
 * [Udacity Discussions Forums - Handling Google Maps in Async and Fallback](https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282)
-* [W£C - Centering Things](https://www.w3.org/Style/Examples/007/center.en.html)
+* [W3C - Centering Things](https://www.w3.org/Style/Examples/007/center.en.html)
 * [Stackoverflow - Add a "new-line" in innerHTML](http://stackoverflow.com/questions/19438895/add-a-new-line-in-innerhtml)
 * [Stackoverflow - JSONP request error handling](http://stackoverflow.com/questions/19035557/jsonp-request-error-handling)
