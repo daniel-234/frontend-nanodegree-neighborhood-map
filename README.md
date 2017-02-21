@@ -1,11 +1,13 @@
 # Neighborhood Map
 
-As project 5 for the Front-End Web Developer Nanodegree, I built a responsive website that will display a map where some markers will identify
-locations a user is interested in.
+Project 5 for the Front-End Web Developer Nanodegree consisted in the development of a single page application featuring a map of a chosen neighborhood.
+Some functionality was added to this map, including highlighted locations and third-party data about these locations.
+This app was developed making use of Knockout JS, a JavaScript framework implementing the MVVM design pattern, to assist in organizing code in a manageable way.
+The map is loaded using the Google Maps API library and the MediaWikiAPI for Wikipedia is used to add specific content, when available, to the highlighted locations.
 
 ## Getting Started
 
-To view the website, download a copy of the project to your local machine and open the file index.html with your browser.
+To load the app, download a copy of the project to your local machine and open the file index.html with your browser.
 
 ## Built With
 
@@ -54,7 +56,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - Google Maps default icons](http://stackoverflow.com/questions/25368851/google-maps-default-icons)
 * A hint from the discussion forums that helped me fix the problems with infoWindows:
 * [Udacity Discussion Forums - Open and Close InfoWindow onclick?](https://discussions.udacity.com/t/open-and-close-infowindow-onclick/170572/9)
-* Some suggestions on how to give each marker a different id and to change an element background color.
+* Some suggestions on how to give each marker a different id and to change an element background color:
 * [Stackoverflow - Adding IDs to Google Map markers](http://stackoverflow.com/questions/2564320/adding-ids-to-google-map-markers)
 * [Stackoverflow - JavaScript adding an ID attribute to another created element](http://stackoverflow.com/questions/19625646/javascript-adding-an-id-attribute-to-another-created-element)
 * [Stackoverflow - Change background color on anchor in listitem when clicked](http://stackoverflow.com/questions/12940782/change-background-color-on-anchor-in-listitem-when-clicked)
@@ -62,10 +64,12 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Todd Motto - Attaching event handlers to dynamically created JavaScript elements](https://toddmotto.com/attaching-event-handlers-to-dynamically-created-javascript-elements/)
 * [Stackoverflow - How to append a CSS class to an element by JavaScript](http://stackoverflow.com/questions/927312/how-to-append-a-css-class-to-an-element-by-javascript)
 * [Stackoverflow - Need an unordered list without any bullets](http://stackoverflow.com/questions/1027354/need-an-unordered-list-without-any-bullets)
-I found this post on how to make a child div scrollable when it exceeds its parent height:
+* I found this post on how to make a child div scrollable when it exceeds its parent height:
 [Stackoverflow - How to make child div scrollable when it exceeds parent height](http://stackoverflow.com/questions/27784727/how-to-make-child-div-scrollable-when-it-exceeds-parent-height)
 * Suggestions on Error Handling:
 * [Udacity Discussions Forums - Handling Google Maps in Async and Fallback](https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282)
 * [W3C - Centering Things](https://www.w3.org/Style/Examples/007/center.en.html)
 * [Stackoverflow - Add a "new-line" in innerHTML](http://stackoverflow.com/questions/19438895/add-a-new-line-in-innerhtml)
 * [Stackoverflow - JSONP request error handling](http://stackoverflow.com/questions/19035557/jsonp-request-error-handling)
+* Acknowledgement for the README template:
+* [PurpleBooth - README-Template.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
