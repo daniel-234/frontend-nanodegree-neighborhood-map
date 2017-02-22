@@ -23,34 +23,41 @@ var redIcon = 'img/red_marker.png';
 ko.bindingHandlers.map = {
 	// Define an 'init' callback to be called once for the DOM element
 	// the callback is used on (in this case, the div with id='map').
-	init: function(element, valueAccessor) {
+	// init: function(element, valueAccessor) {
+	// 	// Create a new map JavaScript object using the coordinates
+	// 	// given by the center property.
+	// 	map = new google.maps.Map(element, {
+	// 		zoom: 15,
+	// 		center: cityOfCagliari
+	// 	});
+	// 	// Create a request for the service callback function.
+	// 	var request = {
+	// 		location: cityOfCagliari,
+	// 		// Instruct the Places service to prefer showing results within this area.
+	// 		// If radius is turned on, the bounds parameter must be turned off.
+	// 		// radius: 500,
+	// 		// A google.maps.LatLngBounds object defining the rectangle in which to search.
+	// 		// If bounds is turned on, the radius parameter must be turned off.
+	// 		bounds: map.getBounds(),
+	// 		query: 'restaurant'
+	// 	};
+	// 	// Initiate a text search by calling the PlacesService's textSearch() method.
+	// 	// Return information about a set of places based on a string.
+	// 	service = new google.maps.places.PlacesService(map);
+	// 	service.textSearch(request, callback);
+	// },
+	// Define an 'update' callback to be called when any dependencies that
+	// are accessed change.
+	update: function(element, valueAccessor) {
+		// Get the current model property that is involved in this binding
+		var value = String(ko.unwrap(valueAccessor()));
+
 		// Create a new map JavaScript object using the coordinates
 		// given by the center property.
 		map = new google.maps.Map(element, {
 			zoom: 15,
 			center: cityOfCagliari
 		});
-		// Create a request for the service callback function.
-		var request = {
-			location: cityOfCagliari,
-			// Instruct the Places service to prefer showing results within this area.
-			// If radius is turned on, the bounds parameter must be turned off.
-			// radius: 500,
-			// A google.maps.LatLngBounds object defining the rectangle in which to search.
-			// If bounds is turned on, the radius parameter must be turned off.
-			bounds: map.getBounds(),
-			query: 'restaurant'
-		};
-		// Initiate a text search by calling the PlacesService's textSearch() method.
-		// Return information about a set of places based on a string.
-		service = new google.maps.places.PlacesService(map);
-		service.textSearch(request, callback);
-	},
-	// Define an 'update' callback to be called when any dependencies that
-	// are accessed change.
-	update: function(element, valueAccessor) {
-		// Get the current model property that is involved in this binding
-		var value = String(ko.unwrap(valueAccessor()));
 		// Create a request for the service callback function.
 		var request = {
 			location: cityOfCagliari,
@@ -105,6 +112,9 @@ function callback(results, status) {
 			// Add a new marker and a list item to the map.
 			addMarker(place, i, uList, elem);
 		}
+	} else {
+		alert('There was a problem contacting the Google servers. Please, check the JavaScript console fo more details.');
+		console.log(google.maps.places.PlacesServiceStatus);
 	}
 }
 
@@ -270,7 +280,7 @@ function activateKO() {
 	var ViewModel = function() {
 		var self = this;
 		// Define an Observable variable.
-		self.query = ko.observable();
+		self.query = ko.observable('restaurant');
 		// Update the query value.
 		self.filterSearch = function() {
 			self.query(self.query());
