@@ -14,8 +14,8 @@
 	</head>
 	<body>
 		<div class="container">
-			<div class="row">
-				<div class="col-list-view">
+			<main class="row">
+				<aside class="col-list-view">
 					<!-- Form element with a filter button.
 					See 'http://getbootstrap.com/css/#forms-inline' and
 					'http://getbootstrap.com/components/#input-groups'. -->
@@ -30,13 +30,13 @@
 					</form>
 					<!-- Element to attach the dynamically created list to. -->
 					<div id="input-list" class="listWrapper"></div>
-				</div>
+				</aside>
 				<!-- Create the map View from the ViewModel defined in app.js.
 				The binding name 'map' matches the custom binding handler
 				defined in app.js, while the binding value 'position' is
 				the JavaScript property defined in the ViewModel. -->
-				<div data-bind="map: query" class="col-map-view" id="map"></div>
-			</div>
+				<article data-bind="map: query" class="col-map-view" id="map"></article>
+			</main>
 		</div>
 		<!-- jQuery Google CDN -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
