@@ -13,11 +13,11 @@ var markers = [];
 // As a marker is clicked, it stores its position inside the markers
 // array; it is called to set the icon back to the original color when
 // another marker is clicked.
-var selected_marker;
+var selectedMarker;
 
 // Store the map icon markers.
-var green_icon = 'img/green_marker.png';
-var red_icon = 'img/red_marker.png';
+var greenIcon = 'img/green_marker.png';
+var redIcon = 'img/red_marker.png';
 
 // Create a custom binding handler to interact with the Google Maps API.
 ko.bindingHandlers.map = {
@@ -159,7 +159,7 @@ function addMarker(place, listPos, uList, elem) {
 			if (response[3].length > 0) {
 				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + articleTitle + '</a></p>';
 			} else {
-				wikiAPIStr = '<p>No results were found on Wikipedia.</p>'
+				wikiAPIStr = '<p>No results were found on Wikipedia.</p>';
 			}
 		},
 		// Handle error if the AJAX method fails to load the API.
@@ -170,7 +170,7 @@ function addMarker(place, listPos, uList, elem) {
 			console.log('Error thrown: ' + textStatus);
 			console.log('parsedJSON: ' + JSON.stringify(parsedjson));
 			// Display a string prompting the user to check the console for details.
-			wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>'
+			wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>';
 		}
 	});
 
@@ -203,12 +203,12 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition) {
 		infowindow.marker = marker;
 		// Store the marker title and a Wikipedia link.
 		var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-			'<div>' + wikiAPIStr + '</div></div>'
+			'<div>' + wikiAPIStr + '</div></div>';
 		// Set the infoWindow content.
 		infowindow.setContent(content);
 		infowindow.open(map, marker);
 		// Set the icon of the marker to green as the infowindow opens.
-		marker.setIcon(green_icon);
+		marker.setIcon(greenIcon);
 		// Highlight the background color of the correspondent list item.
 		setListItemBackground(itemPosition, 'limegreen');
 		// Make sure the marker property is cleared if the infoWindow is closed.
@@ -216,7 +216,7 @@ function populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition) {
 			// Close the infoWindow on this marker.
 			infowindow.marker = null;
 			// Set the icon of the marker back to red as we close the infoWindow.
-			marker.setIcon(red_icon);
+			marker.setIcon(redIcon);
 			// Set the background color of the correspondent list item to normal.
 			setListItemBackground(itemPosition, 'white');
 		});
@@ -237,13 +237,13 @@ function selectRightLocation(marker, listItem, locationsInfoWindow, wikiAPIStr) 
 	// one, deselect it.
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
-	if ((itemNumber !== selected_marker) && (selected_marker !== undefined)) {
-		markers[selected_marker].setIcon(red_icon);
-		setListItemBackground(selected_marker, 'white');
+	if ((itemNumber !== selectedMarker) && (selectedMarker !== undefined)) {
+		markers[selectedMarker].setIcon(redIcon);
+		setListItemBackground(selectedMarker, 'white');
 	}
 	// Assign the current item position inside the markers array
-	// to variable 'selected_marker'.
-	selected_marker = itemNumber;
+	// to variable 'selectedMarker'.
+	selectedMarker = itemNumber;
 	// Call a function to higlight the selected list item and the equivalent marker and
 	// populate the chosen marker's infoWindow..
 	populateInfoWindow(marker, locationsInfoWindow, wikiAPIStr, itemNumber);
