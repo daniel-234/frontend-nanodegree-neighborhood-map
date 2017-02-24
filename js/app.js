@@ -6,8 +6,11 @@ var cityOfCagliari = {
 				lat: 39.2151,
 				lng: 9.1128
 			};
+
+var mapDiv = document.getElementById('map');
 // Create an array to hold the markers.
 var markers = [];
+var places = [];
 
 // Store the position of the selected marker; undefined as page loads.
 // As a marker is clicked, it stores its position inside the markers
@@ -76,10 +79,73 @@ ko.bindingHandlers.map = {
 	}
 };
 
+
+function initMap() {
+	// Create a new map JavaScript object using the coordinates
+	// given by the center property.
+	map = new google.maps.Map(mapDiv, {
+		zoom: 15,
+		center: cityOfCagliari
+	});
+
+	var input = document.getElementById('pac-input');
+	var searchBox = new google.maps.places.SearchBox(input);
+
+	searchBox.addListener('places_changed', function() {
+		places = searchBox.getPlaces();
+		viewModel.locations(places);
+
+		if (places.length == 0) {
+			return;
+		}
+
+		// Clear out the old markers
+		markers.forEach(function(marker) {
+			marker.setMap(null);
+		});
+		markers = [];
+
+		// For each place, get the name and location
+		var bounds = new google.maps.LatLngBounds();
+		places.forEach(function(place) {
+			if(!place.geometry) {
+				console.log('Returned place contains no geometry');
+				return;
+			}
+
+			console.log(places);
+
+			// Create a marker for each place
+			markers.push(new google.maps.Marker({
+				map: map,
+				title: place.name,
+				position: place.geometry.location
+			}));
+
+			if (place.geometry.viewport) {
+				// Only geocodes have viewport
+				bounds.union(place.geometry.viewport);
+			} else {
+				bounds.extend(place.geometry.location);
+			}
+		});
+
+		map.fitBounds(bounds);
+	});
+}
+
+
 // Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
 function callback(results, status) {
 	// Store the element with id='input-list'.
 	var elem = document.getElementById('input-list');
+
+	locations = results;
+
+
+	console.log(markers);
+	console.log(locations);
+
 
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
 		// Check if there are old markers and clear them out.
@@ -275,18 +341,27 @@ function googleError() {
 //
 // Suggestion taken from a response in the discussion forum:
 // https://discussions.udacity.com/t/map-async-moved-after-app-js/216797/2
-function activateKO() {
+// function activateKO() {
 	// Store the position of the map center and the query input value as an Observable.
-	var ViewModel = function() {
+	var oldViewModel = function() {
 		var self = this;
 		// Define an Observable variable.
-		self.query = ko.observable('restaurant');
+		// self.query = ko.observable('restaurant');
+		self.locations = ko.observableArray(places);
+		console.log(self.locations());
 		// Update the query value.
 		self.filterSearch = function() {
 			self.query(self.query());
 		};
 	};
 
+	function locationsViewModel(places) {
+		var self = this;
+		self.locations = ko.observableArray(places || []);
+	}
+
+	var viewModel = new locationsViewModel();
+
 	// Activate KnockoutJS.
-	ko.applyBindings(new ViewModel());
-}
+	ko.applyBindings(viewModel);
+// }

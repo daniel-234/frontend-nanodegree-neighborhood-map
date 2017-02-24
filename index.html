@@ -19,23 +19,37 @@
 					<!-- Form element with a filter button.
 					See 'http://getbootstrap.com/css/#forms-inline' and
 					'http://getbootstrap.com/components/#input-groups'. -->
-					<form data-bind="submit: filterSearch" class="input-group">
+					<!-- <form data-bind="submit: filterSearch" class="input-group"> -->
 						<!-- Add Bootstrap class="form-control" to the input to give it width=100%. -->
-						<input data-bind="value: query" class="form-control"/>
+						<!-- <input data-bind="value: query" class="form-control" id="pac-input" placeholder="Search Box"> -->
+						<input id="pac-input" class="controls" type="text" placeholder="Search Box">
 						<!-- Add one extra level of nesting to wrap the button in input group.
 						Place the button on the right side of the input. -->
-						<span class="input-group-btn">
+						<!-- <span class="input-group-btn">
 							<button class="btn btn-default" type="submit">Filter</button>
-						</span>
-					</form>
+						</span> -->
+					<!-- </form> -->
 					<!-- Element to attach the dynamically created list to. -->
-					<div id="input-list" class="listWrapper"></div>
+					<!-- <ul data-bind="foreach: locations">
+						<li>
+							<p data-bind="text: name"></p>
+						</li>
+					</ul> -->
+					<div id="input-list" class="listWrapper">
+						<ul data-bind="template: {name: 'location', foreach: locations}"></ul>
+
+						<script type="text/html" id="location">
+							<li>
+								<p data-bind="text: name"></p>
+							</li>
+						</script>
+					</div>
 				</aside>
 				<!-- Create the map View from the ViewModel defined in app.js.
 				The binding name 'map' matches the custom binding handler
 				defined in app.js, while the binding value 'position' is
 				the JavaScript property defined in the ViewModel. -->
-				<article data-bind="map: query" class="col-map-view" id="map"></article>
+				<article class="col-map-view" id="map"></article>
 			</main>
 		</div>
 		<!-- jQuery Google CDN -->
@@ -47,7 +61,7 @@
 		<!-- Load Google Maps asynchronously.
 		Make use of the event handler 'onerror' to call a function named googleError if the script fails to load. -->
 		<script async defer
-		    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&libraries=places&callback=activateKO" onerror="googleError()">
+		    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUb435qRJWaoCqtA8885qhZHLmGuLpa7A&libraries=places&callback=initMap" onerror="googleError()">
 		</script>
 	</body>
 </html>
