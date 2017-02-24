@@ -7,6 +7,7 @@ var cityOfCagliari = {
 				lng: 9.1128
 			};
 // Create an array to hold the markers.
+var places = [];
 var markers = [];
 
 // Store the position of the selected marker; undefined as page loads.
@@ -19,6 +20,7 @@ var selectedMarker;
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
 
+function activateKO() {
 // Create a custom binding handler to interact with the Google Maps API.
 ko.bindingHandlers.map = {
 	// Define an 'init' callback to be called once for the DOM element
@@ -73,6 +75,7 @@ ko.bindingHandlers.map = {
 		// Return information about a set of places based on a string.
 		service = new google.maps.places.PlacesService(map);
 		service.textSearch(request, callback);
+
 	}
 };
 
@@ -82,6 +85,9 @@ function callback(results, status) {
 	var elem = document.getElementById('input-list');
 
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
+		// places = results;
+		// viewModel.locations(places);
+		console.log(results);
 		// Check if there are old markers and clear them out.
 		if (markers.length > 0) {
 			markers.forEach(function(marker) {
@@ -91,9 +97,9 @@ function callback(results, status) {
 		}
 
 		// Remove the child elements of elem, if any exists.
-		while (elem.firstChild) {
-			elem.removeChild(elem.firstChild);
-		}
+		// while (elem.firstChild) {
+		// 	elem.removeChild(elem.firstChild);
+		// }
 
 		// Create an infoWindow instance.
 		locationsInfoWindow = new google.maps.InfoWindow();
@@ -103,15 +109,19 @@ function callback(results, status) {
 		// Append a class to the unordered list.
 		uList.classList.add('no-bullets');
 		// Append the list to the appropriate div.
-		elem.appendChild(uList);
+		// elem.appendChild(uList);
 
 		// For each result, place a marker in the map and add a list item.
 		for (var i = 0; i < results.length; i++) {
 			// Store the result.
 			var place = results[i];
+			places.push(place);
 			// Add a new marker and a list item to the map.
 			addMarker(place, i, uList, elem);
 		}
+
+		viewModel.locations(places);
+		console.log(places);
 	} else {
 		alert('There was a problem contacting the Google servers. Please, check the JavaScript console fo more details.');
 		console.log(google.maps.places.PlacesServiceStatus);
@@ -275,18 +285,28 @@ function googleError() {
 //
 // Suggestion taken from a response in the discussion forum:
 // https://discussions.udacity.com/t/map-async-moved-after-app-js/216797/2
-function activateKO() {
+// function activateKO() {
 	// Store the position of the map center and the query input value as an Observable.
-	var ViewModel = function() {
+	var oldViewModel = function() {
 		var self = this;
 		// Define an Observable variable.
 		self.query = ko.observable('restaurant');
+		self.locations = ko.observableArray(places || []);
 		// Update the query value.
 		self.filterSearch = function() {
 			self.query(self.query());
 		};
 	};
 
+	function locationsViewModel(places) {
+		var self = this;
+		// Define an Observable variable.
+		self.query = ko.observable('restaurant');
+		self.locations = ko.observableArray(places || []);
+	};
+
+	var viewModel = new locationsViewModel();
+
 	// Activate KnockoutJS.
-	ko.applyBindings(new ViewModel());
+	ko.applyBindings(viewModel);
 }

@@ -19,17 +19,25 @@
 					<!-- Form element with a filter button.
 					See 'http://getbootstrap.com/css/#forms-inline' and
 					'http://getbootstrap.com/components/#input-groups'. -->
-					<form data-bind="submit: filterSearch" class="input-group">
+					<form class="input-group">
 						<!-- Add Bootstrap class="form-control" to the input to give it width=100%. -->
-						<input data-bind="value: query" class="form-control"/>
+						<input data-bind="textInput: query" class="form-control"/>
 						<!-- Add one extra level of nesting to wrap the button in input group.
 						Place the button on the right side of the input. -->
-						<span class="input-group-btn">
+						<!-- <span class="input-group-btn">
 							<button class="btn btn-default" type="submit">Filter</button>
-						</span>
+						</span> -->
 					</form>
 					<!-- Element to attach the dynamically created list to. -->
-					<div id="input-list" class="listWrapper"></div>
+					<div id="input-list" class="listWrapper">
+						<ul data-bind="template: {name: 'location', foreach: locations}"></ul>
+
+						<script type="text/html" id="location">
+							<li>
+								<p data-bind="text: name"></p>
+							</li>
+						</script>
+					</div>
 				</aside>
 				<!-- Create the map View from the ViewModel defined in app.js.
 				The binding name 'map' matches the custom binding handler
