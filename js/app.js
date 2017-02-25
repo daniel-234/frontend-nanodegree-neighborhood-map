@@ -12,7 +12,7 @@ var mapDiv = document.getElementById('map');
 var markers = [];
 var places = [];
 
-// Create an array with 5 locations to be displayed by default when the page loads.
+// Create an array with 6 locations to be displayed by default when the page loads.
 var locations = [
 	{
 		name: 'Cagliari Cathedral',
@@ -80,64 +80,9 @@ var selectedMarker;
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
 
-// Create a custom binding handler to interact with the Google Maps API.
-ko.bindingHandlers.map = {
-	// Define an 'init' callback to be called once for the DOM element
-	// the callback is used on (in this case, the div with id='map').
-	// init: function(element, valueAccessor) {
-	// 	// Create a new map JavaScript object using the coordinates
-	// 	// given by the center property.
-	// 	map = new google.maps.Map(element, {
-	// 		zoom: 15,
-	// 		center: cityOfCagliari
-	// 	});
-	// 	// Create a request for the service callback function.
-	// 	var request = {
-	// 		location: cityOfCagliari,
-	// 		// Instruct the Places service to prefer showing results within this area.
-	// 		// If radius is turned on, the bounds parameter must be turned off.
-	// 		// radius: 500,
-	// 		// A google.maps.LatLngBounds object defining the rectangle in which to search.
-	// 		// If bounds is turned on, the radius parameter must be turned off.
-	// 		bounds: map.getBounds(),
-	// 		query: 'restaurant'
-	// 	};
-	// 	// Initiate a text search by calling the PlacesService's textSearch() method.
-	// 	// Return information about a set of places based on a string.
-	// 	service = new google.maps.places.PlacesService(map);
-	// 	service.textSearch(request, callback);
-	// },
-	// Define an 'update' callback to be called when any dependencies that
-	// are accessed change.
-	update: function(element, valueAccessor) {
-		// Get the current model property that is involved in this binding
-		var value = String(ko.unwrap(valueAccessor()));
-
-		// Create a new map JavaScript object using the coordinates
-		// given by the center property.
-		map = new google.maps.Map(element, {
-			zoom: 15,
-			center: cityOfCagliari
-		});
-		// Create a request for the service callback function.
-		var request = {
-			location: cityOfCagliari,
-			// Instruct the Places service to prefer showing results within this area.
-			// If radius is turned on, the bounds parameter must be turned off.
-			// radius: 500,
-			// A google.maps.LatLngBounds object defining the rectangle in which to search.
-			// If bounds is turned on, the radius parameter must be turned off.
-			bounds: map.getBounds(),
-			query: value
-		};
-		// Initiate a text search by calling the PlacesService's textSearch() method.
-		// Return information about a set of places based on a string.
-		service = new google.maps.places.PlacesService(map);
-		service.textSearch(request, callback);
-	}
-};
-
-
+// Create a map object and populate it with the result of the SearchBox
+// autocomplete input field.
+// As the app loads, populate it with results from localStorage.
 function initMap() {
 	// Create a new map JavaScript object using the coordinates
 	// given by the center property.
@@ -146,52 +91,39 @@ function initMap() {
 		center: cityOfCagliari
 	});
 
+	// LocalStorage only supports strings. To solve the problem see:
+	// http://stackoverflow.com/questions/19174525/how-to-store-array-
+	// in-localstorage-object-in-html5
+	//
+	// Stringify the array and store the string in the 'locations'
+	// key inside localStorage.
 	localStorage['locations'] = JSON.stringify(locations);
+	// Pull it back out and parse it.
 	places = JSON.parse(localStorage['locations']);
 
+	// Update the observable array.
 	viewModel.locations(places);
 
-	// For each place, get the name and location
+	// Create a bounds object.
 	var bounds = new google.maps.LatLngBounds();
 
+	// Place the markers in the map.
 	placeMarkers(places, bounds);
 
-
-	// places.forEach(function(place) {
-	// 	if(!place.geometry) {
-	// 		console.log('Returned place contains no geometry');
-	// 		return;
-	// 	}
-
-	// 	console.log(places);
-
-	// 	// Create a marker for each place
-	// 	markers.push(new google.maps.Marker({
-	// 		map: map,
-	// 		title: place.name,
-	// 		position: place.geometry.location
-	// 	}));
-
-	// 	if (place.geometry.viewport) {
-	// 		// Only geocodes have viewport
-	// 		bounds.union(place.geometry.viewport);
-	// 	} else {
-	// 		bounds.extend(place.geometry.location);
-	// 	}
-	// });
-
-	// map.fitBounds(bounds);
-
-
+	// Create the search box and link it to the UI element.
 	var input = document.getElementById('pac-input');
 	var searchBox = new google.maps.places.SearchBox(input);
 
+	// Bias the SearchBox results towards current map's viewport.
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
 	});
 
+	// Listen for the event fired when the user selects a prediction
+	// and retrieve more details for that place.
 	searchBox.addListener('places_changed', function() {
 		places = searchBox.getPlaces();
+		// Update the observable array.
 		viewModel.locations(places);
 
 		if (places.length == 0) {
@@ -204,15 +136,14 @@ function initMap() {
 		});
 		markers = [];
 
-		// For each place, get the name and location
-		// var bounds = new google.maps.LatLngBounds();
-
+		// Place the markers in the map.
 		placeMarkers(places, bounds);
 
 
 	});
 }
 
+// Place the markers in the map at the returned places.
 function placeMarkers(places, bounds) {
 	places.forEach(function(place) {
 		if(!place.geometry) {
@@ -239,7 +170,6 @@ function placeMarkers(places, bounds) {
 
 	map.fitBounds(bounds);
 }
-
 
 // Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
 function callback(results, status) {
@@ -441,33 +371,15 @@ function googleError() {
 	mapDiv.append(message);
 }
 
-// Instantiate the ViewModel and activate KnockoutJS inside a callback function.
-// This makes sure that the Google Maps API has finished loading before we use
-// this script that depends on the Google Maps API.
+// Knockout ViewModel.
 //
-// Suggestion taken from a response in the discussion forum:
-// https://discussions.udacity.com/t/map-async-moved-after-app-js/216797/2
-// function activateKO() {
-	// Store the position of the map center and the query input value as an Observable.
-	var oldViewModel = function() {
-		var self = this;
-		// Define an Observable variable.
-		// self.query = ko.observable('restaurant');
-		self.locations = ko.observableArray(places);
-		console.log(self.locations());
-		// Update the query value.
-		self.filterSearch = function() {
-			self.query(self.query());
-		};
-	};
+// Store the locations as an observable array inside the ViewModel..
+function locationsViewModel(places) {
+	var self = this;
+	self.locations = ko.observableArray(places || []);
+}
 
-	function locationsViewModel(places) {
-		var self = this;
-		self.locations = ko.observableArray(places || []);
-	}
+var viewModel = new locationsViewModel();
 
-	var viewModel = new locationsViewModel();
-
-	// Activate KnockoutJS.
-	ko.applyBindings(viewModel);
-// }
+// Activate KnockoutJS.
+ko.applyBindings(viewModel);
