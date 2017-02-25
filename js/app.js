@@ -127,6 +127,7 @@ function initMap() {
 		viewModel.locations(places);
 
 		if (places.length == 0) {
+			console.log('No selection has been made.');
 			return;
 		}
 
@@ -138,8 +139,6 @@ function initMap() {
 
 		// Place the markers in the map.
 		placeMarkers(places, bounds);
-
-
 	});
 }
 
