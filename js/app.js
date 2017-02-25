@@ -12,6 +12,64 @@ var mapDiv = document.getElementById('map');
 var markers = [];
 var places = [];
 
+// Create an array with 5 locations to be displayed by default when the page loads.
+var locations = [
+	{
+		name: 'Cagliari Cathedral',
+		geometry: {
+			location: {
+				lat: 39.2187433,
+				lng: 9.116967899999963
+			}
+		}
+	},
+	{
+		name: 'Bastione di Saint Remy',
+		geometry: {
+			location: {
+				lat: 39.2159691,
+				lng: 9.11647040
+			}
+		}
+	},
+	{
+		name: 'Torre dell\'Elefante',
+		geometry: {
+			location: {
+				lat: 39.21794610,
+				lng: 9.114884099999927
+			}
+		}
+	},
+	{
+		name: 'ExMà',
+		geometry: {
+			location: {
+				lat: 39.2147617,
+				lng: 9.120505800000046
+			}
+		}
+	},
+	{
+		name: 'Piazza Matteotti',
+		geometry: {
+			location: {
+				lat: 39.21510099999999,
+				lng: 9.108989899999983
+			}
+		}
+	},
+	{
+		name: 'Pinacoteca Nazionale di Cagliari',
+		geometry: {
+			location: {
+				lat: 39.22297289999999,
+				lng: 9.117204000000015
+			}
+		}
+	}
+];
+
 // Store the position of the selected marker; undefined as page loads.
 // As a marker is clicked, it stores its position inside the markers
 // array; it is called to set the icon back to the original color when
@@ -88,8 +146,49 @@ function initMap() {
 		center: cityOfCagliari
 	});
 
+	localStorage['locations'] = JSON.stringify(locations);
+	places = JSON.parse(localStorage['locations']);
+
+	viewModel.locations(places);
+
+	// For each place, get the name and location
+	var bounds = new google.maps.LatLngBounds();
+
+	placeMarkers(places, bounds);
+
+
+	// places.forEach(function(place) {
+	// 	if(!place.geometry) {
+	// 		console.log('Returned place contains no geometry');
+	// 		return;
+	// 	}
+
+	// 	console.log(places);
+
+	// 	// Create a marker for each place
+	// 	markers.push(new google.maps.Marker({
+	// 		map: map,
+	// 		title: place.name,
+	// 		position: place.geometry.location
+	// 	}));
+
+	// 	if (place.geometry.viewport) {
+	// 		// Only geocodes have viewport
+	// 		bounds.union(place.geometry.viewport);
+	// 	} else {
+	// 		bounds.extend(place.geometry.location);
+	// 	}
+	// });
+
+	// map.fitBounds(bounds);
+
+
 	var input = document.getElementById('pac-input');
 	var searchBox = new google.maps.places.SearchBox(input);
+
+	map.addListener('bounds_changed', function() {
+		searchBox.setBounds(map.getBounds());
+	});
 
 	searchBox.addListener('places_changed', function() {
 		places = searchBox.getPlaces();
@@ -106,32 +205,39 @@ function initMap() {
 		markers = [];
 
 		// For each place, get the name and location
-		var bounds = new google.maps.LatLngBounds();
-		places.forEach(function(place) {
-			if(!place.geometry) {
-				console.log('Returned place contains no geometry');
-				return;
-			}
+		// var bounds = new google.maps.LatLngBounds();
 
-			console.log(places);
+		placeMarkers(places, bounds);
 
-			// Create a marker for each place
-			markers.push(new google.maps.Marker({
-				map: map,
-				title: place.name,
-				position: place.geometry.location
-			}));
 
-			if (place.geometry.viewport) {
-				// Only geocodes have viewport
-				bounds.union(place.geometry.viewport);
-			} else {
-				bounds.extend(place.geometry.location);
-			}
-		});
-
-		map.fitBounds(bounds);
 	});
+}
+
+function placeMarkers(places, bounds) {
+	places.forEach(function(place) {
+		if(!place.geometry) {
+			console.log('Returned place contains no geometry');
+			return;
+		}
+
+		console.log(places);
+
+		// Create a marker for each place
+		markers.push(new google.maps.Marker({
+			map: map,
+			title: place.name,
+			position: place.geometry.location
+		}));
+
+		if (place.geometry.viewport) {
+			// Only geocodes have viewport
+			bounds.union(place.geometry.viewport);
+		} else {
+			bounds.extend(place.geometry.location);
+		}
+	});
+
+	map.fitBounds(bounds);
 }
 
 

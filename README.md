@@ -75,3 +75,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [PurpleBooth - README-Template.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
 * I read different posts on how to populate the list View using Knockout 'template' binding instead of DOM manipulation. The most complete suggestion on how to solve the problem of updating the observable array after the array it wraps is updated is the following one:
 * [Stackoverflow - How do I update UI where there is a change in an observableArray?](http://stackoverflow.com/questions/11197241/how-do-i-auto-update-ui-where-there-is-a-change-in-an-observablearray)
+* An answer on Stackoverflow that helped me use localStorage to display some locations by default when the page loads:
+* [Stackoverflow - How to store array in localStorage Object in HTML5?](http://stackoverflow.com/questions/19174525/how-to-store-array-in-localstorage-object-in-html5)
