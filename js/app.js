@@ -1,5 +1,5 @@
 // Define global variables for the map and infoWindows instances.
-var map, locationsInfoWindow, service;
+var map, locationsInfoWindow, service, bounds;
 // Store the map center coordinates and set them to the city center
 // of Cagliari, the capital town of Sardinia (IT).
 var cityOfCagliari = {
@@ -105,10 +105,10 @@ function initMap() {
 	viewModel.locations(places);
 
 	// Create a bounds object.
-	var bounds = new google.maps.LatLngBounds();
+	bounds = new google.maps.LatLngBounds();
 
 	// Place the markers in the map.
-	placeMarkers(places, bounds);
+	placeMarkers(places);
 
 	// Create the search box and link it to the UI element.
 	var input = document.getElementById('pac-input');
@@ -138,12 +138,12 @@ function initMap() {
 		markers = [];
 
 		// Place the markers in the map.
-		placeMarkers(places, bounds);
+		placeMarkers(places);
 	});
 }
 
 // Place the markers in the map at the returned places.
-function placeMarkers(places, bounds) {
+function placeMarkers(places) {
 	places.forEach(function(place) {
 		if(!place.geometry) {
 			console.log('Returned place contains no geometry');
@@ -375,10 +375,126 @@ function googleError() {
 // Store the locations as an observable array inside the ViewModel..
 function locationsViewModel(places) {
 	var self = this;
+	self.filter = ko.observable('');
+	self.filteredLocations = ko.observableArray([]);
 	self.locations = ko.observableArray(places || []);
+
+	// self.filteredLocations = ko.computed(function() {
+	// 	var isFirstEvaluation = ko.computedContext.isInitial();
+	// 	var filter = self.filter().toLowerCase();
+
+	// 	if (isFirstEvaluation) {
+	// 		return self.locations();
+	// 	}
+	// 	if(!filter) {
+	// 		console.log(self.locations());
+	// 		return self.locations();
+	// 	} else {
+	// 		// return self.locations()[0];
+	// 		return ko.utils.arrayFilter(self.locations(), function(location) {
+	// 			console.log(location.name.toLowerCase());
+	// 			console.log(filter);
+	// 			console.log(ko.utils.stringStartsWith(location.name.toLowerCase(), filter));
+	// 			return ko.utils.stringStartsWith(location.name.toLowerCase(), filter);
+	// 		});
+	// 	}
+	// });
+
+
+
+	self.filterSearch = function() {
+		var filter = self.filter().toLowerCase();
+		// self.locations(places[0].name);
+		console.log(filter);
+		places = [];
+
+		for(var i = 0; i < self.locations().length; i++) {
+			if ((self.locations()[i].name.toLowerCase().startsWith(self.filter()[0].toLowerCase()))) {
+				console.log(self.locations()[i].name);
+				self.filteredLocations.push(self.locations()[i]);
+				// places = [];
+				places.push(self.locations()[i]);
+			}
+		}
+
+		// Clear out the old markers
+		markers.forEach(function(marker) {
+			marker.setMap(null);
+		});
+		markers = [];
+
+		console.log(places);
+		self.locations(places);
+		placeMarkers(places);
+	};
+
+
+
+	// self.filterSearch = function() {
+	// 	self.filter(self.filter());
+	// 	console.log(self.filter()[0].toLowerCase());
+
+	// 	// console.log(self.locations().filter(function(value) {
+	// 	// 	return (self.filter());
+		// }));
+
+		// for(var i = 0; i < self.locations().length; i++) {
+		// 	if (!(self.locations()[i].name.toLowerCase().startsWith(self.filter()[0].toLowerCase()))) {
+		// 		console.log(self.locations()[i].name);
+		// 		delete(self.locations[i]);
+		// 	}
+		// }
+
+		// var filter = self.filter().toLowerCase();
+
+		// if (!filter) {
+		// 	return self.locations();
+		// }
+
+		// if (filter) {
+		// 	// console.log(self.locations()[0].name.toLowerCase());
+		// 	return (filter);
+		// }
+	// };
+
+	// self.search = function() {
+	// 	var filter = self.filter();
+	// 	self.locations.removeAll();
+
+	// 	for (var x in places) {
+	// 		if (places[x].name[0].toLowerCase().indexOf(filter.toLowerCase()) >= 0) {
+	// 			self.locations.push(places[x]);
+	// 		}
+	// 	}
+	// };
+
+	// self.filter.subscribe(self.search);
+
+	// self.search = ko.computed(function() {
+	// 	var filter = self.filter();
+
+	// 	console.log(filter);
+
+	// 	// for (var location in places) {
+	// 	// 	if (places[location].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+	// 	// 		self.locations.push(places[location]);
+	// 	// 	}
+	// 	// }
+	// });
+
+	ko.utils.stringStartsWith = function (string, startsWith) {
+        string = string || "";
+        if (startsWith.length > string.length)
+            return false;
+        return string.substring(0, startsWith.length) === startsWith;
+    };
+
+	// self.query.subscribe(self.search);
 }
 
 var viewModel = new locationsViewModel();
+
+// viewModel.query.subscribe(viewModel.search);
 
 // Activate KnockoutJS.
 ko.applyBindings(viewModel);
