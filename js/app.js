@@ -408,14 +408,19 @@ function locationsViewModel(places) {
 		console.log(filter);
 		places = [];
 
-		for(var i = 0; i < self.locations().length; i++) {
-			if ((self.locations()[i].name.toLowerCase().startsWith(self.filter()[0].toLowerCase()))) {
-				console.log(self.locations()[i].name);
-				self.filteredLocations.push(self.locations()[i]);
-				// places = [];
-				places.push(self.locations()[i]);
+		if (!filter) {
+			return self.locations();
+		} else {
+			for(var i = 0; i < self.locations().length; i++) {
+				if ((self.locations()[i].name.toLowerCase().startsWith(self.filter()[0].toLowerCase()))) {
+					console.log(self.locations()[i].name);
+					self.filteredLocations.push(self.locations()[i]);
+					// places = [];
+					places.push(self.locations()[i]);
+				}
 			}
 		}
+
 
 		// Clear out the old markers
 		markers.forEach(function(marker) {
