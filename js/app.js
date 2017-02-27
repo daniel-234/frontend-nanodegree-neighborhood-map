@@ -12,8 +12,6 @@ var mapDiv = document.getElementById('map');
 var markers = [];
 var places = [];
 
-var places1 = [];
-
 // Create an array with 6 locations to be displayed by default when the page loads.
 var locations = [
 	{
@@ -102,22 +100,6 @@ function initMap() {
 	localStorage['locations'] = JSON.stringify(locations);
 	// Pull it back out and parse it.
 	places = JSON.parse(localStorage['locations']);
-	console.log(places);
-
-	places1 = locations;
-	console.log(places1);
-
-
-
-	// var storedLocations = JSON.parse(localStorage['locations']);
-	// console.log(places);
-	// console.log(storedLocations);
-	// storedLocations.forEach(function(location) {
-	// 	places.push(location);
-	// });
-	// console.log(places);
-
-
 
 	// Update the observable array.
 	viewModel.locations(places);
@@ -140,16 +122,8 @@ function initMap() {
 	// Listen for the event fired when the user selects a prediction
 	// and retrieve more details for that place.
 	searchBox.addListener('places_changed', function() {
-		if (searchBox.getPlaces()) {
-			console.log(searchBox.getPlaces());
-			places = searchBox.getPlaces();
-			console.log(places);
-		}
-		console.log(places);
+		places = searchBox.getPlaces();
 
-		console.log(searchBox.getPlaces());
-		// places = searchBox.getPlaces();
-		console.log(places);
 		// Update the observable array.
 		viewModel.locations(places);
 
@@ -403,30 +377,7 @@ function googleError() {
 function locationsViewModel(places) {
 	var self = this;
 	self.filter = ko.observable('');
-	self.filteredLocations = ko.observableArray([]);
 	self.locations = ko.observableArray(places || []);
-
-	// self.filteredLocations = ko.computed(function() {
-	// 	var isFirstEvaluation = ko.computedContext.isInitial();
-	// 	var filter = self.filter().toLowerCase();
-
-	// 	if (isFirstEvaluation) {
-	// 		return self.locations();
-	// 	}
-	// 	if(!filter) {
-	// 		console.log(self.locations());
-	// 		return self.locations();
-	// 	} else {
-	// 		// return self.locations()[0];
-	// 		return ko.utils.arrayFilter(self.locations(), function(location) {
-	// 			console.log(location.name.toLowerCase());
-	// 			console.log(filter);
-	// 			console.log(ko.utils.stringStartsWith(location.name.toLowerCase(), filter));
-	// 			return ko.utils.stringStartsWith(location.name.toLowerCase(), filter);
-	// 		});
-	// 	}
-	// });
-
 
 	// Provide a filter functionality that should filter (show or hide) the
 	// existing list of locations as well as markers on the map.
@@ -440,32 +391,25 @@ function locationsViewModel(places) {
 	// See http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage
 	self.filterSearch = function() {
 		var filter = self.filter().toLowerCase();
-		// self.locations(places[0].name);
-		console.log(locations);
-		console.log(filter);
-		console.log(places);
-		console.log(places1);
 
 		// Clean the places array to push into it the filtered locations.
 		places = [];
 
-
+		// Check if the user provided a filter string.
 		if (!filter) {
 			return self.locations();
 		} else {
-			// Control which items are included based on the input text.
+			// Populate the 'places' array based on the items of the observable array
+			// self.locations() that match the filter string provided by the user.
 			for(var i = 0; i < self.locations().length; i++) {
 				// Check if the current location initial substring matches 'filter'.
 				if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
 					console.log(self.locations()[i].name);
-					// self.filteredLocations.push(self.locations()[i]);
-					// places = [];
 					// Insert the matching location in the places array.
 					places.push(self.locations()[i]);
 				}
 			}
 		}
-
 
 		// Clear out the old markers
 		markers.forEach(function(marker) {
@@ -473,79 +417,15 @@ function locationsViewModel(places) {
 		});
 		markers = [];
 
-		console.log(places);
-		// Update the observable array locations.
+		// Update the observable array locations that populate the list view..
 		self.locations(places);
+		// Update the markers based on filter.
 		placeMarkers(places);
 	};
-
-
-
-	// self.filterSearch = function() {
-	// 	self.filter(self.filter());
-	// 	console.log(self.filter()[0].toLowerCase());
-
-	// 	// console.log(self.locations().filter(function(value) {
-	// 	// 	return (self.filter());
-		// }));
-
-		// for(var i = 0; i < self.locations().length; i++) {
-		// 	if (!(self.locations()[i].name.toLowerCase().startsWith(self.filter()[0].toLowerCase()))) {
-		// 		console.log(self.locations()[i].name);
-		// 		delete(self.locations[i]);
-		// 	}
-		// }
-
-		// var filter = self.filter().toLowerCase();
-
-		// if (!filter) {
-		// 	return self.locations();
-		// }
-
-		// if (filter) {
-		// 	// console.log(self.locations()[0].name.toLowerCase());
-		// 	return (filter);
-		// }
-	// };
-
-	// self.search = function() {
-	// 	var filter = self.filter();
-	// 	self.locations.removeAll();
-
-	// 	for (var x in places) {
-	// 		if (places[x].name[0].toLowerCase().indexOf(filter.toLowerCase()) >= 0) {
-	// 			self.locations.push(places[x]);
-	// 		}
-	// 	}
-	// };
-
-	// self.filter.subscribe(self.search);
-
-	// self.search = ko.computed(function() {
-	// 	var filter = self.filter();
-
-	// 	console.log(filter);
-
-	// 	// for (var location in places) {
-	// 	// 	if (places[location].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-	// 	// 		self.locations.push(places[location]);
-	// 	// 	}
-	// 	// }
-	// });
-
-	ko.utils.stringStartsWith = function (string, startsWith) {
-        string = string || "";
-        if (startsWith.length > string.length)
-            return false;
-        return string.substring(0, startsWith.length) === startsWith;
-    };
-
-	// self.query.subscribe(self.search);
 }
 
+// Instantiate a viewModel object.
 var viewModel = new locationsViewModel();
-
-// viewModel.query.subscribe(viewModel.search);
 
 // Activate KnockoutJS.
 ko.applyBindings(viewModel);

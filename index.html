@@ -16,19 +16,9 @@
 		<div class="container">
 			<main class="row">
 				<aside class="col-list-view">
-					<!-- Extend form controls by adding buttons after or before.
-					See 'http://getbootstrap.com/components/#input-groups'. -->
-					<!-- Add Bootstrap class '.input-group' with an '.input-group-btn' to append a
-					btn element to a single form-control.
-					Add Bootstrap class="form-control" to the input to give it width=100%. -->
-					<!-- <div class="input-group">
-						<input id="pac-input" class="form-control" type="text" placeholder="Search Box"> -->
-						<!-- Add one extra level of nesting to wrap the button in input group.
-						Place the button to the right side of the input. -->
-						<!-- <span class="input-group-btn">
-							<button class="btn btn-default" type="submit">Filter</button>
-						</span>
-					</div> -->
+					<!-- Add Bootstrap class '.input-group' with an '.input-group-btn' to append a btn element to a single form-control.
+					Add Bootstrap class="form-control" to the input to give it width=100%.
+					See 'http://getbootstrap.com/components/#input-groups' and http://getbootstrap.com/css/#forms-example -->
 					<form data-bind="submit: filterSearch" class="input-group">
 						<input data-bind="value: filter" id="pac-input" class="form-control" type="text" placeholder="Search Box">
 						<!-- Add one extra level of nesting to wrap the button in input group.
