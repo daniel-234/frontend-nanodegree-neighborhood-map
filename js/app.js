@@ -91,34 +91,6 @@ function initMap() {
 		center: cityOfCagliari
 	});
 
-	// LocalStorage only supports strings. To solve the problem see:
-	// http://stackoverflow.com/questions/19174525/how-to-store-array-
-	// in-localstorage-object-in-html5
-	//
-	// // Stringify the array and store the string in the 'locations'
-	// // key inside localStorage.
-
-
-	// localStorage.setItem('locations', JSON.stringify(locations));
-	// places = JSON.parse(localStorage.getItem('locations'));
-	// console.log(places);
-
-
-
-
-	// localStorage['locations'] = JSON.stringify(locations);
-	// // Pull it back out and parse it.
-	// var data = JSON.parse(localStorage['locations']);
-
-	// for (var key in data) {
-	// 	if (data.hasOwnProperty(key)) {
-	// 		places.push(data[key]);
-	// 	}
-
-	// }
-	// places = JSON.parse(localStorage['locations']);
-	// places = locations;
-
 	// Update the observable array.
 	viewModel.locations(places);
 
@@ -126,7 +98,7 @@ function initMap() {
 	bounds = new google.maps.LatLngBounds();
 
 	// Create an infoWindow instance.
-		locationsInfoWindow = new google.maps.InfoWindow();
+	locationsInfoWindow = new google.maps.InfoWindow();
 
 	// Place the markers in the map.
 	placeMarkers(places);
@@ -159,9 +131,6 @@ function initMap() {
 		});
 		markers = [];
 
-		// // Create an infoWindow instance.
-		// locationsInfoWindow = new google.maps.InfoWindow();
-
 		// Place the markers in the map.
 		placeMarkers(places);
 	});
@@ -171,7 +140,6 @@ function initMap() {
 
 // Place the markers in the map at the returned places.
 function placeMarkers(places) {
-	// places.forEach(function(place) {
 	// For each result, place a marker in the map and add a list item.
 	for (var i = 0; i < places.length; i++) {
 		// Store the result.
@@ -180,7 +148,6 @@ function placeMarkers(places) {
 			console.log('Returned place contains no geometry');
 			return;
 		}
-
 
 		// Add a new marker and a list item to the map.
 		addMarker(place, i);
@@ -193,242 +160,7 @@ function placeMarkers(places) {
 			bounds.extend(place.geometry.location);
 		}
 	}
-
-	// map.fitBounds(bounds);
-
-
-		// if(!place.geometry) {
-		// 	console.log('Returned place contains no geometry');
-		// 	return;
-		// }
-
-		// console.log(places);
-
-		// Define a variable to store the Wikipedia repsonse link.
-		// var wikiAPIStr;
-
-		// addMarker(place, i, uList, elem);
-		// // Create a new marker for each place.
-		// markers.push(new google.maps.Marker({
-		// 	// The position field of the Marker options object literal
-		// 	// taken by the google.maps.Marker constructor specifies a
-		// 	// LatLng identifying the location of the marker.
-		// 	position: place.geometry.location,
-		// 	// The map field specifies the Map on which to place the
-		// 	// marker; here the marker is attached to the map created
-		// 	// just above.
-		// 	map: map,
-		// 	title: place.name
-		// }));
-
-		// if (place.geometry.viewport) {
-		// 	// Only geocodes have viewport
-		// 	bounds.union(place.geometry.viewport);
-		// } else {
-		// 	bounds.extend(place.geometry.location);
-		// }
-
-		// // Store the place name.
-		// var locationString = place.name;
-		// // Compose the Wikipedia URL search string with the search term.
-		// // Code taken from the Wikipedia API lesson of the course.
-		// var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-		// 	locationString + '&format=json&callback=wikiCallback';
-
-		// // AJAX request object.
-		// $.ajax({
-		// 	url: wikiUrl,
-		// 	dataType: 'jsonp',
-		// 	success: function(response) {
-		// 		// Take the first element of the response Array as the article title.
-		// 		var articleTitle = response[0];
-		// 		// There may be more than one article in the response's 4th element. Take only the first link,
-		// 		// that should be the most representative.
-		// 		var articleUrl = response[3][0];
-		// 		// The AJAX response is an Array with 4 elements. The Wikipedia link that's of interest to the
-		// 		// marker infoWindow is stored at position 3 (of a 0-based array).
-		// 		// If the response array has a 4th element, compose the link; otherwise, provide a standard
-		// 		// replacement message.
-		// 		if (response[3].length > 0) {
-		// 			wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + articleTitle + '</a></p>';
-		// 		} else {
-		// 			wikiAPIStr = '<p>No results were found on Wikipedia.</p>';
-		// 		}
-		// 	},
-		// 	// Handle error if the AJAX method fails to load the API.
-		// 	error: function(parsedjson, textStatus, errorThrown) {
-		// 		// Display the error message on the console to let the user have more details about it.
-		// 		console.log('parsedJSON: ' + parsedjson.statusText + ' ' + parsedjson.status);
-		// 		console.log('Error status: ' + textStatus);
-		// 		console.log('Error thrown: ' + textStatus);
-		// 		console.log('parsedJSON: ' + JSON.stringify(parsedjson));
-		// 		// Display a string prompting the user to check the console for details.
-		// 		wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>';
-		// 	}
-		// });
-		// // Add an event listener.
-		// // Code taken from the Google Maps API section of the course and elaborated for this
-		// // app.
-		// marker.addListener('click', function() {
-		// 	// Set background color of the list item, the color of the marker and populates
-		// 	// the infoWindow.
-		// 	selectRightLocation(this, locationsInfoWindow, wikiAPIStr);
-		// });
-	// };
-
-	// map.fitBounds(bounds);
 }
-
-
-
-
-
-
-
-
-// // Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
-// function callback(results, status) {
-// 	// Store the element with id='input-list'.
-// 	var elem = document.getElementById('input-list');
-
-// 	locations = results;
-
-
-// 	console.log(markers);
-// 	console.log(locations);
-
-
-// 	if (status == google.maps.places.PlacesServiceStatus.OK) {
-// 		// Check if there are old markers and clear them out.
-// 		if (markers.length > 0) {
-// 			markers.forEach(function(marker) {
-// 				marker.setMap(null);
-// 			});
-// 			markers = [];
-// 		}
-
-// 		// Remove the child elements of elem, if any exists.
-// 		while (elem.firstChild) {
-// 			elem.removeChild(elem.firstChild);
-// 		}
-
-// 		// Create an infoWindow instance.
-// 		locationsInfoWindow = new google.maps.InfoWindow();
-
-// 		// Create an unordered list and store it.
-// 		var uList = document.createElement('ul');
-// 		// Append a class to the unordered list.
-// 		uList.classList.add('no-bullets');
-// 		// Append the list to the appropriate div.
-// 		elem.appendChild(uList);
-
-// 		// For each result, place a marker in the map and add a list item.
-// 		for (var i = 0; i < results.length; i++) {
-// 			// Store the result.
-// 			var place = results[i];
-// 			// Add a new marker and a list item to the map.
-// 			addMarker(place, i, uList, elem);
-// 		}
-// 	} else {
-// 		alert('There was a problem contacting the Google servers. Please, check the JavaScript console fo more details.');
-// 		console.log(google.maps.places.PlacesServiceStatus);
-// 	}
-// }
-
-
-
-
-// // Create a marker with an infoWindow and insert it into the 'markers' array.
-// // Create a list item connected to an appropriate marker.
-// function addMarker1(place, listPos, uList, elem) {
-// 	// Store the marker title.
-// 	var title = place.name;
-// 	// Define a variable to store the Wikipedia repsonse link.
-// 	var wikiAPIStr;
-// 	// Create a new marker for each place.
-// 	var marker = new google.maps.Marker({
-// 		// The position field of the Marker options object literal
-// 		// taken by the google.maps.Marker constructor specifies a
-// 		// LatLng identifying the location of the marker.
-// 		position: place.geometry.location,
-// 		// The map field specifies the Map on which to place the
-// 		// marker; here the marker is attached to the map created
-// 		// just above.
-// 		map: map,
-// 		title: title
-// 	});
-
-// 	// Create a list item with the place name as text content and append it.
-// 	var listItem = document.createElement('li');
-// 	var newContent = document.createTextNode(place.name);
-// 	listItem.appendChild(newContent);
-// 	listItem.id = "item_list" + listPos;
-// 	uList.appendChild(listItem);
-
-// 	// Store the place name.
-// 	var locationString = place.name;
-// 	// Compose the Wikipedia URL search string with the search term.
-// 	// Code taken from the Wikipedia API lesson of the course.
-// 	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-// 		locationString + '&format=json&callback=wikiCallback';
-
-// 	// AJAX request object.
-// 	$.ajax({
-// 		url: wikiUrl,
-// 		dataType: 'jsonp',
-// 		success: function(response) {
-// 			// Take the first element of the response Array as the article title.
-// 			var articleTitle = response[0];
-// 			// There may be more than one article in the response's 4th element. Take only the first link,
-// 			// that should be the most representative.
-// 			var articleUrl = response[3][0];
-// 			// The AJAX response is an Array with 4 elements. The Wikipedia link that's of interest to the
-// 			// marker infoWindow is stored at position 3 (of a 0-based array).
-// 			// If the response array has a 4th element, compose the link; otherwise, provide a standard
-// 			// replacement message.
-// 			if (response[3].length > 0) {
-// 				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + articleTitle + '</a></p>';
-// 			} else {
-// 				wikiAPIStr = '<p>No results were found on Wikipedia.</p>';
-// 			}
-// 		},
-// 		// Handle error if the AJAX method fails to load the API.
-// 		error: function(parsedjson, textStatus, errorThrown) {
-// 			// Display the error message on the console to let the user have more details about it.
-// 			console.log('parsedJSON: ' + parsedjson.statusText + ' ' + parsedjson.status);
-// 			console.log('Error status: ' + textStatus);
-// 			console.log('Error thrown: ' + textStatus);
-// 			console.log('parsedJSON: ' + JSON.stringify(parsedjson));
-// 			// Display a string prompting the user to check the console for details.
-// 			wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>';
-// 		}
-// 	});
-
-// 	// Add an event listener.
-// 	// Code taken from the Google Maps API section of the course and elaborated for this
-// 	// app.
-// 	marker.addListener('click', function() {
-// 		// Set background color of the list item, the color of the marker and populates
-// 		// the infoWindow.
-// 		selectRightLocation(this, listItem, locationsInfoWindow, wikiAPIStr);
-// 	});
-
-// 	// Insert the marker into the markers array.
-// 	markers.push(marker);
-
-// 	// Add an event listener to the list element.
-// 	listItem.addEventListener('click', function() {
-// 		// Set background color of the list item, the color of the marker and populates
-// 		// the infoWindow.
-// 		selectRightLocation(marker, this, locationsInfoWindow, wikiAPIStr);
-// 	});
-// }
-
-
-
-
-
-
 
 // Create a marker with an infoWindow and insert it into the 'markers' array.
 // Create a list item connected to an appropriate marker.
@@ -449,13 +181,6 @@ function addMarker(place, listPos) {
 		map: map,
 		title: title
 	});
-
-	// // Create a list item with the place name as text content and append it.
-	// var listItem = document.createElement('li');
-	// var newContent = document.createTextNode(place.name);
-	// listItem.appendChild(newContent);
-	// listItem.id = "item_list" + listPos;
-	// uList.appendChild(listItem);
 
 	// Store the place name.
 	var locationString = place.name;
@@ -498,7 +223,7 @@ function addMarker(place, listPos) {
 		}
 	});
 
-	// Add an event listener.
+	// Add an event listener to the marker.
 	// Code taken from the Google Maps API section of the course and elaborated for this
 	// app.
 	marker.addListener('click', function() {
@@ -567,8 +292,7 @@ function setListItemBackground(itemPos, color) {
 function selectRightLocation(marker, itemPos, locationsInfoWindow, wikiAPIStr) {
 	// Store the position of the selected list item, taking it from its id.
 	var itemNumber = itemPos;
-	// Check if there is a marker already selected; if there is
-	// one, deselect it.
+	// Check if there is a marker already selected; if there is one, deselect it.
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
 	if ((itemNumber !== selectedMarker) && (selectedMarker !== undefined)) {
@@ -641,8 +365,27 @@ function locationsViewModel(places) {
 	self.filterSearch = function() {
 		var filter = self.filter().toLowerCase();
 
+		// // Clean the places array to push into it the filtered locations.
+		// places = [];
+
+		// // Check if the user provided a filter string.
+		// if (!filter) {
+		// 	return self.locations();
+		// } else {
+		// 	// Populate the 'places' array based on the items of the observable array
+		// 	// self.locations() that match the filter string provided by the user.
+		// 	for(var i = 0; i < self.locations().length; i++) {
+		// 		// Check if the current location initial substring matches 'filter'.
+		// 		if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
+		// 			console.log(self.locations()[i].name);
+		// 			// Insert the matching location in the places array.
+		// 			places.push(self.locations()[i]);
+		// 		}
+		// 	}
+		// }
+
 		// Clean the places array to push into it the filtered locations.
-		places = [];
+		self.locations.removeAll();
 
 		// Check if the user provided a filter string.
 		if (!filter) {
@@ -650,15 +393,30 @@ function locationsViewModel(places) {
 		} else {
 			// Populate the 'places' array based on the items of the observable array
 			// self.locations() that match the filter string provided by the user.
-			for(var i = 0; i < self.locations().length; i++) {
+			for (var i = 0; i < places.length; i++) {
 				// Check if the current location initial substring matches 'filter'.
-				if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
-					console.log(self.locations()[i].name);
+				if (places[i].name.toLowerCase().startsWith(filter)) {
 					// Insert the matching location in the places array.
-					places.push(self.locations()[i]);
+					self.locations.push(places[i]);
 				}
 			}
 		}
+
+		// // Check if the user provided a filter string.
+		// if (!filter) {
+		// 	return self.locations();
+		// } else {
+		// 	// Populate the 'places' array based on the items of the observable array
+		// 	// self.locations() that match the filter string provided by the user.
+		// 	for(var i = 0; i < self.locations().length; i++) {
+		// 		// Check if the current location initial substring matches 'filter'.
+		// 		if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
+		// 			console.log(self.locations()[i].name);
+		// 			// Insert the matching location in the places array.
+		// 			places.push(self.locations()[i]);
+		// 		}
+		// 	}
+		// }
 
 		// Clear out the old markers
 		markers.forEach(function(marker) {
