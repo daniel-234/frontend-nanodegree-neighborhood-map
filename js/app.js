@@ -2,6 +2,9 @@
 var map, locationsInfoWindow, service;
 // Store the map center coordinates and set them to the city center
 // of Cagliari, the capital town of Sardinia (IT).
+
+var mapDiv = document.getElementById('map');
+
 var cityOfCagliari = {
 				lat: 39.2151,
 				lng: 9.1128
@@ -20,7 +23,7 @@ var selectedMarker;
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
 
-function activateKO() {
+// function activateKO() {
 // Create a custom binding handler to interact with the Google Maps API.
 ko.bindingHandlers.map = {
 	// Define an 'init' callback to be called once for the DOM element
@@ -78,6 +81,112 @@ ko.bindingHandlers.map = {
 
 	}
 };
+
+function initMap() {
+	// Create a new map JavaScript object using the coordinates
+	// given by the center property.
+	map = new google.maps.Map(mapDiv, {
+		zoom: 15,
+		center: cityOfCagliari
+	});
+
+	// Create a request for the service callback function.
+	var request = {
+		location: cityOfCagliari,
+		// Instruct the Places service to prefer showing results within this area.
+		// If radius is turned on, the bounds parameter must be turned off.
+		// radius: 500,
+		// A google.maps.LatLngBounds object defining the rectangle in which to search.
+		// If bounds is turned on, the radius parameter must be turned off.
+		bounds: map.getBounds(),
+		query: 'restaurants'
+	};
+	// Initiate a text search by calling the PlacesService's textSearch() method.
+	// Return information about a set of places based on a string.
+	service = new google.maps.places.PlacesService(map);
+	service.textSearch(request, callback);
+
+	// // Create a request for the service callback function.
+	// var request = {
+	// 	location: cityOfCagliari,
+	// 	// Instruct the Places service to prefer showing results within this area.
+	// 	// If radius is turned on, the bounds parameter must be turned off.
+	// 	// radius: 500,
+	// 	// A google.maps.LatLngBounds object defining the rectangle in which to search.
+	// 	// If bounds is turned on, the radius parameter must be turned off.
+	// 	bounds: map.getBounds(),
+	// 	query: viewModel.query()
+	// };
+	// // Initiate a text search by calling the PlacesService's textSearch() method.
+	// // Return information about a set of places based on a string.
+	// service = new google.maps.places.PlacesService(map);
+	// service.textSearch(request, callback);
+
+	// // Update the observable array.
+	// viewModel.locations(places);
+
+	// // Create a bounds object.
+	// bounds = new google.maps.LatLngBounds();
+
+	// // Create an infoWindow instance.
+	// locationsInfoWindow = new google.maps.InfoWindow();
+
+	// // Place the markers in the map.
+	// placeMarkers(places);
+
+	// // Create the search box and link it to the UI element.
+	// var input = document.getElementById('pac-input');
+	// var searchBox = new google.maps.places.SearchBox(input);
+
+	// // Bias the SearchBox results towards current map's viewport.
+	// map.addListener('bounds_changed', function() {
+	// 	searchBox.setBounds(map.getBounds());
+	// });
+
+	// // Listen for the event fired when the user selects a prediction
+	// // and retrieve more details for that place.
+	// searchBox.addListener('places_changed', function() {
+	// 	places = searchBox.getPlaces();
+
+	// 	// Update the observable array.
+	// 	viewModel.locations(places);
+
+	// 	if (places.length == 0) {
+	// 		console.log('No selection has been made.');
+	// 		return;
+	// 	}
+
+	// 	// Clear out the old markers
+	// 	markers.forEach(function(marker) {
+	// 		marker.setMap(null);
+	// 	});
+	// 	markers = [];
+
+	// 	// Place the markers in the map.
+	// 	placeMarkers(places);
+	// });
+
+	// map.fitBounds(bounds);
+}
+
+function getRequest(value) {
+	// Create a request for the service callback function.
+	var request = {
+		location: cityOfCagliari,
+		// Instruct the Places service to prefer showing results within this area.
+		// If radius is turned on, the bounds parameter must be turned off.
+		// radius: 500,
+		// A google.maps.LatLngBounds object defining the rectangle in which to search.
+		// If bounds is turned on, the radius parameter must be turned off.
+		bounds: map.getBounds(),
+		query: value
+	};
+	// Initiate a text search by calling the PlacesService's textSearch() method.
+	// Return information about a set of places based on a string.
+	service = new google.maps.places.PlacesService(map);
+	service.textSearch(request, callback);
+}
+
 
 // Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
 function callback(results, status) {
@@ -275,7 +384,7 @@ function googleError() {
 	message.classList.add('error-message');
 	message.innerHTML = 'Something went wrong when loading Google Maps.' + '<br />' +
 		'Check the JavaScript console for details.';
-	var mapDiv = document.getElementById('map');
+	// var mapDiv = document.getElementById('map');
 	mapDiv.append(message);
 }
 
@@ -301,12 +410,29 @@ function googleError() {
 	function locationsViewModel(places) {
 		var self = this;
 		// Define an Observable variable.
-		self.query = ko.observable('restaurant');
+		self.query = ko.observable('');
 		self.locations = ko.observableArray(places || []);
+
+		self.filterSearch = function() {
+			getRequest(self.query());
+		}
+
+		self.search = function(value) {
+			self.locations.removeAll();
+			console.log(places);
+
+			for (var x in places) {
+				console.log(places[x]);
+			}
+		}
+
+		self.query.subscribe(self.search);
 	};
+
+
 
 	var viewModel = new locationsViewModel();
 
 	// Activate KnockoutJS.
 	ko.applyBindings(viewModel);
-}
+// }
