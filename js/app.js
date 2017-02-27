@@ -12,6 +12,8 @@ var mapDiv = document.getElementById('map');
 var markers = [];
 var places = [];
 
+var places1 = [];
+
 // Create an array with 6 locations to be displayed by default when the page loads.
 var locations = [
 	{
@@ -100,6 +102,22 @@ function initMap() {
 	localStorage['locations'] = JSON.stringify(locations);
 	// Pull it back out and parse it.
 	places = JSON.parse(localStorage['locations']);
+	console.log(places);
+
+	places1 = locations;
+	console.log(places1);
+
+
+
+	// var storedLocations = JSON.parse(localStorage['locations']);
+	// console.log(places);
+	// console.log(storedLocations);
+	// storedLocations.forEach(function(location) {
+	// 	places.push(location);
+	// });
+	// console.log(places);
+
+
 
 	// Update the observable array.
 	viewModel.locations(places);
@@ -122,7 +140,16 @@ function initMap() {
 	// Listen for the event fired when the user selects a prediction
 	// and retrieve more details for that place.
 	searchBox.addListener('places_changed', function() {
-		places = searchBox.getPlaces();
+		if (searchBox.getPlaces()) {
+			console.log(searchBox.getPlaces());
+			places = searchBox.getPlaces();
+			console.log(places);
+		}
+		console.log(places);
+
+		console.log(searchBox.getPlaces());
+		// places = searchBox.getPlaces();
+		console.log(places);
 		// Update the observable array.
 		viewModel.locations(places);
 
@@ -401,21 +428,39 @@ function locationsViewModel(places) {
 	// });
 
 
-
+	// Provide a filter functionality that should filter (show or hide) the
+	// existing list of locations as well as markers on the map.
+	// It returns the matching subset of the original array of items.
+	//
+	// Building this functionality has forced me to face localStorage behavior
+	// when storing JSON objects within an array.
+	// The parsed object is in fact an array, however each JSON object in the
+	// array is no longer an object and must be JSON parsed to "recreate" an
+	// object out of the string that it is.
+	// See http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage
 	self.filterSearch = function() {
 		var filter = self.filter().toLowerCase();
 		// self.locations(places[0].name);
+		console.log(locations);
 		console.log(filter);
+		console.log(places);
+		console.log(places1);
+
+		// Clean the places array to push into it the filtered locations.
 		places = [];
+
 
 		if (!filter) {
 			return self.locations();
 		} else {
+			// Control which items are included based on the input text.
 			for(var i = 0; i < self.locations().length; i++) {
-				if ((self.locations()[i].name.toLowerCase().startsWith(self.filter()[0].toLowerCase()))) {
+				// Check if the current location initial substring matches 'filter'.
+				if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
 					console.log(self.locations()[i].name);
-					self.filteredLocations.push(self.locations()[i]);
+					// self.filteredLocations.push(self.locations()[i]);
 					// places = [];
+					// Insert the matching location in the places array.
 					places.push(self.locations()[i]);
 				}
 			}
@@ -429,6 +474,7 @@ function locationsViewModel(places) {
 		markers = [];
 
 		console.log(places);
+		// Update the observable array locations.
 		self.locations(places);
 		placeMarkers(places);
 	};

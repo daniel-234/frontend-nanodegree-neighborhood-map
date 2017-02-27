@@ -77,3 +77,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - How do I update UI where there is a change in an observableArray?](http://stackoverflow.com/questions/11197241/how-do-i-auto-update-ui-where-there-is-a-change-in-an-observablearray)
 * An answer on Stackoverflow that helped me use localStorage to display some locations by default when the page loads:
 * [Stackoverflow - How to store array in localStorage Object in HTML5?](http://stackoverflow.com/questions/19174525/how-to-store-array-in-localstorage-object-in-html5)
+* Resources I used on how to provide a filter functionality:
+* [Opensoul.org - Live search with Knockout.js](http://opensoul.org/2011/06/23/live-search-with-knockoutjs/)
+* [KnockMeOut - Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
+* "A really great lesson on storing JSON objects within an array in localStorage":
+* [Stackoverflow - Object properties are undefined after localStorage](http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage)
