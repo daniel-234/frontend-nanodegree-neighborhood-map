@@ -94,7 +94,10 @@ function initMap() {
 	console.log(places instanceof Array);
 
 	// Update the observable array.
-	viewModel.locations(places);
+	// viewModel.locations(places);
+	// places.forEach(function(place) {
+	// 	viewModel.locations.push(place);
+	// });
 
 	// Create a bounds object.
 	bounds = new google.maps.LatLngBounds();
@@ -120,7 +123,11 @@ function initMap() {
 		places = searchBox.getPlaces();
 
 		// Update the observable array.
-		viewModel.locations(places);
+		viewModel.locations(places.slice(0));
+
+		// places.forEach(function(place) {
+		// 	viewModel.locations.push(place);
+		// });
 
 		if (places.length == 0) {
 			console.log('No selection has been made.');
@@ -352,7 +359,12 @@ function googleError() {
 function locationsViewModel() {
 	var self = this;
 	self.filter = ko.observable('');
-	self.locations = ko.observableArray(places || []);
+	// self.locations = ko.observableArray(places || []);
+
+	// Define an observable array that clones the places array.
+	// Pass a copy of places to the observable array, so the two won't reference
+	// the same object when updating 'locations' for the filter functionality.
+	self.locations = ko.observableArray(places.slice(0) || []);
 
 	// Provide a filter functionality that should filter (show or hide) the
 	// existing list of locations as well as markers on the map.
@@ -387,9 +399,11 @@ function locationsViewModel() {
 		// }
 		console.log(places instanceof Array);
 		console.log(places.length);
+		self.locations.removeAll();
+		console.log(places.length);
 
 		// Clean the places array to push into it the filtered locations.
-		self.locations.removeAll();
+		// self.locations.removeAll();
 
 		// Check if the user provided a filter string.
 		// if (!filter) {
@@ -399,14 +413,14 @@ function locationsViewModel() {
 
 		// Populate the 'places' array based on the items of the observable array
 		// self.locations() that match the filter string provided by the user.
-		for (var i in places) {
-			console.log(places[i].name);
+		// for (var i = 0; i < places.length; i++) {
+			// console.log(places[i].name);
 			// Check if the current location initial substring matches 'filter'.
-			if (places[i].name.toLowerCase().startsWith(filter)) {
-				// Insert the matching location in the places array.
-				self.locations.push(places[i]);
-			}
-		}
+			// if (places[i].name.toLowerCase().startsWith(filter)) {
+			// 	// Insert the matching location in the places array.
+			// 	self.locations.push(places[i]);
+			// }
+		// }
 
 
 		// console.log(self.locations());

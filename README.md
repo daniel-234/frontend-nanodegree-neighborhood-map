@@ -82,3 +82,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [KnockMeOut - Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
 * "A really great lesson on storing JSON objects within an array in localStorage":
 * [Stackoverflow - Object properties are undefined after localStorage](http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage)
+* The best way of copying/cloning an observable array in Knockout JS:
+* [Stackoverflow - Copy items from observableArray to another observableArray](http://stackoverflow.com/questions/19339180/copy-items-from-observablearray-to-another-observablearray)
+* [Stackoverflow - What is the best way of cloning/copying an observableArray in KnockoutJS?](http://stackoverflow.com/questions/6509297/what-is-the-best-way-of-cloning-copying-an-observablearray-in-knockoutjs)
+* [Udacity Discussion Forums - KO ViewModel can't access global variable? Having trouble implementing filter function](https://discussions.udacity.com/t/ko-viewmodel-cant-access-global-variable-having-trouble-implementing-filter-function/175025)
+* [Udacity Discussion Forums - KnockoutJS remove from observable arrays](https://discussions.udacity.com/t/knockoutjs-remove-from-observable-arrays/166692/7)
