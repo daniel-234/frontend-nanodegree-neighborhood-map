@@ -91,6 +91,8 @@ function initMap() {
 		center: cityOfCagliari
 	});
 
+	console.log(places instanceof Array);
+
 	// Update the observable array.
 	viewModel.locations(places);
 
@@ -347,7 +349,7 @@ function googleError() {
 // Knockout ViewModel.
 //
 // Store the locations as an observable array inside the ViewModel..
-function locationsViewModel(places) {
+function locationsViewModel() {
 	var self = this;
 	self.filter = ko.observable('');
 	self.locations = ko.observableArray(places || []);
@@ -383,24 +385,33 @@ function locationsViewModel(places) {
 		// 		}
 		// 	}
 		// }
+		console.log(places instanceof Array);
+		console.log(places.length);
 
 		// Clean the places array to push into it the filtered locations.
 		self.locations.removeAll();
 
 		// Check if the user provided a filter string.
-		if (!filter) {
-			return self.locations();
-		} else {
-			// Populate the 'places' array based on the items of the observable array
-			// self.locations() that match the filter string provided by the user.
-			for (var i = 0; i < places.length; i++) {
-				// Check if the current location initial substring matches 'filter'.
-				if (places[i].name.toLowerCase().startsWith(filter)) {
-					// Insert the matching location in the places array.
-					self.locations.push(places[i]);
-				}
+		// if (!filter) {
+		// 	return self.locations();
+		// } else {
+
+
+		// Populate the 'places' array based on the items of the observable array
+		// self.locations() that match the filter string provided by the user.
+		for (var i in places) {
+			console.log(places[i].name);
+			// Check if the current location initial substring matches 'filter'.
+			if (places[i].name.toLowerCase().startsWith(filter)) {
+				// Insert the matching location in the places array.
+				self.locations.push(places[i]);
 			}
 		}
+
+
+		// console.log(self.locations());
+
+		// }
 
 		// // Check if the user provided a filter string.
 		// if (!filter) {
@@ -425,9 +436,10 @@ function locationsViewModel(places) {
 		markers = [];
 
 		// Update the observable array locations that populate the list view..
-		self.locations(places);
+		// self.locations(places);
 		// Update the markers based on filter.
-		placeMarkers(places);
+		placeMarkers(self.locations());
+		// placeMarkers(places);
 	};
 }
 
