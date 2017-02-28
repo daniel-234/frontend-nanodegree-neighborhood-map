@@ -14,9 +14,6 @@ var markers = [];
 // Create an array to hold the places returned by the Google Maps Autocomplete API.
 var places = [];
 
-// var getAPIString;
-var wikiAPIStrArray = [];
-
 // Create an array with 6 locations to be displayed by default when the page loads.
 var locations = [
 	{
@@ -165,10 +162,8 @@ function placeMarkers(places) {
 // Create a list item connected to an appropriate marker.
 function addMarker(place, listPos) {
 	// Store the marker title.
-	var title = place.name;
+	var locationName = place.name;
 	// Define a variable to store the Wikipedia repsonse link.
-
-	// var wikiAPIStr = wikiAPIStrArray[listPos];
 	var wikiAPIStr;
 	// Create a new marker for each place.
 	var marker = new google.maps.Marker({
@@ -180,21 +175,14 @@ function addMarker(place, listPos) {
 		// marker; here the marker is attached to the map created
 		// just above.
 		map: map,
-		title: title
+		title: locationName
 	});
-	// Store the place name.
-	var locationString = place.name;
-
-	// getWikipediaRequest(locationString, wikiAPIStr);
-	// wikiAPIStr = wikiAPIStrArray[listPos];
-	console.log(wikiAPIStr);
-	// console.log(wikiAPIStrArray);
 
 	// Compose the Wikipedia URL search string with the search term. Query the Wikipedia
 	// Code taken from the Wikipedia API lesson of the course.
 	// Query the English Wikipedia API; to query the Italian API, change 'en' to 'it'.
 	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-		locationString + '&format=json&callback=wikiCallback';
+		locationName + '&format=json&callback=wikiCallback';
 	// AJAX request object.
 	$.ajax({
 		url: wikiUrl,
@@ -211,10 +199,14 @@ function addMarker(place, listPos) {
 			// If the response array has a 4th element, compose the link; otherwise, provide a standard
 			// replacement message.
 			if (response[3].length > 0) {
+				// Build the marker string.
 				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + articleTitle + '</a></p>';
+				// Add the string as a new marker property.
 				marker.info = wikiAPIStr;
 			} else {
+				// Build the marker string.
 				wikiAPIStr = '<p>No results were found on Wikipedia.</p>';
+				// Add the string as a new marker property.
 				marker.info = wikiAPIStr;
 			}
 		},
@@ -227,156 +219,22 @@ function addMarker(place, listPos) {
 			console.log('parsedJSON: ' + JSON.stringify(parsedjson));
 			// Display a string prompting the user to check the console for details.
 			wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>';
+			// Add the string as a new marker property.
 			marker.info = wikiAPIStr;
 		}
 	});
-
-	console.log(wikiAPIStr);
-
-	marker.info = wikiAPIStr;
-
-	// locationsInfoWindow = new google.maps.InfoWindow({
-	// 	content: wikiAPIStr;
-	// });
-
-	// var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-	// 		'<div>' + wikiAPIStr + '</div></div>';
-
-	// locationsInfoWindow.setContent(content);
-
-
-
-
-
-	// infowindow = new google.maps.InfoWindow({
-	// 	content: '<div class="location-info"><div>' + marker.title + '</div>' +
-	// 		'<div>' + wikiAPIStr + '</div></div>'
-	// });
-
-
-	// var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-	// 		'<div>' + wikiAPIStr + '</div></div>';
-
-	// marker.info = new google.maps.InfoWindow({
-	// 	content: content
-	// });
-
-	// function createInfoWindow(marker, wikiAPIStr) {
-	// 	var infowindow = new google.maps.InfoWindow({
-	// 		content: content
-	// 	});
-	// }
-
-	// // Check to make sure the infoWindow is not already open on this marker.
-	// if (infowindow.marker != marker) {
-	// 	infowindow.marker = marker;
-	// 	// Store the marker title and a Wikipedia link.
-	// 	var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-	// 		'<div>' + wikiAPIStr + '</div></div>';
-	// 	// Set the infoWindow content.
-	// 	infowindow.setContent(content);
-	// }
-
-
-	// populateInfoWindow(marker, infowindow, wikiAPIStr, itemPosition);
-
-
-	// var getAPIString = function() {
-	// 	return wikiAPIStr;
-	// }
-
-	// console.log(wikiAPIStr);
-
-
-	// wikiAPIStrArray.push(getAPIString());
-
-	// var markerAPIStr = getAPIString(listPos);
-	// wikiAPIStrArray.push(wikiAPIStr);
-
 
 	// Add an event listener to the marker.
 	// Code taken from the Google Maps API section of the course and elaborated for this
 	// app.
 	marker.addListener('click', function() {
-		// Set background color of the list item, the color of the marker and populates
-		// the infoWindow.
-
-
-		// selectRightLocation(this, listItem, locationsInfoWindow, wikiAPIStr);
-		// console.log(wikiAPIStrArray[listPos]);
-
-
+		// Set the color of the marker and populates the infoWindow.
 		selectRightLocation(this, listPos, locationsInfoWindow);
-
-
 	});
 
 	// Insert the marker into the markers array.
 	markers.push(marker);
-
-	console.log(wikiAPIStr);
-
-	// // Add an event listener to the list element.
-	// listItem.addEventListener('click', function() {
-	// 	// Set background color of the list item, the color of the marker and populates
-	// 	// the infoWindow.
-	// 	selectRightLocation(marker, this, locationsInfoWindow, wikiAPIStr);
-	// });
 }
-
-
-// function getWikipediaRequest(locationString, wikiAPIStr) {
-// 	// var wikiAPIStr;
-// 	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-// 		locationString + '&format=json&callback=wikiCallback';
-// 	// AJAX request object.
-// 	$.ajax({
-// 		url: wikiUrl,
-// 		dataType: 'jsonp',
-// 		success: function(response) {
-// 			console.log(response);
-// 			// Take the first element of the response Array as the article title.
-// 			var articleTitle = response[0];
-// 			// There may be more than one article in the response's 4th element. Take only the first link,
-// 			// that should be the most representative.
-// 			var articleUrl = response[3][0];
-// 			// The AJAX response is an Array with 4 elements. The Wikipedia link that's of interest to the
-// 			// marker infoWindow is stored at position 3 (of a 0-based array).
-// 			// If the response array has a 4th element, compose the link; otherwise, provide a standard
-// 			// replacement message.
-// 			if (response[3].length > 0) {
-// 				wikiAPIStr = '<p><a href="' + articleUrl + '" target="_blank">' + articleTitle + '</a></p>';
-// 			} else {
-// 				wikiAPIStr = '<p>No results were found on Wikipedia.</p>';
-// 			}
-// 			console.log(typeof(wikiAPIStr));
-// 			console.log(1);
-// 			console.log(2);
-// 			// return wikiAPIStr;
-// 			// wikiAPIStrArray.push(wikiAPIStr);
-// 		},
-// 		// Handle error if the AJAX method fails to load the API.
-// 		error: function(parsedjson, textStatus, errorThrown) {
-// 			// Display the error message on the console to let the user have more details about it.
-// 			console.log('parsedJSON: ' + parsedjson.statusText + ' ' + parsedjson.status);
-// 			console.log('Error status: ' + textStatus);
-// 			console.log('Error thrown: ' + textStatus);
-// 			console.log('parsedJSON: ' + JSON.stringify(parsedjson));
-// 			// Display a string prompting the user to check the console for details.
-// 			wikiAPIStr = '<p>There was an error loading the Wikipedia API.' + '<br />' + 'Chech the console for details.</p>';
-// 			console.log(2);
-// 			// return wikiAPIStr;
-// 			// wikiAPIStrArray.push(wikiAPIStr);
-// 		}
-
-// 	});
-
-	// console.log(2);
-	// return wikiAPIStr;
-
-// }
-
-
 
 // Tell the infoWindow to open at this marker and populate it with
 // information specific to this marker.
@@ -390,19 +248,23 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 			'<div>' + marker.info + '</div></div>';
 		// Set the infoWindow content.
 		infowindow.setContent(content);
-
+		// Open the infoWindow.
 		infowindow.open(map, marker);
-
 		// Set the icon of the marker to green as the infowindow opens.
 		marker.setIcon(greenIcon);
+
+
 		// Highlight the background color of the correspondent list item.
 		// setListItemBackground(itemPosition, 'limegreen');
+
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
 			// Close the infoWindow on this marker.
 			infowindow.marker = null;
 			// Set the icon of the marker back to red as we close the infoWindow.
 			marker.setIcon(redIcon);
+
+
 			// Set the background color of the correspondent list item to normal.
 			// setListItemBackground(itemPosition, 'white');
 		});
@@ -414,70 +276,22 @@ function setListItemBackground(itemPos, color) {
 	document.getElementById("item_list" + itemPos).style.backgroundColor = color;
 }
 
-
 // Set the background color of the selected item and the color of the equivalent marker.
 // Populate the appropriate infoWindow.
 function selectRightLocation(marker, itemPos, infowindow) {
-	// Store the position of the selected list item, taking it from its id.
-	var itemNumber = itemPos;
-
 	// Check if there is a marker already selected; if there is one, deselect it.
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
-	if ((itemNumber !== selectedMarker) && (selectedMarker !== undefined)) {
+	if ((itemPos !== selectedMarker) && (selectedMarker !== undefined)) {
 		markers[selectedMarker].setIcon(redIcon);
 		// setListItemBackground(selectedMarker, 'white');
 	}
-	// Assign the current item position inside the markers array
-	// to variable 'selectedMarker'.
-	selectedMarker = itemNumber;
-	// Call a function to higlight the selected list item and the equivalent marker and
-	// populate the chosen marker's infoWindow.
-	// console.log(wikiAPIStr);
-	console.log(marker.info);
-	populateInfoWindow(marker, locationsInfoWindow, itemNumber);
-	// console.log(wikiAPIStr);
-	console.log(marker.info);
-	// marker.setIcon(greenIcon);
-
-	// infowindow.open(map, marker);
-
-	// infowindow.addListener('closeclick', function() {
-	// 	// Close the infoWindow on this marker.
-	// 	infowindow.marker = null;
-	// 	// Set the icon of the marker back to red as we close the infoWindow.
-	// 	marker.setIcon(redIcon);
-	// 	// Set the background color of the correspondent list item to normal.
-	// 	// setListItemBackground(itemPosition, 'white');
-	// });
+	// Assign the current item position inside the markers array to variable 'selectedMarker'.
+	selectedMarker = itemPos;
+	// Change icon color of the selected marker and equivalent list item and populate the
+	// info window.
+	populateInfoWindow(marker, locationsInfoWindow, itemPos);
 }
-
-
-
-// // Set the background color of the selected item and the color of the equivalent marker.
-// // Populate the appropriate infoWindow.
-// function selectRightLocation1(marker, listItem, locationsInfoWindow, wikiAPIStr) {
-// 	// Store the position of the selected list item, taking it from its id.
-// 	var itemNumber = listItem.id.substr(9);
-// 	// Check if there is a marker already selected; if there is
-// 	// one, deselect it.
-// 	// Retrieve it from the array, set back its icon to the normal red icon and
-// 	// set the background color of the equivalent list element to normal.
-// 	if ((itemNumber !== selectedMarker) && (selectedMarker !== undefined)) {
-// 		markers[selectedMarker].setIcon(redIcon);
-// 		setListItemBackground(selectedMarker, 'white');
-// 	}
-// 	// Assign the current item position inside the markers array
-// 	// to variable 'selectedMarker'.
-// 	selectedMarker = itemNumber;
-// 	// Call a function to higlight the selected list item and the equivalent marker and
-// 	// populate the chosen marker's infoWindow..
-// 	populateInfoWindow(marker, locationsInfoWindow, wikiAPIStr, itemNumber);
-// }
-
-
-
-
 
 // Display an error message to the user if the map fails to load.
 function googleError() {
@@ -513,8 +327,6 @@ function LocationsViewModel() {
 		var filter = self.filter().toLowerCase();
 		// Empty the observable array to update the related UI view.
 		self.locations.removeAll();
-		console.log(places.length);
-		console.log(localStorage);
 		// Clean the places array to push into it the filtered locations.
 		self.locations.removeAll();
 		// Populate the 'places' array based on the items of the observable array
@@ -538,11 +350,8 @@ function LocationsViewModel() {
 
 	self.selectListPlace = function(listPlace) {
 		var itemPos = self.locations.indexOf(listPlace);
-		// var itemWikiAPIStr = getAPIString(itemPos);
+		// Change icon color of the equivalent marker and populate its infoWindow.
 		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
-		console.log("Clicked " + itemPos);
-
-		// console.log(itemWikiAPIStr());
 	};
 }
 

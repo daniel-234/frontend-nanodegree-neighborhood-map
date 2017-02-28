@@ -88,3 +88,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Stackoverflow - What is the best way of cloning/copying an observableArray in KnockoutJS?](http://stackoverflow.com/questions/6509297/what-is-the-best-way-of-cloning-copying-an-observablearray-in-knockoutjs)
 * [Udacity Discussion Forums - KO ViewModel can't access global variable? Having trouble implementing filter function](https://discussions.udacity.com/t/ko-viewmodel-cant-access-global-variable-having-trouble-implementing-filter-function/175025)
 * [Udacity Discussion Forums - KnockoutJS remove from observable arrays](https://discussions.udacity.com/t/knockoutjs-remove-from-observable-arrays/166692/7)
+* Adding a new property in markers:
+* [Udacity Discussion Forums - Adding a new property in markers](https://discussions.udacity.com/t/adding-a-new-property-in-marker/224995/2)
