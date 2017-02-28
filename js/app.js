@@ -356,16 +356,13 @@ function googleError() {
 // Knockout ViewModel.
 //
 // Store the locations as an observable array inside the ViewModel..
-function locationsViewModel() {
+function LocationsViewModel() {
 	var self = this;
 	self.filter = ko.observable('');
-	// self.locations = ko.observableArray(places || []);
-
 	// Define an observable array that clones the places array.
 	// Pass a copy of places to the observable array, so the two won't reference
 	// the same object when updating 'locations' for the filter functionality.
 	self.locations = ko.observableArray(places.slice(0) || []);
-
 	// Provide a filter functionality that should filter (show or hide) the
 	// existing list of locations as well as markers on the map.
 	// It returns the matching subset of the original array of items.
@@ -378,39 +375,11 @@ function locationsViewModel() {
 	// See http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage
 	self.filterSearch = function() {
 		var filter = self.filter().toLowerCase();
-
-		// // Clean the places array to push into it the filtered locations.
-		// places = [];
-
-		// // Check if the user provided a filter string.
-		// if (!filter) {
-		// 	return self.locations();
-		// } else {
-		// 	// Populate the 'places' array based on the items of the observable array
-		// 	// self.locations() that match the filter string provided by the user.
-		// 	for(var i = 0; i < self.locations().length; i++) {
-		// 		// Check if the current location initial substring matches 'filter'.
-		// 		if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
-		// 			console.log(self.locations()[i].name);
-		// 			// Insert the matching location in the places array.
-		// 			places.push(self.locations()[i]);
-		// 		}
-		// 	}
-		// }
-		console.log(places instanceof Array);
-		console.log(places.length);
+		// Empty the observable array to update the related UI view.
 		self.locations.removeAll();
 		console.log(places.length);
-
 		// Clean the places array to push into it the filtered locations.
 		self.locations.removeAll();
-
-		// Check if the user provided a filter string.
-		// if (!filter) {
-		// 	return self.locations();
-		// } else {
-
-
 		// Populate the 'places' array based on the items of the observable array
 		// self.locations() that match the filter string provided by the user.
 		for (var i = 0; i < places.length; i++) {
@@ -421,45 +390,18 @@ function locationsViewModel() {
 				self.locations.push(places[i]);
 			}
 		}
-
-
-		// console.log(self.locations());
-
-		// }
-
-		// // Check if the user provided a filter string.
-		// if (!filter) {
-		// 	return self.locations();
-		// } else {
-		// 	// Populate the 'places' array based on the items of the observable array
-		// 	// self.locations() that match the filter string provided by the user.
-		// 	for(var i = 0; i < self.locations().length; i++) {
-		// 		// Check if the current location initial substring matches 'filter'.
-		// 		if ((self.locations()[i].name.toLowerCase().startsWith(filter))) {
-		// 			console.log(self.locations()[i].name);
-		// 			// Insert the matching location in the places array.
-		// 			places.push(self.locations()[i]);
-		// 		}
-		// 	}
-		// }
-
 		// Clear out the old markers
 		markers.forEach(function(marker) {
 			marker.setMap(null);
 		});
 		markers = [];
-
-		// Update the observable array locations that populate the list view..
-		// self.locations(places);
 		// Update the markers based on filter.
 		placeMarkers(self.locations());
-		// placeMarkers(places);
 	};
-
 }
 
-// Instantiate a viewModel object.
-var viewModel = new locationsViewModel();
+// Instantiate a new LocationsViewModel object.
+var viewModel = new LocationsViewModel();
 
 // Activate KnockoutJS.
 ko.applyBindings(viewModel);
