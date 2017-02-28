@@ -403,7 +403,7 @@ function locationsViewModel() {
 		console.log(places.length);
 
 		// Clean the places array to push into it the filtered locations.
-		// self.locations.removeAll();
+		self.locations.removeAll();
 
 		// Check if the user provided a filter string.
 		// if (!filter) {
@@ -413,14 +413,14 @@ function locationsViewModel() {
 
 		// Populate the 'places' array based on the items of the observable array
 		// self.locations() that match the filter string provided by the user.
-		// for (var i = 0; i < places.length; i++) {
-			// console.log(places[i].name);
+		for (var i = 0; i < places.length; i++) {
+			console.log(places[i].name);
 			// Check if the current location initial substring matches 'filter'.
-			// if (places[i].name.toLowerCase().startsWith(filter)) {
-			// 	// Insert the matching location in the places array.
-			// 	self.locations.push(places[i]);
-			// }
-		// }
+			if (places[i].name.toLowerCase().startsWith(filter)) {
+				// Insert the matching location in the places array.
+				self.locations.push(places[i]);
+			}
+		}
 
 
 		// console.log(self.locations());
@@ -455,6 +455,7 @@ function locationsViewModel() {
 		placeMarkers(self.locations());
 		// placeMarkers(places);
 	};
+
 }
 
 // Instantiate a viewModel object.
