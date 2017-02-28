@@ -10,10 +10,11 @@ var cityOfCagliari = {
 var mapDiv = document.getElementById('map');
 // Create an array to hold the markers.
 var markers = [];
-// var places = [];
+// Create an array to hold the places returned by the Google Maps Autocomplete API.
+var places = [];
 
 // Create an array with 6 locations to be displayed by default when the page loads.
-var places = [
+var locations = [
 	{
 		name: 'Cagliari Cathedral',
 		geometry: {
@@ -90,60 +91,48 @@ function initMap() {
 		zoom: 15,
 		center: cityOfCagliari
 	});
-
-	console.log(places instanceof Array);
-
-	// Update the observable array.
-	// viewModel.locations(places);
-	// places.forEach(function(place) {
-	// 	viewModel.locations.push(place);
-	// });
-
+	// LocalStorage only supports strings. To solve the problem see:
+	// http://stackoverflow.com/questions/19174525/how-to-store-array-
+	// in-localstorage-object-in-html5
+	//
+	// Stringify the array and store the string in the 'locations'
+	// key inside localStorage.
+	localStorage.setItem('locations', JSON.stringify(locations));
+	// Pull it back out and parse it.
+	places = JSON.parse(localStorage.getItem('locations'));
+	// Update the observable array as the app loads.
+	viewModel.locations(places.slice(0));
 	// Create a bounds object.
 	bounds = new google.maps.LatLngBounds();
-
 	// Create an infoWindow instance.
 	locationsInfoWindow = new google.maps.InfoWindow();
-
 	// Place the markers in the map.
 	placeMarkers(places);
-
 	// Create the search box and link it to the UI element.
 	var input = document.getElementById('pac-input');
 	var searchBox = new google.maps.places.SearchBox(input);
-
 	// Bias the SearchBox results towards current map's viewport.
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
 	});
-
 	// Listen for the event fired when the user selects a prediction
 	// and retrieve more details for that place.
 	searchBox.addListener('places_changed', function() {
 		places = searchBox.getPlaces();
-
 		// Update the observable array.
 		viewModel.locations(places.slice(0));
-
-		// places.forEach(function(place) {
-		// 	viewModel.locations.push(place);
-		// });
-
 		if (places.length == 0) {
 			console.log('No selection has been made.');
 			return;
 		}
-
 		// Clear out the old markers
 		markers.forEach(function(marker) {
 			marker.setMap(null);
 		});
 		markers = [];
-
 		// Place the markers in the map.
 		placeMarkers(places);
 	});
-
 	map.fitBounds(bounds);
 }
 
@@ -157,11 +146,8 @@ function placeMarkers(places) {
 			console.log('Returned place contains no geometry');
 			return;
 		}
-
 		// Add a new marker and a list item to the map.
 		addMarker(place, i);
-
-
 		if (place.geometry.viewport) {
 			// Only geocodes have viewport
 			bounds.union(place.geometry.viewport);
@@ -190,7 +176,6 @@ function addMarker(place, listPos) {
 		map: map,
 		title: title
 	});
-
 	// Store the place name.
 	var locationString = place.name;
 	// Compose the Wikipedia URL search string with the search term. Query the Wikipedia
@@ -198,7 +183,6 @@ function addMarker(place, listPos) {
 	// Query the English Wikipedia API; to query the Italian API, change 'en' to 'it'.
 	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' +
 		locationString + '&format=json&callback=wikiCallback';
-
 	// AJAX request object.
 	$.ajax({
 		url: wikiUrl,
@@ -378,6 +362,7 @@ function LocationsViewModel() {
 		// Empty the observable array to update the related UI view.
 		self.locations.removeAll();
 		console.log(places.length);
+		console.log(localStorage);
 		// Clean the places array to push into it the filtered locations.
 		self.locations.removeAll();
 		// Populate the 'places' array based on the items of the observable array
