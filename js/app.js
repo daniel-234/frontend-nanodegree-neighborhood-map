@@ -134,6 +134,7 @@ function initMap() {
 		// Place the markers in the map.
 		placeMarkers(places);
 	});
+
 	map.fitBounds(bounds);
 }
 
@@ -252,6 +253,8 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 		infowindow.open(map, marker);
 		// Set the icon of the marker to green as the infowindow opens.
 		marker.setIcon(greenIcon);
+		// Center marker when it's active on click to provide better UX experience.
+		map.panTo(marker.getPosition());
 
 
 		// Highlight the background color of the correspondent list item.
