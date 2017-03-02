@@ -16,17 +16,17 @@
 		<div class="container">
 			<main class="row">
 				<!-- Add Bootstrap class '.input-group' with an '.input-group-btn' to append a btn element to a single form-control.
-					Add Bootstrap class="form-control" to the input to give it width=100%.
-					See 'http://getbootstrap.com/components/#input-groups' and http://getbootstrap.com/css/#forms-example -->
-					<form data-bind="submit: filterSearch" class="input-group">
-						<!-- Add one extra level of nesting to wrap the button in input group.
-						Place the button to the right side of the input. -->
-						<span class="input-group-btn">
-							<button class="btn btn-primary" type="submit">Filter</button>
-							<button class="btn btn-success" data-bind="click: getBack">Get Back</button>
-						</span>
-						<input data-bind="value: filter" id="pac-input" class="form-control" type="text" placeholder="Search Box">
-					</form>
+				Add Bootstrap class="form-control" to the input to give it width=100%.
+				See 'http://getbootstrap.com/components/#input-groups' and http://getbootstrap.com/css/#forms-example -->
+				<form data-bind="submit: filterSearch" class="input-group">
+					<!-- Add one extra level of nesting to wrap the button in input group.
+					Place the buttons to the left side of the input. -->
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="submit">Filter</button>
+						<button class="btn btn-success" data-bind="click: getBack">Get Back</button>
+					</span>
+					<input data-bind="value: filter" id="pac-input" class="form-control" type="text" placeholder="Search Box">
+				</form>
 				<aside class="col-list-view">
 					<!-- Populate a DOM element with the results of rendering a template by using a
 					KnockoutJS "template" binding.

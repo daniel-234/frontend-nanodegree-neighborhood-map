@@ -8,7 +8,7 @@ The map is loaded using the Google Maps API library and the MediaWikiAPI for Wik
 ## Getting Started
 
 To load the app, download a copy of the project to your local machine and open the file index.html with your browser.
-To search for some locations, type your query in the input field. You can filter the returned list with the Filter button and you can retrieve the list that was previously returned by the API search with the get Back button.
+To search for some locations, type your query in the input field. You can filter the returned list with the Filter button and you can retrieve the list that was previously returned by the API search with the Get Back button.
 
 ## Built With
 
