@@ -376,6 +376,8 @@ function LocationsViewModel() {
 		});
 		// Update the markers based on what locations objects are stored into the observable array.
 		placeMarkers(self.locations());
+		// Set back the viewport to contain the given bounds.
+		map.fitBounds(bounds);
 	};
 
 	// Get the position of the selected item and select the equivalent marker.
