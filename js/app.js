@@ -292,12 +292,9 @@ function selectRightLocation(marker, itemPos, infowindow) {
 
 // Display an error message to the user if the map fails to load.
 function googleError() {
-	var message = document.createElement('p');
-	message.classList.add('error-message');
-	message.innerHTML = 'Something went wrong when loading Google Maps.' + '<br />' +
-		'Check the JavaScript console for details.';
-	var mapDiv = document.getElementById('map');
-	mapDiv.append(message);
+	// Set the control variable to true.
+	viewModel.isError(true);
+	return viewModel.message();
 }
 
 // Create a location object with a new property used to toggle a class in the CSS binding.
@@ -318,6 +315,21 @@ function LocationsViewModel() {
 	self.filter = ko.observable('');
 	// Define an observable array that will hold the location objects.
 	self.locations = ko.observableArray([]);
+	// Observable variable that gets set to true if the 'onerror' callback is called by the
+	// asynchronous call.
+	self.isError = ko.observable(false);
+	// Hold the error message content.
+	var errorMessage = 'Something went wrong when loading Google Maps.' +
+		'\nCheck the JavaScript console for details.';
+	// Observable variable that holds the error message.
+	self.message = ko.observable(errorMessage);
+	// Observable for the error message font size.
+	self.fontSize = ko.observable('x-large');
+	// Knockout computed that returns a JavaScript object where the property names correspond to
+	// style names and the values correspond to style values we wish to apply.
+	self.fontSizeCSS = ko.computed(function() {
+		return {'font-size': self.fontSize()};
+	});
 	// Provide a filter functionality that should filter (show or hide) the
 	// existing list of locations as well as markers on the map.
 	// It returns the matching subset of the original array of items.
@@ -366,6 +378,19 @@ function LocationsViewModel() {
 		// Change icon color of the equivalent marker and populate its infoWindow.
 		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
 	};
+
+	// // Display an error message to the user if the map fails to load.
+	// self.googleError = function() {
+	// 	// var message = document.createElement('p');
+	// 	// message.classList.add('error-message');
+	// 	var messageDisplay = 'Something went wrong when loading Google Maps.' + '<br />' +
+	// 		'Check the JavaScript console for details.';
+	// 	// message.innerHTML = 'Something went wrong when loading Google Maps.' + '<br />' +
+	// 	// 	'Check the JavaScript console for details.';
+	// 	// var mapDiv = document.getElementById('map');
+	// 	// mapDiv.append(message);
+	// 	self.message(messageDisplay);
+	// }
 }
 
 // Instantiate a new LocationsViewModel object.

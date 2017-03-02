@@ -40,10 +40,12 @@
 					</div>
 				</aside>
 				<!-- Create the map View from the ViewModel defined in app.js.
-				The binding name 'map' matches the custom binding handler
-				defined in app.js, while the binding value 'position' is
-				the JavaScript property defined in the ViewModel. -->
-				<article class="col-map-view" id="map"></article>
+				The binding name 'map' matches the custom binding handler defined in app.js, while the binding
+				value 'position' is the JavaScript property defined in the ViewModel. -->
+				<article class="col-map-view" id="map">
+					<!-- Div that logs the error warning if the 'onerror' callback is called. -->
+					<div data-bind="text: message, style: fontSizeCSS, visible: isError"></div>
+				</article>
 			</main>
 		</div>
 		<!-- jQuery Google CDN -->
