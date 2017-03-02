@@ -7,8 +7,9 @@ The map is loaded using the Google Maps API library and the MediaWikiAPI for Wik
 
 ## Getting Started
 
-To load the app, download a copy of the project to your local machine and open the file index.html with your browser.
-To search for some locations, type your query in the input field. You can filter the returned list with the Filter button and you can retrieve the list that was previously returned by the API search with the Get Back button.
+To load the app, download a copy of the project to your local machine and open the file index.html with your browser. You should replace the API key with your own key, after getting it from Google. Alternatively, you can load it online from this [GitHub Pages project repository](https://daniel-234.github.io/frontend-nanodegree-neighborhood-map/).
+To search for locations, type your query in the input field. You can filter the returned list with the Filter button and you can retrieve the list that was previously returned by the API search with the Get Back button.
+
 
 ## Built With
 
