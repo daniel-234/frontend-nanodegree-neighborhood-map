@@ -8,6 +8,7 @@ The map is loaded using the Google Maps API library and the MediaWikiAPI for Wik
 ## Getting Started
 
 To load the app, download a copy of the project to your local machine and open the file index.html with your browser.
+To search for some locations, type your query in the input field. You can filter the returned list with the Filter button and you can retrieve the list that was previously returned by the API search with the get Back button.
 
 ## Built With
 
@@ -93,3 +94,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Thanks to some hints in these Discussion Forums threads I was able to refactor my code and add CSS styling of list items:
 * [Udacity Discussion Forums - CSS styling of list items](https://discussions.udacity.com/t/css-styling-of-list-items/185028/6)
 * [Udacity Discussion Forums - Strange Issue. Access of object property returns empty while the console indicates the appropriate value exists](https://discussions.udacity.com/t/strange-issue-access-of-object-property-returns-empty-while-the-console-indicates-the-appropriate-value-exists/169783/4)
+* I relied on this answer on Stackoverflow to add a style binding with property plus value:
+* [Stackoverflow - Can you add a KnockoutJS style binding specifying property and value together?](http://stackoverflow.com/questions/18560815/can-you-add-knockoutjs-style-binding-specifying-propertyvalue-together)
