@@ -342,19 +342,13 @@ function LocationsViewModel() {
 	// See http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage
 	self.filterSearch = function() {
 		var filter = self.filter().toLowerCase();
-		// If the filter text is empty, return the whole original locations array.
-		if (!filter) {
-			places.forEach(function(place) {
-				viewModel.locations.push(new LocationItem(place));
-			});
-		}
 		// Empty the observable array to update the related UI view.
 		self.locations.removeAll();
 		// Populate the 'places' array based on the items of the observable array
 		// self.locations() that match the filter string provided by the user.
 		for (var i = 0; i < places.length; i++) {
 			// Check if the current location initial substring matches 'filter'.
-			if (places[i].name.toLowerCase().startsWith(filter)) {
+			if ((filter !== '') && (places[i].name.toLowerCase().startsWith(filter))) {
 				// Insert the matching location in the places array.
 				self.locations.push(new LocationItem(places[i]));
 			}
@@ -368,9 +362,22 @@ function LocationsViewModel() {
 		// As the locations array has been cleared, the next selection has to not hold
 		// reference to the old one.
 		selectedMarker = undefined;
-		// Update the markers based on filter.
+		// Update the markers based on what locations objects are stored into the observable array.
 		placeMarkers(self.locations());
 	};
+
+	self.getBack = function() {
+		// Empty the observable array to update the related UI view.
+		self.locations.removeAll();
+		// Pull back all the places locations retrieved from the previous API search to
+		// the locations observable array.
+		places.forEach(function(place) {
+			viewModel.locations.push(new LocationItem(place));
+		});
+		// Update the markers based on what locations objects are stored into the observable array.
+		placeMarkers(self.locations());
+	};
+
 	// Get the position of the selected item and select the equivalent marker.
 	self.selectListPlace = function(listPlace) {
 		// Get the index position of the selected list item.
@@ -378,19 +385,6 @@ function LocationsViewModel() {
 		// Change icon color of the equivalent marker and populate its infoWindow.
 		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
 	};
-
-	// // Display an error message to the user if the map fails to load.
-	// self.googleError = function() {
-	// 	// var message = document.createElement('p');
-	// 	// message.classList.add('error-message');
-	// 	var messageDisplay = 'Something went wrong when loading Google Maps.' + '<br />' +
-	// 		'Check the JavaScript console for details.';
-	// 	// message.innerHTML = 'Something went wrong when loading Google Maps.' + '<br />' +
-	// 	// 	'Check the JavaScript console for details.';
-	// 	// var mapDiv = document.getElementById('map');
-	// 	// mapDiv.append(message);
-	// 	self.message(messageDisplay);
-	// }
 }
 
 // Instantiate a new LocationsViewModel object.
