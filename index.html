@@ -35,10 +35,7 @@
 						<ul data-bind="template: {name: 'location', foreach: locations}" class="u-list list-padding"></ul>
 
 						<script type="text/html" id="location">
-							<li data-bind="text: name, click: $parent.selectListPlace, css: {'is-selected': currentSelection}" class="no-bullets">
-							<!-- <li data-bind="text: name, click: $parent.selectListPlace" class="no-bullets"> -->
-								<!-- <p data-bind="text: name"></p> -->
-							</li>
+							<li data-bind="text: name, click: $parent.selectListPlace, css: {'is-selected': currentSelection}" class="no-bullets"></li>
 						</script>
 					</div>
 				</aside>
