@@ -111,7 +111,7 @@ function initMap() {
 	// and retrieve more details for that place.
 	searchBox.addListener('places_changed', function() {
 		places = searchBox.getPlaces();
-		if (places.length == 0) {
+		if (places.length === 0) {
 			console.log('No selection has been made.');
 			return;
 		}
@@ -304,7 +304,7 @@ var LocationItem = function(data) {
 	self.geometry = data.geometry;
 	// Boolean observable that is updated to true when this item is selected by the user.
 	self.currentSelection = ko.observable(false);
-}
+};
 
 // Knockout ViewModel.
 //
