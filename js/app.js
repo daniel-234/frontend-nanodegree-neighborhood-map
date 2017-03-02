@@ -120,7 +120,8 @@ function initMap() {
 			marker.setMap(null);
 		});
 		markers = [];
-
+		// Populate the locations observableArray with a new object
+		// for each location after a new API search.
 		places.forEach(function(place) {
 			viewModel.locations.push(new LocationItem(place));
 		});
@@ -128,7 +129,7 @@ function initMap() {
 		placeMarkers(places);
 	});
 	// Populate the locations observableArray with a new object
-	// for each location.
+	// for each location as the app loads.
 	places.forEach(function(place) {
 		viewModel.locations.push(new LocationItem(place));
 	});
@@ -188,7 +189,6 @@ function addMarker(place, listPos) {
 		url: wikiUrl,
 		dataType: 'jsonp',
 		success: function(response) {
-			console.log(response);
 			// Take the first element of the response Array as the article title.
 			var articleTitle = response[0];
 			// There may be more than one article in the response's 4th element. Take only the first link,
@@ -253,9 +253,7 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 		map.panTo(marker.getPosition());
 		// Set the boolean observable of the selected location to true to highlight
 		// the corresponding list item.
-		// viewModel.locations()[itemPosition].currentSelection(true);
 		selectedPlace.currentSelection(true);
-
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
 			// Close the infoWindow on this marker.
@@ -264,7 +262,6 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 			marker.setIcon(redIcon);
 			// Set the boolean observable of the selected location to false to remove the highlight
 			// from the corresponding list item when the infoWindow is closed.
-			// viewModel.locations()[itemPosition].currentSelection(false);
 			selectedPlace.currentSelection(false);
 		});
 	}
@@ -277,22 +274,17 @@ function selectRightLocation(marker, itemPos, infowindow) {
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
 	if ((itemPos !== selectedMarker) && (selectedMarker !== undefined)) {
-		// markers[selectedMarker].setIcon(redIcon);
-		markers.forEach(function(marker) {
-			marker.setIcon(redIcon);
-		});
+		markers[selectedMarker].setIcon(redIcon);
+	}
+	// If there was a location already selected, set its boolean observable property to false to
+	// remove its highlighting.
+	if (typeof(selectedPlace) !== 'undefined') {
 		selectedPlace.currentSelection(false);
-		// Set all the observables back to false.
-		// This operation takes also care of the case when a filter has been used and the
-		// new list is shorter that the original one, having lost reference to the old item position.
-		// viewModel.locations().forEach(function(location) {
-		// 	location.currentSelection(false);
-		// });
 	}
 	// Assign the current item position inside the markers array to variable 'selectedMarker'.
 	selectedMarker = itemPos;
+	// Store the selected location object.
 	selectedPlace = viewModel.locations()[itemPos];
-	console.log(selectedPlace);
 	// Change icon color of the selected marker and equivalent list item and populate the
 	// info window.
 	populateInfoWindow(marker, locationsInfoWindow, itemPos);
@@ -360,21 +352,17 @@ function LocationsViewModel() {
 			marker.setMap(null);
 		});
 		markers = [];
+		// Remove the reference to the selected marker.
+		// As the locations array has been cleared, the next selection has to not hold
+		// reference to the old one.
+		selectedMarker = undefined;
 		// Update the markers based on filter.
 		placeMarkers(self.locations());
 	};
 	// Get the position of the selected item and select the equivalent marker.
 	self.selectListPlace = function(listPlace) {
 		// Get the index position of the selected list item.
-
-		console.log(selectedPlace);
-		console.log(typeof(selectedPlace));
 		var itemPos = self.locations.indexOf(listPlace);
-		if (typeof(selectedPlace) !== 'undefined') {
-			selectedPlace.currentSelection(false);
-		}
-		// listPlace.currentSelection(true);
-		// selectedPlace = listPlace;
 		// Change icon color of the equivalent marker and populate its infoWindow.
 		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
 	};
