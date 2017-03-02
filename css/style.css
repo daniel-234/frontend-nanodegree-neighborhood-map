@@ -29,6 +29,14 @@ html, body {
 	list-style-type: none;
 }
 
+.list-padding {
+	padding-left: 10px;
+}
+
+.is-selected {
+	color: limegreen;
+}
+
 /* Position the element with class='error-message' at the center of the map div. */
 .error-message {
 	position: absolute;

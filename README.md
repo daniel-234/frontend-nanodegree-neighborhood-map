@@ -90,3 +90,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Udacity Discussion Forums - KnockoutJS remove from observable arrays](https://discussions.udacity.com/t/knockoutjs-remove-from-observable-arrays/166692/7)
 * Adding a new property in markers:
 * [Udacity Discussion Forums - Adding a new property in markers](https://discussions.udacity.com/t/adding-a-new-property-in-marker/224995/2)
+* Thanks to some hints in these Discussion Forums threads I was able to refactor my code and add CSS styling of list items:
+* [Udacity Discussion Forums - CSS styling of list items](https://discussions.udacity.com/t/css-styling-of-list-items/185028/6)
+* [Udacity Discussion Forums - Strange Issue. Access of object property returns empty while the console indicates the appropriate value exists](https://discussions.udacity.com/t/strange-issue-access-of-object-property-returns-empty-while-the-console-indicates-the-appropriate-value-exists/169783/4)

@@ -102,11 +102,53 @@ function initMap() {
 	// Pull it back out and parse it.
 	places = JSON.parse(localStorage.getItem('locations'));
 	// Update the observable array as the app loads.
-	viewModel.locations(places.slice(0));
+
+	console.log('Parse localStorage');
+
+	console.log(places.slice[0]);
+
+
+	// viewModel.locations(places.slice(0));
+
+
+
+
+	// var placeLocations = places.slice[0];
+	// console.log(placeLocations);
+	// console.log(places.slice[0]);
+	// for (var i = 0; i < placeLocations.length; i++) {
+	// 	placeLocations[i].currentSelection = false;
+	// 	// viewModel.locations.push(placeLocations[i]);
+	// }
+
+	// console.log(placeLocations);
+
+	// placeLocations.forEach(function(place) {
+	// 	// place[currentSelection] = false;
+	// 	// console.log(place);
+	// 	// var loc = new LocationItem(place);
+	// 	// console.log(loc);
+	// 	// console.log(typeof(loc.name));
+	// 	viewModel.locations.push(new LocationItem(place));
+
+	// });
+
+	// for (var i = 0; i < places.length; i++) {
+	// 		places.slice[0][i].currentSelection = false;
+	// 		// viewModel.locations.push(placeLocations[i]);
+	// }
+
+	// console.log(placeLocations);
+
+
+
+
+
+
 	// Create a bounds object.
 	bounds = new google.maps.LatLngBounds();
 	// Create an infoWindow instance.
-	locationsInfoWindow = new google.maps.InfoWindow();
+	// locationsInfoWindow = new google.maps.InfoWindow();
 	// Place the markers in the map.
 	placeMarkers(places);
 	// Create the search box and link it to the UI element.
@@ -121,7 +163,44 @@ function initMap() {
 	searchBox.addListener('places_changed', function() {
 		places = searchBox.getPlaces();
 		// Update the observable array.
-		viewModel.locations(places.slice(0));
+
+		console.log(places.slice[0]);
+
+		console.log('Get places from SearchBox');
+
+		// var placeLocations = places.slice[0];
+		// for (var i = 0; i < placeLocations.length; i++) {
+		// 	placeLocations[i].currentSelection = false;
+		// 	// viewModel.locations.push(placeLocations[i]);
+		// }
+
+		// console.log(placeLocations);
+
+
+		// // viewModel.locations(places.slice(0));
+		// // var placeLocations = places.slice(0);
+		// placeLocations.forEach(function(place) {
+		// // 	console.log(place);
+		// // 	var loc = new LocationItem(place);
+		// // 	console.log(loc);
+		// // 	viewModel.locations.push(loc);
+		// 	viewModel.locations.push(new LocationItem(place));
+		// });
+
+		// for (var i = 0; i < placeLocations.length; i++) {
+		// 	placeLocations[i].currentSelection = false;
+		// 	// viewModel.locations.push(placeLocations[i]);
+		// }
+
+
+		// viewModel.locations(places.slice(0));
+
+
+		// places.slice[0].forEach(function(place) {
+		// 	viewModel.locations.push(place);
+		// });
+
+
 		if (places.length == 0) {
 			console.log('No selection has been made.');
 			return;
@@ -135,13 +214,32 @@ function initMap() {
 		placeMarkers(places);
 	});
 
+	console.log(places);
+
+	places.forEach(function(place) {
+		viewModel.locations.push(new LocationItem(place));
+	});
+
+	console.log(viewModel.locations());
+
 	map.fitBounds(bounds);
 }
 
 // Place the markers in the map at the returned places.
 function placeMarkers(places) {
+
 	// For each result, place a marker in the map and add a list item.
 	for (var i = 0; i < places.length; i++) {
+
+		// console.log(places);
+		console.log('Place markers');
+
+		console.log(typeof(places));
+
+
+
+
+
 		// Store the result.
 		var place = places[i];
 		if(!place.geometry) {
@@ -179,6 +277,11 @@ function addMarker(place, listPos) {
 		title: locationName
 	});
 
+	// Create an infoWindow instance.
+	locationsInfoWindow = new google.maps.InfoWindow();
+
+	console.log('Add single marker');
+
 	// Compose the Wikipedia URL search string with the search term. Query the Wikipedia
 	// Code taken from the Wikipedia API lesson of the course.
 	// Query the English Wikipedia API; to query the Italian API, change 'en' to 'it'.
@@ -210,6 +313,8 @@ function addMarker(place, listPos) {
 				// Add the string as a new marker property.
 				marker.info = wikiAPIStr;
 			}
+
+			console.log('Return Wikipedia response');
 		},
 		// Handle error if the AJAX method fails to load the API.
 		error: function(parsedjson, textStatus, errorThrown) {
@@ -231,6 +336,8 @@ function addMarker(place, listPos) {
 	marker.addListener('click', function() {
 		// Set the color of the marker and populates the infoWindow.
 		selectRightLocation(this, listPos, locationsInfoWindow);
+
+		console.log('Marker click');
 	});
 
 	// Insert the marker into the markers array.
@@ -244,6 +351,9 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 	// Check to make sure the infoWindow is not already open on this marker.
 	if (infowindow.marker != marker) {
 		infowindow.marker = marker;
+
+		console.log('Populate infoWindow');
+
 		// Store the marker title and a Wikipedia link.
 		var content = '<div class="location-info"><div>' + marker.title + '</div>' +
 			'<div>' + marker.info + '</div></div>';
@@ -256,7 +366,7 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 		// Center marker when it's active on click to provide better UX experience.
 		map.panTo(marker.getPosition());
 
-
+		viewModel.locations()[itemPosition].currentSelection(true);
 		// Highlight the background color of the correspondent list item.
 		// setListItemBackground(itemPosition, 'limegreen');
 
@@ -267,6 +377,10 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 			// Set the icon of the marker back to red as we close the infoWindow.
 			marker.setIcon(redIcon);
 
+			console.log(itemPosition);
+			console.log(typeof(itemPosition));
+
+			viewModel.locations()[itemPosition].currentSelection(false);
 
 			// Set the background color of the correspondent list item to normal.
 			// setListItemBackground(itemPosition, 'white');
@@ -276,7 +390,9 @@ function populateInfoWindow(marker, infowindow, itemPosition) {
 
 // Set the background color of the list item at position itemPos to color.
 function setListItemBackground(itemPos, color) {
-	document.getElementById("item_list" + itemPos).style.backgroundColor = color;
+	// document.getElementById("item_list" + itemPos).style.backgroundColor = color;
+	// viewModel.locations()[itemPos].
+	document.getElementsByTagName('li')[itemPos].style.backgroundColor = color;
 }
 
 // Set the background color of the selected item and the color of the equivalent marker.
@@ -286,9 +402,23 @@ function selectRightLocation(marker, itemPos, infowindow) {
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
 	if ((itemPos !== selectedMarker) && (selectedMarker !== undefined)) {
-		markers[selectedMarker].setIcon(redIcon);
+		// markers[selectedMarker].setIcon(redIcon);
+		markers.forEach(function(marker) {
+			marker.setIcon(redIcon);
+		});
 		// setListItemBackground(selectedMarker, 'white');
+		// viewModel.locations()[selectedMarker].currentSelection(false);
+		// if (viewModel.locations().length) {
+		// 	viewModel.locations()[selectedMarker].currentSelection(false);
+		// 	console.log(false);
+		// }
+		viewModel.locations().forEach(function(location) {
+			location.currentSelection(false);
+		});
 	}
+
+	console.log('select right location');
+
 	// Assign the current item position inside the markers array to variable 'selectedMarker'.
 	selectedMarker = itemPos;
 	// Change icon color of the selected marker and equivalent list item and populate the
@@ -306,16 +436,42 @@ function googleError() {
 	mapDiv.append(message);
 }
 
+var LocationItem = function(data) {
+	var self = this;
+	self.name = data.name;
+	self.geometry = data.geometry;
+	self.currentSelection = ko.observable(false);
+}
+
 // Knockout ViewModel.
 //
 // Store the locations as an observable array inside the ViewModel..
 function LocationsViewModel() {
 	var self = this;
 	self.filter = ko.observable('');
+
+	console.log(places);
+	console.log('inside view model');
+
 	// Define an observable array that clones the places array.
 	// Pass a copy of places to the observable array, so the two won't reference
 	// the same object when updating 'locations' for the filter functionality.
-	self.locations = ko.observableArray(places.slice(0) || []);
+
+
+	// self.locations = ko.observableArray(places.slice(0) || []);
+	self.locations = ko.observableArray([]);
+
+
+	// self.locations().currentSelection = ko.observable(false);
+	// var placeLocations = places.slice(0);
+	// placeLocations.forEach(function(place) {
+	// 	self.locations.push(new LocationItem(place));
+	// 	// self.locations.push(place);
+	// });
+
+
+	console.log(self.locations());
+
 	// Provide a filter functionality that should filter (show or hide) the
 	// existing list of locations as well as markers on the map.
 	// It returns the matching subset of the original array of items.
@@ -328,18 +484,34 @@ function LocationsViewModel() {
 	// See http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage
 	self.filterSearch = function() {
 		var filter = self.filter().toLowerCase();
+		// If the filter text is empty, return the whole locations array.
+		if (!filter) {
+			// self.locations(places.slice(0));
+			places.forEach(function(place) {
+				viewModel.locations.push(new LocationItem(place));
+			});
+		}
+
+		// self.locations().forEach(function(location) {
+		// 	location.currentSelection(false);
+		// });
+		// self.locations()[selectedMarker].currentSelection(false);
+
+		console.log('filter search');
+
+		console.log(self.locations());
 		// Empty the observable array to update the related UI view.
-		self.locations.removeAll();
-		// Clean the places array to push into it the filtered locations.
 		self.locations.removeAll();
 		// Populate the 'places' array based on the items of the observable array
 		// self.locations() that match the filter string provided by the user.
 		for (var i = 0; i < places.length; i++) {
-			console.log(places[i].name);
+			// console.log(places[i].name);
 			// Check if the current location initial substring matches 'filter'.
 			if (places[i].name.toLowerCase().startsWith(filter)) {
 				// Insert the matching location in the places array.
-				self.locations.push(places[i]);
+
+				// self.locations.push(places[i]);
+				self.locations.push(new LocationItem(places[i]));
 			}
 		}
 		// Clear out the old markers
@@ -347,12 +519,21 @@ function LocationsViewModel() {
 			marker.setMap(null);
 		});
 		markers = [];
+
+		// viewModel.locations().forEach(function(location) {
+		// 	location.currentSelection(false);
+		// });
+
 		// Update the markers based on filter.
 		placeMarkers(self.locations());
 	};
-
+	// Get the position of the selected item and select the equivalent marker.
 	self.selectListPlace = function(listPlace) {
+		// Get the index position of the selected list item.
 		var itemPos = self.locations.indexOf(listPlace);
+
+		console.log(self.locations()[itemPos].currentSelection());
+		// self.locations()[itemPos].currentSelection(true);
 		// Change icon color of the equivalent marker and populate its infoWindow.
 		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
 	};
