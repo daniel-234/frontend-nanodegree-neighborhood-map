@@ -97,3 +97,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * [Udacity Discussion Forums - Strange Issue. Access of object property returns empty while the console indicates the appropriate value exists](https://discussions.udacity.com/t/strange-issue-access-of-object-property-returns-empty-while-the-console-indicates-the-appropriate-value-exists/169783/4)
 * I relied on this answer on Stackoverflow to add a style binding with property plus value:
 * [Stackoverflow - Can you add a KnockoutJS style binding specifying property and value together?](http://stackoverflow.com/questions/18560815/can-you-add-knockoutjs-style-binding-specifying-propertyvalue-together)
+* Sample code used to filter the array:
+* [Stackoverflow - Filter using KnockoutJS](http://stackoverflow.com/questions/28042344/filter-using-knockoutjs)
