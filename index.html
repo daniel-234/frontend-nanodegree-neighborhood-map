@@ -18,14 +18,13 @@
 				<!-- Add Bootstrap class '.input-group' with an '.input-group-btn' to append a btn element to a single form-control.
 				Add Bootstrap class="form-control" to the input to give it width=100%.
 				See 'http://getbootstrap.com/components/#input-groups' and http://getbootstrap.com/css/#forms-example -->
-				<form data-bind="submit: filterSearch" class="input-group">
+				<form class="input-group">
 					<!-- Add one extra level of nesting to wrap the button in input group.
 					Place the buttons to the left side of the input. -->
 					<span class="input-group-btn">
-						<button class="btn btn-primary" type="submit">Filter</button>
-						<button class="btn btn-success" data-bind="click: getBack">Get Back</button>
+						<button class="btn btn-success" data-bind="click: searchPlacesAPI">Search API</button>
 					</span>
-					<input data-bind="value: filter" id="pac-input" class="form-control" type="text" placeholder="Search Box">
+					<input data-bind="textInput: query" class="form-control" type="text" placeholder="Search Box">
 				</form>
 				<aside class="col-list-view">
 					<!-- Populate a DOM element with the results of rendering a template by using a
@@ -33,35 +32,10 @@
 					Build sophisticated UI structures with repeating blocks as a function of our view
 					model data. -->
 					<div id="input-list" class="listWrapper">
-						<ul data-bind="template: {name: 'location', foreach: locations}" class="u-list list-padding"></ul>
+						<ul data-bind="template: {name: 'location', foreach: filteredLocations}" class="u-list list-padding"></ul>
 
 						<script type="text/html" id="location">
 							<li data-bind="text: name, click: $parent.selectListPlace, css: {'is-selected': currentSelection}" class="no-bullets"></li>
-						</script>
-					</div>
-					<!-- Form element with a filter button.
-					See 'http://getbootstrap.com/css/#forms-inline' and
-					'http://getbootstrap.com/components/#input-groups'. -->
-					<form data-bind="submit: filterSearch" class="input-group">
-						<!-- Add Bootstrap class="form-control" to the input to give it width=100%. -->
-						<input data-bind="textInput: query" class="form-control"/>
-						<!-- Add one extra level of nesting to wrap the button in input group.
-						Place the button on the right side of the input. -->
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="submit">Filter</button>
-						</span>
-					</form>
-					<!-- Populate a DOM element with the results of rendering a template by using a
-					KnockoutJS "template" binding.
-					Build sophisticated UI structures with repeating blocks as a function of our view
-					model data. -->
-					<div id="input-list" class="listWrapper">
-						<ul data-bind="template: {name: 'location', foreach: locations}"></ul>
-
-						<script type="text/html" id="location">
-							<li>
-								<p data-bind="text: name"></p>
-							</li>
 						</script>
 					</div>
 				</aside>

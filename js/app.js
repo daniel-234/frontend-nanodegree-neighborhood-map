@@ -9,69 +9,11 @@ var cityOfCagliari = {
 				lat: 39.2151,
 				lng: 9.1128
 			};
-var mapDiv = document.getElementById('map');
 // Create an array to hold the markers.
 var places = [];
 var markers = [];
 // Create an array to hold the places returned by the Google Maps Autocomplete API.
 var places = [];
-// Create an array with 6 locations to be displayed by default when the page loads.
-var locations = [
-	{
-		name: 'Cagliari Cathedral',
-		geometry: {
-			location: {
-				lat: 39.2187433,
-				lng: 9.116967899999963
-			}
-		}
-	},
-	{
-		name: 'Bastione di Saint Remy',
-		geometry: {
-			location: {
-				lat: 39.2159691,
-				lng: 9.11647040
-			}
-		}
-	},
-	{
-		name: 'Torre dell\'Elefante',
-		geometry: {
-			location: {
-				lat: 39.21794610,
-				lng: 9.114884099999927
-			}
-		}
-	},
-	{
-		name: 'ExMà',
-		geometry: {
-			location: {
-				lat: 39.2147617,
-				lng: 9.120505800000046
-			}
-		}
-	},
-	{
-		name: 'Piazza Matteotti',
-		geometry: {
-			location: {
-				lat: 39.21510099999999,
-				lng: 9.108989899999983
-			}
-		}
-	},
-	{
-		name: 'Pinacoteca Nazionale Cagliari',
-		geometry: {
-			location: {
-				lat: 39.22297289999999,
-				lng: 9.117204000000015
-			}
-		}
-	}
-];
 // Store the position of the selected marker; undefined as page loads.
 // As a marker is clicked, it stores its position inside the markers
 // array; it is called to set the icon back to the original color when
@@ -80,6 +22,8 @@ var selectedMarker, selectedPlace;
 // Store the map icon markers.
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
+
+var oldQuery = 'restaurants';
 
 function initMap() {
 	// Create a new map JavaScript object using the coordinates
@@ -90,20 +34,22 @@ function initMap() {
 	});
 
 	// Create a request for the service callback function.
-	var request = {
-		location: cityOfCagliari,
-		// Instruct the Places service to prefer showing results within this area.
-		// If radius is turned on, the bounds parameter must be turned off.
-		// radius: 500,
-		// A google.maps.LatLngBounds object defining the rectangle in which to search.
-		// If bounds is turned on, the radius parameter must be turned off.
-		bounds: map.getBounds(),
-		query: 'restaurants'
-	};
+	// var request = {
+	// 	location: cityOfCagliari,
+	// 	// Instruct the Places service to prefer showing results within this area.
+	// 	// If radius is turned on, the bounds parameter must be turned off.
+	// 	// radius: 500,
+	// 	// A google.maps.LatLngBounds object defining the rectangle in which to search.
+	// 	// If bounds is turned on, the radius parameter must be turned off.
+	// 	bounds: map.getBounds(),
+	// 	// query: 'restaurants'
+	// 	query: oldQuery
+	// };
 	// Initiate a text search by calling the PlacesService's textSearch() method.
 	// Return information about a set of places based on a string.
 	service = new google.maps.places.PlacesService(map);
-	service.textSearch(request, callback);
+	// service.textSearch(request, callback);
+	getRequest(oldQuery);
 }
 
 function getRequest(value) {
@@ -120,7 +66,6 @@ function getRequest(value) {
 	};
 	// Initiate a text search by calling the PlacesService's textSearch() method.
 	// Return information about a set of places based on a string.
-	service = new google.maps.places.PlacesService(map);
 	service.textSearch(request, callback);
 }
 
@@ -131,7 +76,7 @@ function callback(results, status) {
 	var elem = document.getElementById('input-list');
 
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
-		// places = results;
+		// places = [];
 		// viewModel.locations(places);
 		console.log(results);
 		// Check if there are old markers and clear them out.
@@ -141,82 +86,45 @@ function callback(results, status) {
 			});
 			markers = [];
 		}
-		console.log(places);
-		// Clear out the old markers
-		markers.forEach(function(marker) {
-			marker.setMap(null);
-		});
-		markers = [];
+
 		// Empty the locations observable array.
 		viewModel.locations.removeAll();
-		// Populate the locations observableArray with a new object
-		// for each location after a new API search.
-		places.forEach(function(place) {
-			viewModel.locations.push(new LocationItem(place));
-		});
-		// Create a bounds object.
-		bounds = new google.maps.LatLngBounds();
-		// Place the markers in the map.
-		placeMarkers(places);
-		// Set the viewport to contain the given bounds.
-		map.fitBounds(bounds);
-	};
-	// Populate the locations observableArray with a new object
-	// for each location as the app loads.
-	places.forEach(function(place) {
-		viewModel.locations.push(new LocationItem(place));
-	});
-	// Set the viewport to contain the given bounds.
-	map.fitBounds(bounds);
-}
-
-// Place the markers in the map at the returned places coordinates.
-function placeMarkers(places) {
-	// For each result, place a marker in the map.
-	for (var i = 0; i < places.length; i++) {
-		// Store each single result result.
-		var place = places[i];
-		if(!place.geometry) {
-			console.log('Returned place contains no geometry');
-			return;
-		}
-		// Add a new marker to the map.
-		addMarker(place, i);
-		if (place.geometry.viewport) {
-			// Only geocodes have viewport
-			bounds.union(place.geometry.viewport);
-		} else {
-			bounds.extend(place.geometry.location);
-		}
-		// Remove the child elements of elem, if any exists.
-		// while (elem.firstChild) {
-		// 	elem.removeChild(elem.firstChild);
-		// }
 
 		// Create an infoWindow instance.
 		locationsInfoWindow = new google.maps.InfoWindow();
 
-		// Create an unordered list and store it.
-		var uList = document.createElement('ul');
-		// Append a class to the unordered list.
-		uList.classList.add('no-bullets');
-		// Append the list to the appropriate div.
-		// elem.appendChild(uList);
+		places = [];
 
-		// For each result, place a marker in the map and add a list item.
 		for (var i = 0; i < results.length; i++) {
 			// Store the result.
 			var place = results[i];
 			places.push(place);
-			// Add a new marker and a list item to the map.
-			addMarker(place, i, uList, elem);
+			viewModel.locations.push(new LocationItem(place));
 		}
 
-		viewModel.locations(places);
+
+		placeMarkers(places);
+
 		console.log(places);
+		viewModel.query('');
 	} else {
 		alert('There was a problem contacting the Google servers. Please, check the JavaScript console fo more details.');
 		console.log(google.maps.places.PlacesServiceStatus);
+	}
+}
+
+// Place the markers in the map at the returned places coordinates.
+function placeMarkers(placesResults) {
+	// places = [];
+	// For each result, place a marker in the map and add a list item.
+	for (var i = 0; i < placesResults.length; i++) {
+		// Store the result.
+		var place = placesResults[i];
+		// places.push(place);
+		// viewModel.locations.push(new LocationItem(place));
+		// Add a new marker to the map.
+		addMarker(place, i);
+		console.log(place);
 	}
 }
 
@@ -240,7 +148,7 @@ function addMarker(place, listPos) {
 		title: locationName
 	});
 	// Create an infoWindow instance.
-	locationsInfoWindow = new google.maps.InfoWindow();
+	// locationsInfoWindow = new google.maps.InfoWindow();
 	// Compose the Wikipedia URL search string with the search term. Query the Wikipedia
 	// Code taken from the Wikipedia API lesson of the course.
 	// Query the English Wikipedia API; to query the Italian API, change 'en' to 'it'.
@@ -285,6 +193,7 @@ function addMarker(place, listPos) {
 			marker.info = wikiAPIStr;
 		}
 	});
+	console.log(marker);
 	// Add an event listener to the marker.
 	// Code taken from the Google Maps API section of the course and elaborated for this app.
 	marker.addListener('click', function() {
@@ -298,7 +207,7 @@ function addMarker(place, listPos) {
 // Tell the infoWindow to open at this marker and populate it with
 // information specific to this marker.
 // Code taken from the Google Maps API section of the course.
-function populateInfoWindow(marker, infowindow, itemPosition) {
+function populateInfoWindow(marker, itemPosition, infowindow) {
 	// Check to make sure the infoWindow is not already open on this marker.
 	if (infowindow.marker != marker) {
 		infowindow.marker = marker;
@@ -344,13 +253,15 @@ function selectRightLocation(marker, itemPos, infowindow) {
 	if (typeof(selectedPlace) !== 'undefined') {
 		selectedPlace.currentSelection(false);
 	}
+	// console.log(locationsInfoWindow);
+	// console.log(locationsInfoWindow);
 	// Assign the current item position inside the markers array to variable 'selectedMarker'.
 	selectedMarker = itemPos;
 	// Store the selected location object.
-	selectedPlace = viewModel.locations()[itemPos];
+	selectedPlace = viewModel.filteredMarkers()[itemPos];
 	// Change icon color of the selected marker and equivalent list item and populate the
 	// info window.
-	populateInfoWindow(marker, locationsInfoWindow, itemPos);
+	populateInfoWindow(marker, itemPos, locationsInfoWindow);
 }
 
 // Display an error message to the user if the map fails to load.
@@ -375,9 +286,14 @@ var LocationItem = function(data) {
 function LocationsViewModel() {
 	var self = this;
 	// Observable that holds the input value.
-	self.filter = ko.observable('');
+	self.query = ko.observable('');
 	// Define an observable array that will hold the location objects.
 	self.locations = ko.observableArray([]);
+
+
+	self.filteredMarkers = ko.observableArray([]);
+
+
 	// Observable variable that gets set to true if the 'onerror' callback is called by the
 	// asynchronous call.
 	self.isError = ko.observable(false);
@@ -396,76 +312,206 @@ function LocationsViewModel() {
 	// Provide a filter functionality that should filter (show or hide) the
 	// existing list of locations as well as markers on the map.
 	// It returns the matching subset of the original array of items.
-	//
-	// Building this functionality has forced me to face localStorage behavior
-	// when storing JSON objects within an array.
-	// The parsed object is in fact an array, however each JSON object in the
-	// array is no longer an object and must be JSON parsed to "recreate" an
-	// object out of the string that it is.
-	// See http://stackoverflow.com/questions/30584476/object-properties-are-undefined-after-localstorage
-	self.filterSearch = function() {
-		var filter = self.filter().toLowerCase();
-		// Empty the observable array to update the related UI view.
-		self.locations.removeAll();
-		// Populate the 'places' array based on the items of the observable array
-		// self.locations() that match the filter string provided by the user.
-		for (var i = 0; i < places.length; i++) {
-			// Check if the current location initial substring matches 'filter'.
-			if ((filter !== '') && (places[i].name.toLowerCase().startsWith(filter))) {
-				// Insert the matching location in the places array.
-				self.locations.push(new LocationItem(places[i]));
-			}
-		}
-		// Clear out the old markers
-		markers.forEach(function(marker) {
-			marker.setMap(null);
-		});
-		markers = [];
-		// Remove the reference to the selected marker.
-		// As the locations array has been cleared, the next selection has to not hold
-		// reference to the old one.
-		selectedMarker = undefined;
-		// Update the markers based on what locations objects are stored into the observable array.
-		placeMarkers(self.locations());
-// Suggestion taken from a response in the discussion forum:
-// https://discussions.udacity.com/t/map-async-moved-after-app-js/216797/2
-function activateKO() {
-	// Store the position of the map center and the query input value as an Observable.
-	var ViewModel = function() {
-		var self = this;
-		// Define an Observable variable.
-		self.query = ko.observable('restaurant');
-		// Update the query value.
-		self.filterSearch = function() {
-			self.query(self.query());
-		};
-	};
 
-	self.getBack = function() {
-		// Empty the observable array to update the related UI view.
-		self.locations.removeAll();
-		// Pull back all the places locations retrieved from the previous API search to
-		// the locations observable array.
-		places.forEach(function(place) {
-			viewModel.locations.push(new LocationItem(place));
-		});
-		// Update the markers based on what locations objects are stored into the observable array.
-		placeMarkers(self.locations());
-		// Set back the viewport to contain the given bounds.
-		map.fitBounds(bounds);
+
+	// self.filterLocations = function(value) {
+	// 	// var filter = self.query().toLowerCase();
+	// 	// Empty the observable array to update the related UI view.
+	// 	self.locations.removeAll();
+	// 	// Populate the 'places' array based on the items of the observable array
+	// 	// self.locations() that match the filter string provided by the user.
+	// 	for (var i = 0; i < places.length; i++) {
+	// 		// Check if the current location initial substring matches 'filter'.
+	// 		if (places[i].name.toLowerCase().startsWith(value)) {
+	// 			// Insert the matching location in the places array.
+	// 			self.locations.push(new LocationItem(places[i]));
+	// 		}
+	// 	}
+	// 	// Clear out the old markers
+	// 	markers.forEach(function(marker) {
+	// 		marker.setMap(null);
+	// 	});
+	// 	markers = [];
+	// 	// Remove the reference to the selected marker.
+	// 	// As the locations array has been cleared, the next selection has to not hold
+	// 	// reference to the old one.
+	// 	selectedMarker = undefined;
+	// 	// Update the markers based on what locations objects are stored into the observable array.
+	// 	placeMarkers(self.locations());
+	// };
+
+
+
+
+
+	self.filteredLocations = ko.computed(function() {
+		var filter = self.query().toLowerCase();
+		var newArr = [];
+		if (!filter) {
+			self.filteredMarkers(self.locations());
+			// console.log(newArr);
+
+			// var newArr = ko.utils.arrayFilter(self.locations(), function(location) {
+			// 	return stringStartsWith(location.name.toLowerCase(), filter);
+			// });
+			// console.log(newArr);
+
+
+			// Clear out the old markers
+			markers.forEach(function(marker) {
+				marker.setMap(null);
+			});
+			markers = [];
+			if (typeof(selectedPlace) !== 'undefined') {
+				selectedPlace.currentSelection(false);
+			}
+			// Remove the reference to the selected marker.
+			// As the locations array has been cleared, the next selection has to not hold
+			// reference to the old one.
+			selectedMarker = undefined;
+			// // Update the markers based on what locations objects are stored into the observable array.
+			// // placeMarkers(self.locations());
+
+
+			placeMarkers(self.filteredMarkers());
+			// return ko.utils.arrayFilter(self.locations(), function(location) {
+			// 	return stringStartsWith(location.name.toLowerCase(), filter);
+			// });
+			return self.filteredMarkers();
+
+
+			// // Clear out the old markers
+			// markers.forEach(function(marker) {
+			// 	marker.setMap(null);
+			// });
+			// markers = [];
+			// // Remove the reference to the selected marker.
+			// // As the locations array has been cleared, the next selection has to not hold
+			// // reference to the old one.
+			// selectedMarker = undefined;
+			// // Update the markers based on what locations objects are stored into the observable array.
+			// // placeMarkers(self.locations());
+
+
+			// placeMarkers(newArr);
+			// // return ko.utils.arrayFilter(self.locations(), function(location) {
+			// // 	return stringStartsWith(location.name.toLowerCase(), filter);
+			// // });
+			// return newArr;
+
+
+			// placeMarkers(self.locations());
+			// return self.locations();
+		} else {
+			newArr = ko.utils.arrayFilter(self.locations(), function(location) {
+				return stringStartsWith(location.name.toLowerCase(), filter);
+			});
+			console.log(newArr);
+			self.filteredMarkers(newArr);
+	// 		self.filteredMarkers.removeAll();
+	// 		for (var i = 0; i < self.locations(); i++) {
+	// 			if (self.locations()[i].name.toLowerCase().startsWith(filter)) {
+	// 				// Insert the matching location in the places array.
+	// 				self.filteredMarkers.push(new LocationItem(self.locations[i]));
+	// 			}
+	// // 		})
+	// 		}
+
+
+			// Clear out the old markers
+			markers.forEach(function(marker) {
+				marker.setMap(null);
+			});
+			markers = [];
+			if (typeof(selectedPlace) !== 'undefined') {
+				selectedPlace.currentSelection(false);
+			}
+			// Remove the reference to the selected marker.
+			// As the locations array has been cleared, the next selection has to not hold
+			// reference to the old one.
+			selectedMarker = undefined;
+			// // Update the markers based on what locations objects are stored into the observable array.
+			// // placeMarkers(self.locations());
+
+			placeMarkers(newArr);
+
+			return newArr;
+
+			// placeMarkers(self.filteredMarkers());
+			// // return ko.utils.arrayFilter(self.locations(), function(location) {
+			// // 	return stringStartsWith(location.name.toLowerCase(), filter);
+			// // });
+			// return self.filteredMarkers();
+		}
+	});
+
+
+	// var stringStartsWith = function (string, startsWith) {
+	//     string = string || "";
+	//     if (startsWith.length > string.length)
+	//         return false;
+	//     return string.substring(0, startsWith.length) === startsWith;
+	// };
+
+
+	// 	// Empty the observable array to update the related UI view.
+	// 	self.locations.removeAll();
+	// 	// Populate the 'places' array based on the items of the observable array
+	// 	// self.locations() that match the filter string provided by the user.
+	// 	for (var i = 0; i < places.length; i++) {
+	// 		// Check if the current location initial substring matches 'filter'.
+	// 		if (places[i].name.toLowerCase().startsWith(value)) {
+	// 			// Insert the matching location in the places array.
+	// 			self.locations.push(new LocationItem(places[i]));
+	// 		}
+	// 	}
+	// 	// Clear out the old markers
+	// 	markers.forEach(function(marker) {
+	// 		marker.setMap(null);
+	// 	});
+	// 	markers = [];
+	// 	// Remove the reference to the selected marker.
+	// 	// As the locations array has been cleared, the next selection has to not hold
+	// 	// reference to the old one.
+	// 	selectedMarker = undefined;
+	// 	// Update the markers based on what locations objects are stored into the observable array.
+	// 	placeMarkers(self.locations());
+	// };
+
+
+
+	self.searchPlacesAPI = function() {
+		if (self.query() !== '') {
+			getRequest(self.query());
+			oldQuery = self.query();
+		} else {
+			getRequest(oldQuery);
+		}
 	};
 
 	// Get the position of the selected item and select the equivalent marker.
 	self.selectListPlace = function(listPlace) {
 		// Get the index position of the selected list item.
-		var itemPos = self.locations.indexOf(listPlace);
+		var itemPos = self.filteredMarkers.indexOf(listPlace);
+		console.log(selectedMarker);
+		console.log(itemPos);
 		// Change icon color of the equivalent marker and populate its infoWindow.
 		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
+
 	};
 }
 
+var stringStartsWith = function (string, startsWith) {
+    string = string || "";
+    if (startsWith.length > string.length)
+        return false;
+    return string.substring(0, startsWith.length) === startsWith;
+};
+
 // Instantiate a new LocationsViewModel object.
 var viewModel = new LocationsViewModel();
+
+// viewModel.filteredMarkers.subscribe(viewModel.filteredLocations);
 
 // Activate KnockoutJS.
 ko.applyBindings(viewModel);
