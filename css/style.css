@@ -15,7 +15,8 @@ html, body {
 */
 .col-list-view {
 	width: 100%;
-	height: 35%;
+	/* Subtract the form height to occupy 100% of container height. */
+	height: calc(35% - 34px);
 	overflow: auto;
 }
 
@@ -56,13 +57,15 @@ html, body {
 	.col-list-view {
 		float: left;
 		width: 25%;
-		height: 100%;
+		/* Subtract the form height to occupy 100% of container height. */
+		height: calc(100% - 34px);
 	}
 
 	.col-map-view {
 		float: right;
 		width: 75%;
-		height: 100%;
+		/* Subtract the form height to occupy 100% of container height. */
+		height: calc(100% - 34px);
 	}
 }
 
