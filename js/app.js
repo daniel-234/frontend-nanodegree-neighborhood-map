@@ -18,8 +18,6 @@ var selectedMarker, selectedPlace;
 // Store the map icon markers.
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
-// Store the first query to the Google Places API.
-var oldQuery = 'restaurants';
 
 // Create a map object and populate it with the result of the
 // Google Places API input field.
@@ -33,7 +31,7 @@ function initMap() {
 	// Initiate a text search by calling the PlacesService's textSearch() method.
 	// Return information about a set of places based on a string.
 	service = new google.maps.places.PlacesService(map);
-	// Make the request to the Google Search Places API.
+	// Make the request to the Google Search Places API passing an initial value.
 	getRequest('restaurants');
 }
 
@@ -329,7 +327,7 @@ function LocationsViewModel() {
 		}
 	});
 
-	// Search the Google Places API.
+	// Search the Google Places API if there is a valid string.
 	self.searchPlacesAPI = function() {
 		if (self.query() !== '') {
 			getRequest(self.query());
