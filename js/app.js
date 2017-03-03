@@ -110,23 +110,31 @@ function initMap() {
 	// Listen for the event fired when the user selects a prediction
 	// and retrieve more details for that place.
 	searchBox.addListener('places_changed', function() {
+		console.log(places);
 		places = searchBox.getPlaces();
 		if (places.length === 0) {
 			console.log('No selection has been made.');
 			return;
 		}
+		console.log(places);
 		// Clear out the old markers
 		markers.forEach(function(marker) {
 			marker.setMap(null);
 		});
 		markers = [];
+		// Empty the locations observable array.
+		viewModel.locations.removeAll();
 		// Populate the locations observableArray with a new object
 		// for each location after a new API search.
 		places.forEach(function(place) {
 			viewModel.locations.push(new LocationItem(place));
 		});
+		// Create a bounds object.
+		bounds = new google.maps.LatLngBounds();
 		// Place the markers in the map.
 		placeMarkers(places);
+		// Set the viewport to contain the given bounds.
+		map.fitBounds(bounds);
 	});
 	// Populate the locations observableArray with a new object
 	// for each location as the app loads.
@@ -275,6 +283,7 @@ function selectRightLocation(marker, itemPos, infowindow) {
 	// set the background color of the equivalent list element to normal.
 	if ((itemPos !== selectedMarker) && (selectedMarker !== undefined)) {
 		markers[selectedMarker].setIcon(redIcon);
+		console.log(selectedMarker);
 	}
 	// If there was a location already selected, set its boolean observable property to false to
 	// remove its highlighting.
