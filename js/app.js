@@ -2,12 +2,16 @@
 var map, locationsInfoWindow, service, bounds;
 // Store the map center coordinates and set them to the city center
 // of Cagliari, the capital town of Sardinia (IT).
+
+var mapDiv = document.getElementById('map');
+
 var cityOfCagliari = {
 				lat: 39.2151,
 				lng: 9.1128
 			};
 var mapDiv = document.getElementById('map');
 // Create an array to hold the markers.
+var places = [];
 var markers = [];
 // Create an array to hold the places returned by the Google Maps Autocomplete API.
 var places = [];
@@ -77,9 +81,6 @@ var selectedMarker, selectedPlace;
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
 
-// Create a map object and populate it with the result of the SearchBox
-// autocomplete input field.
-// As the app loads, populate it with results from localStorage.
 function initMap() {
 	// Create a new map JavaScript object using the coordinates
 	// given by the center property.
@@ -87,34 +88,58 @@ function initMap() {
 		zoom: 15,
 		center: cityOfCagliari
 	});
-	// LocalStorage only supports strings. To solve the problem see:
-	// http://stackoverflow.com/questions/19174525/how-to-store-array-
-	// in-localstorage-object-in-html5
-	//
-	// Stringify the array and store the string in the 'locations'
-	// key inside localStorage.
-	localStorage.setItem('locations', JSON.stringify(locations));
-	// Pull it back out and parse it.
-	places = JSON.parse(localStorage.getItem('locations'));
-	// Create a bounds object.
-	bounds = new google.maps.LatLngBounds();
-	// Place the markers in the map.
-	placeMarkers(places);
-	// Create the search box and link it to the UI element.
-	var input = document.getElementById('pac-input');
-	var searchBox = new google.maps.places.SearchBox(input);
-	// Bias the SearchBox results towards current map's viewport.
-	map.addListener('bounds_changed', function() {
-		searchBox.setBounds(map.getBounds());
-	});
-	// Listen for the event fired when the user selects a prediction
-	// and retrieve more details for that place.
-	searchBox.addListener('places_changed', function() {
-		console.log(places);
-		places = searchBox.getPlaces();
-		if (places.length === 0) {
-			console.log('No selection has been made.');
-			return;
+
+	// Create a request for the service callback function.
+	var request = {
+		location: cityOfCagliari,
+		// Instruct the Places service to prefer showing results within this area.
+		// If radius is turned on, the bounds parameter must be turned off.
+		// radius: 500,
+		// A google.maps.LatLngBounds object defining the rectangle in which to search.
+		// If bounds is turned on, the radius parameter must be turned off.
+		bounds: map.getBounds(),
+		query: 'restaurants'
+	};
+	// Initiate a text search by calling the PlacesService's textSearch() method.
+	// Return information about a set of places based on a string.
+	service = new google.maps.places.PlacesService(map);
+	service.textSearch(request, callback);
+}
+
+function getRequest(value) {
+	// Create a request for the service callback function.
+	var request = {
+		location: cityOfCagliari,
+		// Instruct the Places service to prefer showing results within this area.
+		// If radius is turned on, the bounds parameter must be turned off.
+		// radius: 500,
+		// A google.maps.LatLngBounds object defining the rectangle in which to search.
+		// If bounds is turned on, the radius parameter must be turned off.
+		bounds: map.getBounds(),
+		query: value
+	};
+	// Initiate a text search by calling the PlacesService's textSearch() method.
+	// Return information about a set of places based on a string.
+	service = new google.maps.places.PlacesService(map);
+	service.textSearch(request, callback);
+}
+
+
+// Handle the status code passed in the maps 'PlacesServiceStatus' and the result object.
+function callback(results, status) {
+	// Store the element with id='input-list'.
+	var elem = document.getElementById('input-list');
+
+	if (status == google.maps.places.PlacesServiceStatus.OK) {
+		// places = results;
+		// viewModel.locations(places);
+		console.log(results);
+		// Check if there are old markers and clear them out.
+		if (markers.length > 0) {
+			markers.forEach(function(marker) {
+				marker.setMap(null);
+			});
+			markers = [];
 		}
 		console.log(places);
 		// Clear out the old markers
@@ -135,7 +160,7 @@ function initMap() {
 		placeMarkers(places);
 		// Set the viewport to contain the given bounds.
 		map.fitBounds(bounds);
-	});
+	};
 	// Populate the locations observableArray with a new object
 	// for each location as the app loads.
 	places.forEach(function(place) {
@@ -163,6 +188,35 @@ function placeMarkers(places) {
 		} else {
 			bounds.extend(place.geometry.location);
 		}
+		// Remove the child elements of elem, if any exists.
+		// while (elem.firstChild) {
+		// 	elem.removeChild(elem.firstChild);
+		// }
+
+		// Create an infoWindow instance.
+		locationsInfoWindow = new google.maps.InfoWindow();
+
+		// Create an unordered list and store it.
+		var uList = document.createElement('ul');
+		// Append a class to the unordered list.
+		uList.classList.add('no-bullets');
+		// Append the list to the appropriate div.
+		// elem.appendChild(uList);
+
+		// For each result, place a marker in the map and add a list item.
+		for (var i = 0; i < results.length; i++) {
+			// Store the result.
+			var place = results[i];
+			places.push(place);
+			// Add a new marker and a list item to the map.
+			addMarker(place, i, uList, elem);
+		}
+
+		viewModel.locations(places);
+		console.log(places);
+	} else {
+		alert('There was a problem contacting the Google servers. Please, check the JavaScript console fo more details.');
+		console.log(google.maps.places.PlacesServiceStatus);
 	}
 }
 
@@ -373,6 +427,18 @@ function LocationsViewModel() {
 		selectedMarker = undefined;
 		// Update the markers based on what locations objects are stored into the observable array.
 		placeMarkers(self.locations());
+// Suggestion taken from a response in the discussion forum:
+// https://discussions.udacity.com/t/map-async-moved-after-app-js/216797/2
+function activateKO() {
+	// Store the position of the map center and the query input value as an Observable.
+	var ViewModel = function() {
+		var self = this;
+		// Define an Observable variable.
+		self.query = ko.observable('restaurant');
+		// Update the query value.
+		self.filterSearch = function() {
+			self.query(self.query());
+		};
 	};
 
 	self.getBack = function() {
