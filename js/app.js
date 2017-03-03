@@ -333,6 +333,9 @@ function LocationsViewModel() {
 	self.searchPlacesAPI = function() {
 		if (self.query() !== '') {
 			getRequest(self.query());
+			oldQuery = self.query();
+		} else {
+			getRequest(oldQuery);
 		}
 	};
 
