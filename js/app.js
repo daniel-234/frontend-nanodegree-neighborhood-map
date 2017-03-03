@@ -34,7 +34,7 @@ function initMap() {
 	// Return information about a set of places based on a string.
 	service = new google.maps.places.PlacesService(map);
 	// Make the request to the Google Search Places API.
-	getRequest(oldQuery);
+	getRequest('restaurants');
 }
 
 // Call the PlacesService's textSearch method passing a value for the
@@ -329,13 +329,10 @@ function LocationsViewModel() {
 		}
 	});
 
-	// If there is a query term, search the Google Places API.
+	// Search the Google Places API.
 	self.searchPlacesAPI = function() {
 		if (self.query() !== '') {
 			getRequest(self.query());
-			oldQuery = self.query();
-		} else {
-			getRequest(oldQuery);
 		}
 	};
 
