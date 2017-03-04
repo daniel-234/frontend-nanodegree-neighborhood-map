@@ -15,7 +15,7 @@ var places = [];
 // As a marker is clicked, it stores its position inside the markers
 // array; it is called to set the icon back to the original color when
 // another marker is clicked.
-var selectedMarker, selectedPlace;
+var selectedMarker, selectedPlace, placeName;
 // Store the map icon markers.
 var greenIcon = 'img/green_marker.png';
 var redIcon = 'img/red_marker.png';
@@ -71,11 +71,15 @@ function callback(results, status) {
 			// Insert the results locations into the ViewModel locations
 			// observable array.
 			viewModel.locations.push(new LocationItem(place));
+			viewModel.filteredMarkers.push(new LocationItem(place));
+
+			// placeMarkers(place);
+			addMarker(place, i);
 		}
 
 
-		// placeMarkers(places);
-		placeMarkers(viewModel.locations());
+		// // placeMarkers(places);
+		// placeMarkers(viewModel.locations());
 
 
 		// Set query back to the empty string.
@@ -119,6 +123,7 @@ function addMarker(place, listPos) {
 		// just above.
 		map: map,
 		title: locationName,
+		id: listPos,
 		visible: true
 	});
 	// Compose the Wikipedia URL search string with the search term. Query the Wikipedia
@@ -170,6 +175,8 @@ function addMarker(place, listPos) {
 	marker.addListener('click', function() {
 		// Set the color of the marker and populates the infoWindow.
 		selectRightLocation(this, listPos, locationsInfoWindow);
+
+		// var itemPos = self.locations.indexOf(place);
 	});
 	// Insert the marker into the markers array.
 	markers.push(marker);
@@ -178,7 +185,7 @@ function addMarker(place, listPos) {
 // Tell the infoWindow to open at this marker and populate it with
 // information specific to this marker.
 // Code taken from the Google Maps API section of the course.
-function populateInfoWindow(marker, itemPosition, infowindow) {
+function populateInfoWindow(marker, infowindow) {
 	// Check to make sure the infoWindow is not already open on this marker.
 	if (infowindow.marker != marker) {
 		infowindow.marker = marker;
@@ -211,11 +218,12 @@ function populateInfoWindow(marker, itemPosition, infowindow) {
 
 // Set the background color of the selected item and the color of the equivalent marker.
 // Populate the appropriate infoWindow.
-function selectRightLocation(marker, itemPos, infowindow) {
+function selectRightLocation(marker, locationsPos, infowindow) {
+	console.log(marker.id);
 	// Check if there is a marker already selected; if there is one, deselect it.
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
-	if ((itemPos !== selectedMarker) && (selectedMarker !== undefined)) {
+	if ((marker.id !== selectedMarker) && (selectedMarker !== undefined)) {
 		markers[selectedMarker].setIcon(redIcon);
 		console.log(selectedMarker);
 	}
@@ -225,12 +233,15 @@ function selectRightLocation(marker, itemPos, infowindow) {
 		selectedPlace.currentSelection(false);
 	}
 	// Assign the current item position inside the markers array to variable 'selectedMarker'.
-	selectedMarker = itemPos;
+	// selectedMarker = itemPos;
+	selectedMarker = marker.id;
 	// Store the selected location object.
-	selectedPlace = viewModel.filteredMarkers()[itemPos];
+	selectedPlace = viewModel.locations()[locationsPos];
+	placeName = selectedPlace.name;
+	console.log(locationsPos);
 	// Change icon color of the selected marker and equivalent list item and populate the
 	// info window.
-	populateInfoWindow(marker, itemPos, locationsInfoWindow);
+	populateInfoWindow(marker, locationsInfoWindow);
 }
 
 // Display an error message to the user if the map fails to load.
@@ -286,55 +297,148 @@ function LocationsViewModel() {
 		// Check if the filter query is empty.
 		if (!filter) {
 			// Update the observable that updates the markers on the map.
-			self.filteredMarkers(self.locations());
+			// self.filteredMarkers(self.locations());
 			// Clear out the old markers
+			self.locations.removeAll();
+
+			console.log('go');
+
 			markers.forEach(function(marker) {
 				marker.setVisible(true);
 			});
+
+			places.forEach(function(place) {
+				self.locations.push(new LocationItem(place));
+			});
+
+			for (var j = 0; j < self.locations().length; j++) {
+				if (placeName === self.locations()[j].name) {
+					selectedPlace = self.locations()[j];
+					self.locations()[j].currentSelection(true);
+					// isIn = true;
+					console.log('true')
+				// } else {
+				// 	// selectedPlace.currentSelection(false);
+				// 	selectedPlace = undefined;
+				// 	placeName = undefined;
+				}
+			}
+
 			// markers = [];
 			// If there was a location already selected, set its boolean observable property
 			// to false to remove its highlighting.
-			if (typeof(selectedPlace) !== 'undefined') {
-				selectedPlace.currentSelection(false);
-			}
+			// if (typeof(selectedPlace) !== 'undefined') {
+			// 	selectedPlace.currentSelection(false);
+			// }
 			// Remove the reference to the selected marker.
 			// As the locations array has been cleared, the next selection must lose
 			// reference to the old one.
-			selectedMarker = undefined;
+			// selectedMarker = undefined;
 			// Update the markers based on what locations objects are stored into the
 			// observable array that updates the markers.
 			// placeMarkers(self.filteredMarkers());
 			// Keep the list in sync with the markers and return the same array value.
-			return self.filteredMarkers();
+			return self.locations();
 
 		} else {
 			markers.forEach(function(marker) {
 				marker.setVisible(false);
 			});
 
-			console.log(self.filteredMarkers());
-			console.log(self.locations());
-			console.log(places);
-			console.log(self.locations().length);
-			console.log(places.length);
-			// self.locations.removeAll();
-			self.filteredMarkers.removeAll();
+			// console.log(self.filteredMarkers());
+			// console.log(self.locations());
+			// console.log(places);
+			// console.log(self.locations().length);
+			// console.log(places.length);
+			// placeName = selectedPlace.name;
+			self.locations.removeAll();
+			console.log(placeName);
+
+			// selectedPlace.currentSelection(true);
+
+			// self.filteredMarkers.removeAll();
 			console.log(self.locations().length);
 
+			// for (var i = 0; i < places.length; i++) {
+			// 	// console.log(self.locations().length);
+			// 	if (places[i].name.toLowerCase().indexOf(filter) >= 0) {
+			// 		var newPlace = places[i];
+			// 		// console.log(places[i]);
+			// 		// console.log(places[i].name.toLowerCase());
+			// 		self.locations.push(new LocationItem(newPlace));
+			// 		// console.log(markers[i]);
+			// 		markers[i].setVisible(true);
+			// 	}
+			// }
+
+
+			var isIn = false;
+			var filtered = [];
 			for (var i = 0; i < places.length; i++) {
 				// console.log(self.locations().length);
 				if (places[i].name.toLowerCase().indexOf(filter) >= 0) {
 					var newPlace = places[i];
 					// console.log(places[i]);
 					// console.log(places[i].name.toLowerCase());
-					self.filteredMarkers.push(new LocationItem(newPlace));
+					// self.filteredMarkers.push(new LocationItem(newPlace));
+					self.locations.push(new LocationItem(newPlace));
 					// console.log(markers[i]);
 					markers[i].setVisible(true);
+					filtered.push(i);
 				}
 			}
 
-			console.log(self.locations().length);
-			console.log(self.filteredMarkers());
+			for (var j = 0; j < self.locations().length; j++) {
+				if (placeName === self.locations()[j].name) {
+					selectedPlace = self.locations()[j];
+					self.locations()[j].currentSelection(true);
+					// isIn = true;
+					console.log('true')
+				} else {
+					// selectedPlace.currentSelection(false);
+					selectedPlace = undefined;
+					placeName = undefined;
+				}
+			}
+
+			console.log(filtered);
+			console.log(filtered.length);
+			// console.log(selectedPlace.name);
+
+			if (selectedMarker !== undefined && filtered.indexOf(selectedMarker) < 0) {
+				markers[selectedMarker].setIcon(redIcon);
+				locationsInfoWindow.close();
+
+				selectedMarker = undefined;
+			}
+
+			// if (!isIn) {
+			// 	selectedPlace.currentSelection(true);
+			// 	console.log('false');
+			// }
+
+
+			// if (typeof(selectedPlace) !== 'undefined' && !isIn) {
+			// 	selectedPlace.currentSelection(false);
+			// }
+
+
+			// console.log(self.locations().length);
+			// console.log(self.filteredMarkers());
+
+			// markers.forEach(function(marker) {
+			// 	console.log(marker.title);
+			// });
+
+			// self.locations().forEach(function(location) {
+			// 	console.log(location.name);
+			// });
+
+			for (var i = 0; i < self.filteredMarkers.length; i++) {
+				console.log(places[i].name);
+				console.log(markers[i].title);
+				console.log(self.filteredMarkers[i].name);
+			}
 
 
 
@@ -353,13 +457,13 @@ function LocationsViewModel() {
 
 			// If there was a location already selected, set its boolean observable property
 			// to false to remove its highlighting.
-			if (typeof(selectedPlace) !== 'undefined') {
-				selectedPlace.currentSelection(false);
-			}
+			// if (typeof(selectedPlace) !== 'undefined') {
+			// 	selectedPlace.currentSelection(false);
+			// }
 			// Remove the reference to the selected marker.
 			// As the locations array has been cleared, the next selection must lose
 			// reference to the old one.
-			selectedMarker = undefined;
+			// selectedMarker = undefined;
 			// Update the markers based on what locations objects are stored into the
 			// observable array that updates the markers.
 			// placeMarkers(self.filteredMarkers());
@@ -379,9 +483,22 @@ function LocationsViewModel() {
 	// Get the position of the selected item and select the equivalent marker.
 	self.selectListPlace = function(listPlace) {
 		// Get the index position of the selected list item from the filtered list.
-		var itemPos = self.filteredMarkers.indexOf(listPlace);
+		var markerPos;
+		for (var i = 0; i < places.length; i++) {
+			if (listPlace.name === places[i].name) {
+				markerPos = i;
+			}
+		}
+		var itemPos = self.locations.indexOf(listPlace);
+		if (itemPos) {
+			console.log(places);
+			console.log(itemPos);
+			console.log(markerPos);
+			console.log(listPlace.name);
+		}
+
 		// Change icon color of the equivalent marker and populate its infoWindow.
-		selectRightLocation(markers[itemPos], itemPos, locationsInfoWindow);
+		selectRightLocation(markers[markerPos], itemPos, locationsInfoWindow);
 
 	};
 }
