@@ -61,6 +61,8 @@ function callback(results, status) {
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
 		// Empty the locations observable array.
 		viewModel.locations.removeAll();
+		places = [];
+		markers = [];
 		// Create an infoWindow instance.
 		locationsInfoWindow = new google.maps.InfoWindow();
 		// Loop over the results array returned by the callback.
@@ -68,13 +70,14 @@ function callback(results, status) {
 			// Store the result.
 			var place = results[i];
 			places.push(place);
+			addMarker(place, i);
 			// Insert the results locations into the ViewModel locations
 			// observable array.
 			viewModel.locations.push(new LocationItem(place));
 			viewModel.filteredMarkers.push(new LocationItem(place));
 
 			// placeMarkers(place);
-			addMarker(place, i);
+			// addMarker(place, i);
 		}
 
 
@@ -174,7 +177,14 @@ function addMarker(place, listPos) {
 	// Code taken from the Google Maps API section of the course and elaborated for this app.
 	marker.addListener('click', function() {
 		// Set the color of the marker and populates the infoWindow.
-		selectRightLocation(this, listPos, locationsInfoWindow);
+		// var itemPos = self.locations.indexOf(place);
+		var itemPos;
+		for (var i = 0; i < viewModel.locations().length; i++) {
+			if (locationName === viewModel.locations()[i].name) {
+				itemPos = i;
+			}
+		}
+		selectRightLocation(this, itemPos, locationsInfoWindow);
 
 		// var itemPos = self.locations.indexOf(place);
 	});
@@ -187,8 +197,8 @@ function addMarker(place, listPos) {
 // Code taken from the Google Maps API section of the course.
 function populateInfoWindow(marker, infowindow) {
 	// Check to make sure the infoWindow is not already open on this marker.
-	if (infowindow.marker != marker) {
-		infowindow.marker = marker;
+	// if (infowindow.marker != marker) {
+	// 	infowindow.marker = marker;
 		// Store the marker title and a Wikipedia link.
 		var content = '<div class="location-info"><div>' + marker.title + '</div>' +
 			'<div>' + marker.info + '</div></div>';
@@ -213,31 +223,60 @@ function populateInfoWindow(marker, infowindow) {
 			// from the corresponding list item when the infoWindow is closed.
 			selectedPlace.currentSelection(false);
 		});
-	}
+	// }
 }
 
 // Set the background color of the selected item and the color of the equivalent marker.
 // Populate the appropriate infoWindow.
 function selectRightLocation(marker, locationsPos, infowindow) {
 	console.log(marker.id);
+	viewModel.locations().forEach(function(location) {
+		location.currentSelection(false);
+	});
+	// viewModel.locations()[locationsPos].currentSelection(true)
 	// Check if there is a marker already selected; if there is one, deselect it.
 	// Retrieve it from the array, set back its icon to the normal red icon and
 	// set the background color of the equivalent list element to normal.
 	if ((marker.id !== selectedMarker) && (selectedMarker !== undefined)) {
 		markers[selectedMarker].setIcon(redIcon);
+		// if (typeof(selectedPlace) !== 'undefined') {
+		// 	selectedPlace.currentSelection(false);
+		// }
+		// selectedLocation.currentSelection(false);
 		console.log(selectedMarker);
 	}
+
+	// if (selectedMarker !== undefined && i === selectedMarker) {
+	// 	selectedLocation.currentSelection(true);
+	// 	// self.locations.push();
+	// }
+
+	// if (selectedMarker !== undefined && filtered.indexOf(selectedMarker) < 0) {
+	// 	markers[selectedMarker].setIcon(redIcon);
+	// 	locationsInfoWindow.close();
+	// 	selectedPlace = undefined;
+	// 	selectedMarker = undefined;
+	// }
+
+
+
 	// If there was a location already selected, set its boolean observable property to false to
 	// remove its highlighting.
-	if (typeof(selectedPlace) !== 'undefined') {
-		selectedPlace.currentSelection(false);
-	}
+	// if (typeof(selectedPlace) !== 'undefined') {
+	// 	selectedPlace.currentSelection(false);
+	// }
+
 	// Assign the current item position inside the markers array to variable 'selectedMarker'.
 	// selectedMarker = itemPos;
 	selectedMarker = marker.id;
 	// Store the selected location object.
+	console.log(viewModel.locations()[locationsPos]);
 	selectedPlace = viewModel.locations()[locationsPos];
-	placeName = selectedPlace.name;
+	// selectedPlace = new LocationItem(places[marker.id]);
+	console.log(selectedPlace.name);
+	// placeName = selectedPlace.name;
+	placeName = marker.title;
+	console.log(placeName);
 	console.log(locationsPos);
 	// Change icon color of the selected marker and equivalent list item and populate the
 	// info window.
@@ -294,6 +333,7 @@ function LocationsViewModel() {
 		var filter = self.query().toLowerCase();
 		// Define an array to save the filtered locations.
 		var newArr = [];
+		// var listPosition;
 		// Check if the filter query is empty.
 		if (!filter) {
 			// Update the observable that updates the markers on the map.
@@ -302,27 +342,52 @@ function LocationsViewModel() {
 			self.locations.removeAll();
 
 			console.log('go');
+			console.log(placeName);
 
 			markers.forEach(function(marker) {
 				marker.setVisible(true);
 			});
 
-			places.forEach(function(place) {
-				self.locations.push(new LocationItem(place));
-			});
+			// places.forEach(function(place) {
+			// 	self.locations.push(new LocationItem(place));
+			// });
 
-			for (var j = 0; j < self.locations().length; j++) {
-				if (placeName === self.locations()[j].name) {
-					selectedPlace = self.locations()[j];
-					self.locations()[j].currentSelection(true);
-					// isIn = true;
-					console.log('true')
-				// } else {
-				// 	// selectedPlace.currentSelection(false);
-				// 	selectedPlace = undefined;
-				// 	placeName = undefined;
-				}
+			// if (typeof(selectedPlace) !== 'undefined') {
+			// 	selectedPlace.currentSelection(true);
+			// }
+
+			// for (var j = 0; j < self.locations().length; j++) {
+			// 	if (placeName === self.locations()[j].name) {
+			// 		self.locations()[j].currentSelection(true);
+			// 		// isIn = true;
+			// 		console.log('true')
+			// 	// } else {
+			// 	// 	// selectedPlace.currentSelection(false);
+			// 	// 	selectedPlace = undefined;
+			// 	// 	placeName = undefined;
+			// 	}
+			// }
+
+			for (var i = 0; i < places.length; i++) {
+				// console.log(self.locations().length);
+				// if (places[i].name.toLowerCase().indexOf(filter) >= 0) {
+					var newPlace = places[i];
+					// console.log(places[i]);
+					// console.log(places[i].name.toLowerCase());
+					// self.filteredMarkers.push(new LocationItem(newPlace));
+					var selectedLocation = new LocationItem(newPlace);
+					if (selectedMarker !== undefined && i === selectedMarker) {
+						selectedLocation.currentSelection(true);
+						// self.locations.push();
+					}
+					self.locations.push(selectedLocation);
+					// console.log(markers[i]);
+					// markers[i].setVisible(true);
+					// filtered.push(i);
+				// }
+
 			}
+
 
 			// markers = [];
 			// If there was a location already selected, set its boolean observable property
@@ -341,6 +406,7 @@ function LocationsViewModel() {
 			return self.locations();
 
 		} else {
+			var listPosition;
 			markers.forEach(function(marker) {
 				marker.setVisible(false);
 			});
@@ -372,7 +438,7 @@ function LocationsViewModel() {
 			// }
 
 
-			var isIn = false;
+			var isIn = true;
 			var filtered = [];
 			for (var i = 0; i < places.length; i++) {
 				// console.log(self.locations().length);
@@ -381,25 +447,58 @@ function LocationsViewModel() {
 					// console.log(places[i]);
 					// console.log(places[i].name.toLowerCase());
 					// self.filteredMarkers.push(new LocationItem(newPlace));
-					self.locations.push(new LocationItem(newPlace));
+					var selectedLocation = new LocationItem(newPlace);
+					if (selectedMarker !== undefined && i === selectedMarker) {
+						selectedLocation.currentSelection(true);
+						// self.locations.push();
+					}
+					self.locations.push(selectedLocation);
 					// console.log(markers[i]);
-					markers[i].setVisible(true);
-					filtered.push(i);
+					if (markers.length > 0) {
+						markers[i].setVisible(true);
+						console.log(markers.length);
+						filtered.push(i);
+					}
+					// markers[i].setVisible(true);
+					// filtered.push(i);
 				}
+
 			}
 
-			for (var j = 0; j < self.locations().length; j++) {
-				if (placeName === self.locations()[j].name) {
-					selectedPlace = self.locations()[j];
-					self.locations()[j].currentSelection(true);
-					// isIn = true;
-					console.log('true')
-				} else {
-					// selectedPlace.currentSelection(false);
-					selectedPlace = undefined;
-					placeName = undefined;
-				}
-			}
+			// console.log(placeName);
+			// console.log(placeName.length);
+			// console.log(typeof(placeName));
+
+
+
+			// for (var j = 0; j < self.locations().length; j++) {
+			// 	if (placeName === self.locations()[j].name) {
+			// 		listPosition = j;
+			// 		// self.locations()[j].currentSelection(true);
+			// 		isIn = true;
+			// 		console.log('true')
+			// 	} else {
+			// 		// console.log(placeName);
+			// 	// 	// selectedPlace.currentSelection(false);
+			// 		isIn = false;
+			// 	// 	// selectedPlace = undefined;
+			// 	// 	placeName = '';
+			// 	}
+			// 	console.log(placeName);
+			// }
+
+			// for (var j = 0; j < self.locations().length; j++) {
+			// 	if (placeName === self.locations()[j].name) {
+			// 		selectedPlace = self.locations()[j];
+			// 		self.locations()[j].currentSelection(true);
+			// 		// isIn = true;
+			// 		console.log('true')
+			// 	} else {
+			// 		// selectedPlace.currentSelection(false);
+			// 		selectedPlace = undefined;
+			// 		placeName = undefined;
+			// 	}
+			// }
 
 			console.log(filtered);
 			console.log(filtered.length);
@@ -408,18 +507,26 @@ function LocationsViewModel() {
 			if (selectedMarker !== undefined && filtered.indexOf(selectedMarker) < 0) {
 				markers[selectedMarker].setIcon(redIcon);
 				locationsInfoWindow.close();
-
+				selectedPlace = undefined;
 				selectedMarker = undefined;
 			}
 
-			// if (!isIn) {
-			// 	selectedPlace.currentSelection(true);
-			// 	console.log('false');
+			// console.log(listPosition);
+			// if (listPosition !== undefined) {
+			// 	self.locations()[listPosition].currentSelection(true);
+			// 	// selectedPlace.currentSelection(true);
+			// 	// console.log('false');
+			// 	console.log('yes');
+			// 	// placeName = '';
+			// } else {
+			// 	console.log('no');
+			// 	placeName = '';
 			// }
 
 
 			// if (typeof(selectedPlace) !== 'undefined' && !isIn) {
-			// 	selectedPlace.currentSelection(false);
+			// 	// selectedPlace.currentSelection(false);
+			// 	selectedPlace = undefined
 			// }
 
 
@@ -434,11 +541,16 @@ function LocationsViewModel() {
 			// 	console.log(location.name);
 			// });
 
-			for (var i = 0; i < self.filteredMarkers.length; i++) {
-				console.log(places[i].name);
-				console.log(markers[i].title);
-				console.log(self.filteredMarkers[i].name);
-			}
+
+
+
+			// for (var i = 0; i < self.filteredMarkers.length; i++) {
+			// 	console.log(places[i].name);
+			// 	console.log(markers[i].title);
+			// 	console.log(self.filteredMarkers[i].name);
+			// }
+
+
 
 
 
