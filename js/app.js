@@ -157,19 +157,19 @@ function addMarker(place, listPos) {
 		}
 	});
 	// Add an event listener to the marker.
-	// Code taken from the Google Maps API section of the course and elaborated for this app.
+	// Code taken from the Google Maps API section of the course and heavily adapted for this app.
 	marker.addListener('click', function() {
-		// Set the color of the marker and populates the infoWindow.
-		// var itemPos = self.locations.indexOf(place);
+		// Store the selected object from the locations observable array.
 		var itemPos;
+		// Check the locations observable array in the ViewModel to find the object that matches this
+		// marker's title.
 		for (var i = 0; i < viewModel.locations().length; i++) {
 			if (locationName === viewModel.locations()[i].name) {
 				itemPos = i;
 			}
 		}
+		// Set the color of the marker and populates the infoWindow.
 		selectRightLocation(this, itemPos, locationsInfoWindow);
-
-		// var itemPos = self.locations.indexOf(place);
 	});
 	// Insert the marker into the markers array.
 	markers.push(marker);
@@ -179,103 +179,55 @@ function addMarker(place, listPos) {
 // information specific to this marker.
 // Code taken from the Google Maps API section of the course.
 function populateInfoWindow(marker, infowindow) {
-	// Check to make sure the infoWindow is not already open on this marker.
-	// if (infowindow.marker != marker) {
-	// 	infowindow.marker = marker;
-		// Store the marker title and a Wikipedia link.
-		var content = '<div class="location-info"><div>' + marker.title + '</div>' +
-			'<div>' + marker.info + '</div></div>';
-		// Set the infoWindow content.
-		infowindow.setContent(content);
-		// Open the infoWindow.
-		infowindow.open(map, marker);
-		// Set the icon of the marker to green as the infowindow opens.
-		marker.setIcon(greenIcon);
-		// Center marker when it's active on click to provide better UX experience.
-		map.panTo(marker.getPosition());
-		// Set the boolean observable of the selected location to true to highlight
-		// the corresponding list item.
-		selectedPlace.currentSelection(true);
-		// Make sure the marker property is cleared if the infoWindow is closed.
-		infowindow.addListener('closeclick', function() {
-			// // Close the infoWindow on this marker.
-			// infowindow.marker = null;
-			// // Set the icon of the marker back to red as we close the infoWindow.
-			// marker.setIcon(redIcon);
-			// // Set the boolean observable of the selected location to false to remove the highlight
-			// // from the corresponding list item when the infoWindow is closed.
-			// selectedPlace.currentSelection(false);
-
-			// // selectedPlace = undefined;
-			// selectedMarker = undefined;
-
-			// viewModel.locations().forEach(function(location) {
-			// 	location.currentSelection(false);
-			// });
-
-			if (selectedMarker !== undefined && typeof(selectedPlace) !== 'undefined') {
-				markers[selectedMarker].setIcon(redIcon);
-				selectedPlace.currentSelection(false);
-				infowindow.close();
-				selectedPlace = undefined;
-				selectedMarker = undefined;
-			}
-		});
-	// }
+	// Store the marker title and a Wikipedia link.
+	var content = '<div class="location-info"><div>' + marker.title + '</div>' +
+		'<div>' + marker.info + '</div></div>';
+	// Set the infoWindow content.
+	infowindow.setContent(content);
+	// Open the infoWindow.
+	infowindow.open(map, marker);
+	// Set the icon of the marker to green as the infowindow opens.
+	marker.setIcon(greenIcon);
+	// Center marker when it's active on click to provide better UX experience.
+	map.panTo(marker.getPosition());
+	// Set the boolean observable of the selected location to true to highlight
+	// the corresponding list item.
+	selectedPlace.currentSelection(true);
+	// Make sure the marker and item properties are cleared if the infoWindow is closed.
+	infowindow.addListener('closeclick', function() {
+		// Check if there is a selected marker and a selected location.
+		if (selectedMarker !== undefined && typeof(selectedPlace) !== 'undefined') {
+			// Set the icon of the selected marker back to normal.
+			markers[selectedMarker].setIcon(redIcon);
+			// Remove the highlight from the selected list item.
+			selectedPlace.currentSelection(false);
+			// Close the infowindow.
+			infowindow.close();
+			// Remove the old references of the selected marker and item.
+			selectedPlace = undefined;
+			selectedMarker = undefined;
+		}
+	});
 }
 
 // Set the background color of the selected item and the color of the equivalent marker.
 // Populate the appropriate infoWindow.
 function selectRightLocation(marker, locationsPos, infowindow) {
-	console.log(marker.id);
+	// Make sure the highlight property is removed from list items.
 	viewModel.locations().forEach(function(location) {
 		location.currentSelection(false);
 	});
-	// viewModel.locations()[locationsPos].currentSelection(true)
-	// Check if there is a marker already selected; if there is one, deselect it.
-	// Retrieve it from the array, set back its icon to the normal red icon and
-	// set the background color of the equivalent list element to normal.
+	// Check if there is a marker already selected; if there is one, set back its icon
+	// to the normal red icon.
 	if ((marker.id !== selectedMarker) && (selectedMarker !== undefined)) {
 		markers[selectedMarker].setIcon(redIcon);
-		// if (typeof(selectedPlace) !== 'undefined') {
-		// 	selectedPlace.currentSelection(false);
-		// }
-		// selectedLocation.currentSelection(false);
-		console.log(selectedMarker);
 	}
-
-	// if (selectedMarker !== undefined && i === selectedMarker) {
-	// 	selectedLocation.currentSelection(true);
-	// 	// self.locations.push();
-	// }
-
-	// if (selectedMarker !== undefined && filtered.indexOf(selectedMarker) < 0) {
-	// 	markers[selectedMarker].setIcon(redIcon);
-	// 	locationsInfoWindow.close();
-	// 	selectedPlace = undefined;
-	// 	selectedMarker = undefined;
-	// }
-
-
-
-	// If there was a location already selected, set its boolean observable property to false to
-	// remove its highlighting.
-	// if (typeof(selectedPlace) !== 'undefined') {
-	// 	selectedPlace.currentSelection(false);
-	// }
-
-	// Assign the current item position inside the markers array to variable 'selectedMarker'.
-	// selectedMarker = itemPos;
+	// Assign the current marker id to variable 'selectedMarker'.
 	selectedMarker = marker.id;
 	// Store the selected location object.
-	console.log(viewModel.locations()[locationsPos]);
 	selectedPlace = viewModel.locations()[locationsPos];
-	// selectedPlace = new LocationItem(places[marker.id]);
-	console.log(selectedPlace.name);
-	// placeName = selectedPlace.name;
+	// Store the name of the selected place taking it from the marker title.
 	placeName = marker.title;
-	console.log(placeName);
-	console.log(locationsPos);
 	// Change icon color of the selected marker and equivalent list item and populate the
 	// info window.
 	populateInfoWindow(marker, locationsInfoWindow);
