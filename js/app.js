@@ -371,7 +371,6 @@ function LocationsViewModel() {
 	// Search the Google Places API if there is a valid string.
 	self.searchPlacesAPI = function() {
 		if (self.query() !== '') {
-			console.log('query');
 			getRequest(self.query());
 		}
 	};
