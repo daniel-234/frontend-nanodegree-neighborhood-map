@@ -10,6 +10,7 @@ var cityOfCagliari = {
 			};
 // Store the map markers.
 var markers = [];
+// Store the places returned from the results callback.
 var places = [];
 // Store the position of the selected marker; undefined as page loads.
 // As a marker is clicked, it stores its position inside the markers
@@ -61,6 +62,7 @@ function callback(results, status) {
 	if (status == google.maps.places.PlacesServiceStatus.OK) {
 		// Empty the locations observable array.
 		viewModel.locations.removeAll();
+		// Make places and markers reference an empty array.
 		places = [];
 		markers = [];
 		// Create an infoWindow instance.
@@ -69,22 +71,14 @@ function callback(results, status) {
 		for (var i = 0; i < results.length; i++) {
 			// Store the result.
 			var place = results[i];
+			// Insert the result into the places array.
 			places.push(place);
+			// Add a marker for this place.
 			addMarker(place, i);
-			// Insert the results locations into the ViewModel locations
-			// observable array.
+			// Insert a new LocationItem object for this place into the
+			// ViewModel observable array locations.
 			viewModel.locations.push(new LocationItem(place));
-			viewModel.filteredMarkers.push(new LocationItem(place));
-
-			// placeMarkers(place);
-			// addMarker(place, i);
 		}
-
-
-		// // placeMarkers(places);
-		// placeMarkers(viewModel.locations());
-
-
 		// Set query back to the empty string.
 		// As the input text works both as textSearch for the Google Places API and
 		// for the filter, the input text must be cleared after the results have been
@@ -94,17 +88,6 @@ function callback(results, status) {
 		// Handle the case when the Google Places API returns an error.
 		alert('There was a problem contacting the Google servers. Please, check the JavaScript console fo more details.');
 		console.log(google.maps.places.PlacesServiceStatus);
-	}
-}
-
-// Place the markers in the map at the returned places coordinates.
-function placeMarkers(placesResults) {
-	// For each result, place a marker in the map and add a list item.
-	for (var i = 0; i < placesResults.length; i++) {
-		// Store the result.
-		var place = placesResults[i];
-		// Add a new marker to the map.
-		addMarker(place, i);
 	}
 }
 
@@ -215,13 +198,28 @@ function populateInfoWindow(marker, infowindow) {
 		selectedPlace.currentSelection(true);
 		// Make sure the marker property is cleared if the infoWindow is closed.
 		infowindow.addListener('closeclick', function() {
-			// Close the infoWindow on this marker.
-			infowindow.marker = null;
-			// Set the icon of the marker back to red as we close the infoWindow.
-			marker.setIcon(redIcon);
-			// Set the boolean observable of the selected location to false to remove the highlight
-			// from the corresponding list item when the infoWindow is closed.
-			selectedPlace.currentSelection(false);
+			// // Close the infoWindow on this marker.
+			// infowindow.marker = null;
+			// // Set the icon of the marker back to red as we close the infoWindow.
+			// marker.setIcon(redIcon);
+			// // Set the boolean observable of the selected location to false to remove the highlight
+			// // from the corresponding list item when the infoWindow is closed.
+			// selectedPlace.currentSelection(false);
+
+			// // selectedPlace = undefined;
+			// selectedMarker = undefined;
+
+			// viewModel.locations().forEach(function(location) {
+			// 	location.currentSelection(false);
+			// });
+
+			if (selectedMarker !== undefined && typeof(selectedPlace) !== 'undefined') {
+				markers[selectedMarker].setIcon(redIcon);
+				selectedPlace.currentSelection(false);
+				infowindow.close();
+				selectedPlace = undefined;
+				selectedMarker = undefined;
+			}
 		});
 	// }
 }
@@ -379,12 +377,14 @@ function LocationsViewModel() {
 					if (selectedMarker !== undefined && i === selectedMarker) {
 						selectedLocation.currentSelection(true);
 						// self.locations.push();
+						selectedPlace = selectedLocation;
 					}
 					self.locations.push(selectedLocation);
 					// console.log(markers[i]);
 					// markers[i].setVisible(true);
 					// filtered.push(i);
 				// }
+
 
 			}
 
@@ -409,6 +409,7 @@ function LocationsViewModel() {
 			var listPosition;
 			markers.forEach(function(marker) {
 				marker.setVisible(false);
+				// marker.setIcon(redIcon);
 			});
 
 			// console.log(self.filteredMarkers());
@@ -450,9 +451,14 @@ function LocationsViewModel() {
 					var selectedLocation = new LocationItem(newPlace);
 					if (selectedMarker !== undefined && i === selectedMarker) {
 						selectedLocation.currentSelection(true);
+						markers[selectedMarker].setIcon(greenIcon);
 						// self.locations.push();
+						selectedPlace = selectedLocation;
 					}
 					self.locations.push(selectedLocation);
+
+
+
 					// console.log(markers[i]);
 					if (markers.length > 0) {
 						markers[i].setVisible(true);
